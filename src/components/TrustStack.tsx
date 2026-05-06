@@ -75,9 +75,13 @@ export const TrustStack = () => {
               ))}
             </div>
             
-            <button className="mt-10 w-full py-4 border border-white/10 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
+            <a 
+              href="/Chopta_Tungnath_Safety_Brochure.pdf" 
+              download="Chopta_Tungnath_Safety_Brochure.pdf"
+              className="mt-10 w-full py-4 border border-white/10 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors text-center inline-block"
+            >
               Download Safety Brochure
-            </button>
+            </a>
           </div>
         </div>
       </div>
