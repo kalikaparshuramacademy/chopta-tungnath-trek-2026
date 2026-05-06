@@ -15,7 +15,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "Sacred river energy",
     facts: "Gateway to the Garhwal Himalayas",
     altitude: "340m",
-    image: "/images/dest_rishikesh_1778044611078.png"
+    image: "/images/dest_rishikesh_1778044611078.webp"
   },
   {
     id: "devprayag",
@@ -23,7 +23,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "Confluence of rivers",
     facts: "Where Bhagirathi meets Alaknanda to become Ganga",
     altitude: "830m",
-    image: "/images/dest_devprayag_1778044625556.png"
+    image: "/images/dest_devprayag_1778044625556.webp"
   },
   {
     id: "deoriatal",
@@ -31,7 +31,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "Mirror lake reflections",
     facts: "Crystal-clear water with Chaukhamba peaks reflection",
     altitude: "2,438m",
-    image: "/images/day2_deoria_tal_1778044472269.png"
+    image: "/images/day2_deoria_tal_1778044472269.webp"
   },
   {
     id: "chopta",
@@ -39,7 +39,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "Mini Switzerland atmosphere",
     facts: "Lush green meadows and dense forests",
     altitude: "2,680m",
-    image: "/images/dest_chopta_1778044654935.png"
+    image: "/images/dest_chopta_1778044654935.webp"
   },
   {
     id: "tungnath",
@@ -47,7 +47,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "Highest Shiva temple experience",
     facts: "Lord Shiva's hands appeared here after Mahabharat",
     altitude: "3,680m",
-    image: "/images/day3_tungnath_1778044489559.png"
+    image: "/images/day3_tungnath_1778044489559.webp"
   },
   {
     id: "chandrashila",
@@ -55,7 +55,7 @@ export const DESTINATIONS: Destination[] = [
     significance: "360° Himalayan summit panorama",
     facts: "Panoramic views of Nanda Devi, Trishul, and Chaukhamba",
     altitude: "4,000m",
-    image: "/images/dest_chandrashila_1778044684173.png"
+    image: "/images/dest_chandrashila_1778044684173.webp"
   }
 ];
 
@@ -65,35 +65,35 @@ export const ITINERARY: DayItinerary[] = [
     title: "Departure + Overnight Journey",
     description: "Depart from Delhi in the evening and begin your exciting journey toward the Himalayas.",
     highlights: ["Departure from Delhi", "Group road trip experience", "Overnight journey", "Scenic Himalayan route"],
-    image: "/images/day1_departure_1778044457321.png"
+    image: "/images/day1_departure_1778044457321.webp"
   },
   {
     day: 2,
     title: "Scenic Drive + Deoria Tal Trek",
     description: "Arrive in Rishikesh, drive towards Sari Village, and trek to the beautiful Deoria Tal lake.",
     highlights: ["Devprayag Sangam viewpoint", "2.5 km trek to Deoria Tal", "Lake reflection views", "Overnight stay in Sari Village"],
-    image: "/images/day2_deoria_tal_1778044472269.png"
+    image: "/images/day2_deoria_tal_1778044472269.webp"
   },
   {
     day: 3,
     title: "Tungnath Temple + Chandrashila Summit",
     description: "The marquee day. Begin the trek to the highest Shiva temple and explore Chandrashila peak.",
     highlights: ["3.5 km Himalayan trek", "Highest Shiva Temple in the world", "360° panoramic summit views", "Descent back to Chopta"],
-    image: "/images/day3_tungnath_1778044489559.png"
+    image: "/images/day3_tungnath_1778044489559.webp"
   },
   {
     day: 4,
     title: "Mountain Retreat + Return Drive",
     description: "Wake up to fresh mountain air, visit local temples, and begin the journey back towards Rishikesh.",
     highlights: ["Morning views of Chopta valley", "Dhari Devi Temple visit", "Scenic road journey", "Overnight drive to Delhi"],
-    image: "/images/day4_return_1778044507903.png"
+    image: "/images/day4_return_1778044507903.webp"
   },
   {
     day: 5,
     title: "Arrival in Delhi",
     description: "Early morning arrival in Delhi, marking the end of an incredible journey.",
     highlights: ["Completion of journey", "Memorable Himalayan experience", "New friends", "Trip conclusions"],
-    image: "/images/day5_arrival_1778044527261.png"
+    image: "/images/day5_arrival_1778044527261.webp"
   }
 ];
 

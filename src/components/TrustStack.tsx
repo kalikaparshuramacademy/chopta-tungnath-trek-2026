@@ -11,7 +11,7 @@ export const TrustStack = () => {
 
   return (
     <section className="py-32 px-6 relative">
-      <img src="/images/trust_safety_1778044760954.png" alt="Safety and Trust" className="absolute inset-0 w-full h-full object-cover opacity-10" />
+      <img src="/images/trust_safety_1778044760954.webp" alt="Safety and Trust" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-10" />
       <div className="absolute inset-0 bg-himalaya-black/90" />
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

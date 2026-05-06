@@ -33,8 +33,9 @@ export const Hero = () => {
             loop
             muted
             playsInline
-            poster="/images/hero_bg_1778044589465.png"
+            poster="/images/hero_bg_1778044589465.webp"
             className="absolute inset-0 w-full h-full object-cover"
+            title="Cinematic view of Himalayan clouds"
           >
             <source src="https://assets.mixkit.co/videos/preview/mixkit-clouds-among-the-mountain-peaks-at-sunset-41604-large.mp4" type="video/mp4" />
           </video>

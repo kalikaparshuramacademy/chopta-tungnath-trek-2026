@@ -20,12 +20,20 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { motion, useScroll, useSpring } from 'motion/react';
-import { PAYMENT_LINK } from './constants';
 import { Routes, Route, Link } from 'react-router-dom';
-import { BookNow } from './pages/BookNow';
-import { Admin } from './pages/Admin';
-import { AmbassadorApply } from './pages/AmbassadorApply';
-import { InfluencerApply } from './pages/InfluencerApply';
+import { lazy, Suspense } from 'react';
+
+// Lazy load pages
+const BookNow = lazy(() => import('./pages/BookNow').then(module => ({ default: module.BookNow })));
+const Admin = lazy(() => import('./pages/Admin').then(module => ({ default: module.Admin })));
+const AmbassadorApply = lazy(() => import('./pages/AmbassadorApply').then(module => ({ default: module.AmbassadorApply })));
+const InfluencerApply = lazy(() => import('./pages/InfluencerApply').then(module => ({ default: module.InfluencerApply })));
+
+const Loading = () => (
+  <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
+    <div className="w-8 h-8 border-4 border-sunrise-gold border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const Home = () => {
   const { scrollYProgress } = useScroll();
@@ -41,6 +49,7 @@ const Home = () => {
         className="fixed top-0 left-0 right-0 h-1 bg-sunrise-gold origin-left z-[60]"
         style={{ scaleX }}
       />
+      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-screen" />
       
       <Navbar />
       
@@ -93,8 +102,9 @@ const Home = () => {
         {/* Final CTA Emotional Section */}
         <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
           <img 
-            src="/images/testimonials_bg_1778044744815.png" 
-            alt="Chandrashila Sunrise" 
+            src="/images/testimonials_bg_1778044744815.webp" 
+            alt="Majestic Himalayan peaks at sunrise from Chandrashila summit" 
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-himalaya-black/60 backdrop-blur-[2px]" />
@@ -140,12 +150,14 @@ const Home = () => {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/book" element={<BookNow />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/ambassador-apply" element={<AmbassadorApply />} />
-      <Route path="/influencer-apply" element={<InfluencerApply />} />
-    </Routes>
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/book" element={<BookNow />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/ambassador-apply" element={<AmbassadorApply />} />
+        <Route path="/influencer-apply" element={<InfluencerApply />} />
+      </Routes>
+    </Suspense>
   );
 }

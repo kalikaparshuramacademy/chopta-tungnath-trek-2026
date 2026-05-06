@@ -76,7 +76,7 @@ export const AmbassadorApply = () => {
 
   return (
     <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-6 pb-12 relative">
-      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/campus_ambassador_1778044724349.png')] bg-cover bg-center mix-blend-screen" />
+      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/campus_ambassador_1778044724349.webp')] bg-cover bg-center mix-blend-screen" />
       
       <div className="max-w-4xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
         {/* Left Side: Information */}

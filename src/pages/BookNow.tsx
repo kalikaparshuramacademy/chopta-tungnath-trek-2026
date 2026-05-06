@@ -21,7 +21,18 @@ export const BookNow = () => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase
+      // --- DEBUG: Log Supabase config ---
+      console.log('[BookNow] Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('[BookNow] Anon Key present:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+      console.log('[BookNow] Submitting registration payload:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        college: formData.college,
+        batch_date: formData.date,
+      });
+
+      const { data, error } = await supabase
         .from('registrations')
         .insert([
           {
@@ -31,19 +42,32 @@ export const BookNow = () => {
             college: formData.college,
             batch_date: formData.date
           }
-        ]);
+        ])
+        .select();
         
       if (error) {
-        console.error('Error saving registration:', error);
-        alert('There was an error saving your registration. Please try again.');
+        // --- DETAILED ERROR LOGGING ---
+        console.error('[BookNow] ❌ Supabase INSERT failed:');
+        console.error('  code:', error.code);         // e.g. "42501" = RLS violation
+        console.error('  message:', error.message);
+        console.error('  details:', error.details);
+        console.error('  hint:', error.hint);
+        console.error('  Full error object:', JSON.stringify(error, null, 2));
+
+        const userMessage = error.code === '42501'
+          ? 'Permission denied. The database is blocking this submission (RLS policy issue). Check the browser console for details.'
+          : `Submission error [${error.code}]: ${error.message}`;
+        alert(userMessage);
         setIsSubmitting(false);
         return;
       }
-      
+
+      console.log('[BookNow] ✅ Registration saved successfully:', data);
       // Redirect to Razorpay payment link after saving data
       window.location.href = PAYMENT_LINK;
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('[BookNow] ❌ Unexpected JS error during submit:', err);
+      alert('An unexpected error occurred. Please check the browser console.');
       setIsSubmitting(false);
     }
   };
@@ -55,7 +79,7 @@ export const BookNow = () => {
   return (
     <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-6 pb-12">
       {/* Background element */}
-      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-screen" />
+      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-overlay backdrop-blur-[2px]" />
       
       <div className="max-w-6xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Side: Information */}

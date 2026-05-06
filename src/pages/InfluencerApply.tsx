@@ -76,7 +76,7 @@ export const InfluencerApply = () => {
 
   return (
     <div className="min-h-screen bg-himalaya-black text-white selection:bg-pink-400 selection:text-black pt-24 px-6 pb-12 relative">
-      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/hero_bg_1778044589465.png')] bg-cover bg-center mix-blend-screen" />
+      <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-screen" />
       
       <div className="max-w-4xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
         {/* Left Side: Information */}

@@ -29,7 +29,7 @@ export const AmbassadorProgram = () => {
 
   return (
     <section id="ambassador" className="py-32 px-6 relative">
-      <img src="/images/campus_ambassador_1778044724349.png" alt="Campus Ambassadors" className="absolute inset-0 w-full h-full object-cover opacity-10" />
+      <img src="/images/campus_ambassador_1778044724349.webp" alt="Campus Ambassadors" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-10" />
       <div className="absolute inset-0 bg-himalaya-black/90" />
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-24">

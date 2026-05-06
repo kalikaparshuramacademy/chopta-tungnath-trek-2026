@@ -46,6 +46,7 @@ export const DestinationShowcase = () => {
               <img 
                 src={dest.image} 
                 alt={dest.name} 
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-himalaya-black via-himalaya-black/40 to-transparent" />

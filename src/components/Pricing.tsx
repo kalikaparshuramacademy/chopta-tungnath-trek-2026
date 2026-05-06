@@ -6,7 +6,7 @@ import { Check, X, ShieldCheck, Zap } from 'lucide-react';
 export const Pricing = () => {
   return (
     <section id="pricing" className="py-32 px-6 relative overflow-hidden">
-      <img src="/images/pricing_bg_1778044708749.png" alt="Luxury Mountain Camping" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+      <img src="/images/pricing_bg_1778044708749.webp" alt="Luxury Mountain Camping" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-20" />
       <div className="absolute inset-0 bg-himalaya-black/80" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-himalaya-emerald/5 blur-[150px] -z-10" />
       

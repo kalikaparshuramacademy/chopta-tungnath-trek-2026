@@ -56,7 +56,8 @@ export const CreatorProgram = () => {
             <div className="aspect-[4/5] glass-dark rounded-[40px] overflow-hidden border-white/10 relative">
               <img 
                 src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop" 
-                alt="Creator filming"
+                alt="Creator filming in the Himalayas"
+                loading="lazy"
                 className="w-full h-full object-cover opacity-60"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-himalaya-black via-transparent to-transparent" />

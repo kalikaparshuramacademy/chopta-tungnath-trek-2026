@@ -66,7 +66,8 @@ export const JourneyTimeline = () => {
                     <div className="w-full h-full rounded-xl overflow-hidden relative">
                        <img 
                         src={day.image}
-                        alt={`Day ${day.day}`}
+                        alt={`Experience of Day ${day.day}: ${day.title}`}
+                        loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-himalaya-black/40" />
