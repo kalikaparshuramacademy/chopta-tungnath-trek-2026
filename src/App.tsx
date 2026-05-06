@@ -24,6 +24,7 @@ import { motion, useScroll, useSpring } from 'motion/react';
 import { PAYMENT_LINK } from './constants';
 import { Routes, Route, Link } from 'react-router-dom';
 import { BookNow } from './pages/BookNow';
+import { Admin } from './pages/Admin';
 
 const Home = () => {
   const { scrollYProgress } = useScroll();
@@ -137,6 +138,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/book" element={<BookNow />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }

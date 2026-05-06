@@ -4,7 +4,10 @@ import { PAYMENT_LINK } from '../constants';
 import { ArrowLeft, CheckCircle, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { supabase } from '../lib/supabase';
+
 export const BookNow = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,10 +16,36 @@ export const BookNow = () => {
     date: '21st June 2026'
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect to Razorpay payment link after "saving" data
-    window.location.href = PAYMENT_LINK;
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase
+        .from('registrations')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            college: formData.college,
+            batch_date: formData.date
+          }
+        ]);
+        
+      if (error) {
+        console.error('Error saving registration:', error);
+        alert('There was an error saving your registration. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Redirect to Razorpay payment link after saving data
+      window.location.href = PAYMENT_LINK;
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -171,12 +200,15 @@ export const BookNow = () => {
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               type="submit"
-              className="w-full bg-sunrise-gold text-black font-bold text-lg py-4 rounded-xl mt-6 shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-shadow"
+              disabled={isSubmitting}
+              className={`w-full font-bold text-lg py-4 rounded-xl mt-6 shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all ${
+                isSubmitting ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-sunrise-gold text-black hover:shadow-[0_0_30px_rgba(255,215,0,0.5)]'
+              }`}
             >
-              Pay ₹999 & Book Seat
+              {isSubmitting ? 'Securing Seat...' : 'Pay ₹999 & Book Seat'}
             </motion.button>
             <p className="text-center text-xs text-white/30 mt-4">
               You will be redirected to Razorpay securely.
