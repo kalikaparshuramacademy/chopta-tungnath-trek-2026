@@ -21,7 +21,10 @@ export const AmbassadorApply = () => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase
+      console.log('[AmbassadorApply] Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('[AmbassadorApply] Key present:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+
+      const { data, error } = await supabase
         .from('ambassadors')
         .insert([
           {
@@ -31,18 +34,27 @@ export const AmbassadorApply = () => {
             college: formData.college,
             why_join: formData.why_join
           }
-        ]);
+        ])
+        .select();
         
       if (error) {
-        throw error;
+        console.error('[AmbassadorApply] ❌ INSERT failed:');
+        console.error('  code:', error.code);
+        console.error('  message:', error.message);
+        console.error('  details:', error.details);
+        console.error('  hint:', error.hint);
+        console.error('  Full:', JSON.stringify(error, null, 2));
+        alert(`Error [${error.code}]: ${error.message}`);
+        return;
       }
-      
+
+      console.log('[AmbassadorApply] ✅ Saved:', data);
       setIsSuccess(true);
       setTimeout(() => {
         navigate('/');
       }, 3000);
     } catch (err: any) {
-      console.error('Unexpected error:', err);
+      console.error('[AmbassadorApply] ❌ JS error:', err);
       alert('There was an error submitting your application. Please try again.');
     } finally {
       setIsSubmitting(false);
