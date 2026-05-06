@@ -18,7 +18,6 @@ export const Navbar = () => {
 
   const navItems = [
     { name: 'Home', href: '#' },
-    { name: 'Journey', href: '#journey' },
     { name: 'Destinations', href: '#destinations' },
     { name: 'Itinerary', href: '#itinerary' },
     { name: 'Pricing', href: '#pricing' },

@@ -3,7 +3,7 @@ import { ITINERARY } from '../constants';
 
 export const JourneyTimeline = () => {
   return (
-    <section id="journey" className="py-32 px-6 bg-himalaya-black relative overflow-hidden">
+    <section id="itinerary" className="py-32 px-6 bg-himalaya-black relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-himalaya-emerald/10 blur-[120px] rounded-full" />
       
       <div className="max-w-7xl mx-auto">
