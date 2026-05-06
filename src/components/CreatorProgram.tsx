@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Camera, Instagram, Video, Sparkles, Award, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const CreatorProgram = () => {
   const benefits = [
@@ -70,9 +71,9 @@ export const CreatorProgram = () => {
                   </div>
                 </div>
                 <h4 className="text-2xl font-bold mb-4">Join our 2026 Batch Creator Squad</h4>
-                <button className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-sunrise-gold transition-colors flex items-center justify-center gap-2">
+                <Link to="/influencer-apply" className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-sunrise-gold transition-colors flex items-center justify-center gap-2">
                   Apply as Creator <Instagram className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
             </div>
             

@@ -16,7 +16,6 @@ import { Pricing } from './components/Pricing';
 import { TrustStack } from './components/TrustStack';
 import { CreatorProgram } from './components/CreatorProgram';
 import { AmbassadorProgram } from './components/AmbassadorProgram';
-import { AmbassadorForm } from './components/AmbassadorForm';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
@@ -87,7 +86,6 @@ const Home = () => {
         <DestinationShowcase />
         <Pricing />
         <AmbassadorProgram />
-        <AmbassadorForm />
         <CreatorProgram />
         <TrustStack />
         <FAQ />
