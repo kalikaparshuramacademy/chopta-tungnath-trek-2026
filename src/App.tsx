@@ -25,6 +25,8 @@ import { PAYMENT_LINK } from './constants';
 import { Routes, Route, Link } from 'react-router-dom';
 import { BookNow } from './pages/BookNow';
 import { Admin } from './pages/Admin';
+import { AmbassadorApply } from './pages/AmbassadorApply';
+import { InfluencerApply } from './pages/InfluencerApply';
 
 const Home = () => {
   const { scrollYProgress } = useScroll();
@@ -139,6 +141,8 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/book" element={<BookNow />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/ambassador-apply" element={<AmbassadorApply />} />
+      <Route path="/influencer-apply" element={<InfluencerApply />} />
     </Routes>
   );
 }

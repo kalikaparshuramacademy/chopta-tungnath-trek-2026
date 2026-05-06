@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Trophy, Target, Share2, Rocket, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const AmbassadorProgram = () => {
   const rewards = [
@@ -94,7 +95,7 @@ export const AmbassadorProgram = () => {
         </div>
 
         {/* Perks List */}
-        <div className="glass-dark p-12 rounded-[40px] border-white/5">
+        <div className="glass-dark p-12 rounded-[40px] border-white/5 mb-16">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               "Official Certificate",
@@ -112,6 +113,29 @@ export const AmbassadorProgram = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link 
+              to="/ambassador-apply" 
+              className="inline-flex items-center gap-3 bg-sunrise-gold text-black px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:shadow-[0_0_30px_rgba(255,215,0,0.5)] transition-all"
+            >
+              Apply as Ambassador
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link 
+              to="/influencer-apply" 
+              className="inline-flex items-center gap-3 bg-pink-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(244,114,182,0.3)] hover:shadow-[0_0_30px_rgba(244,114,182,0.5)] transition-all"
+            >
+              Apply as Influencer
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>
