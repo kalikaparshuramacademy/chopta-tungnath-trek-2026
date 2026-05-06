@@ -118,9 +118,14 @@ const Home = () => {
                   <span className="text-xl font-bold leading-none">Book Now at ₹999</span>
                 </div>
               </Link>
-              <button className="glass px-12 py-5 rounded-full font-bold text-xl hover:bg-white/10 transition-colors">
+              <a 
+                href="https://wa.me/919266910290?text=Hi!%20I%20want%20to%20know%20more%20about%20the%20Chopta%20Tungnath%20Trek%202026." 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="glass px-12 py-5 rounded-full font-bold text-xl hover:bg-white/10 transition-colors inline-flex items-center justify-center"
+              >
                 Connect on WhatsApp
-              </button>
+              </a>
             </div>
             <p className="mt-8 text-xs font-bold tracking-widest text-white/30 uppercase">60 Seats • 39 Days to Departure • Locked</p>
           </div>
