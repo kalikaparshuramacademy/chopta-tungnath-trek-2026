@@ -1,34 +1,34 @@
 import { motion } from 'motion/react';
 import { ITINERARY } from '../constants';
 
+// Standard smooth easing for a premium feel
+const SMOOTH_EASE = [0.23, 1, 0.32, 1];
+
 export const JourneyTimeline = () => {
   return (
     <section id="itinerary" className="py-32 px-6 bg-himalaya-black relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-himalaya-emerald/10 blur-[120px] rounded-full" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-himalaya-emerald/10 blur-[120px] rounded-full pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-24">
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
-          >
-            The Path of Enlightenment
-          </motion.p>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-5xl md:text-7xl font-bold tracking-tighter"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: SMOOTH_EASE }}
           >
-            Interactive Journey
-          </motion.h2>
+            <p className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              The Path of Enlightenment
+            </p>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-glow">
+              Interactive Journey
+            </h2>
+          </motion.div>
         </div>
 
         <div className="relative">
           {/* Timeline Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-sunrise-gold/0 via-sunrise-gold/40 to-sunrise-gold/0 hidden md:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-sunrise-gold/0 via-sunrise-gold/30 to-sunrise-gold/0 hidden md:block" />
 
           <div className="space-y-32">
             {ITINERARY.map((day, idx) => (
@@ -36,45 +36,44 @@ export const JourneyTimeline = () => {
                 key={day.day}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className={`relative flex flex-col md:flex-row items-center gap-8 ${
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1.2, ease: SMOOTH_EASE, delay: idx * 0.1 }}
+                className={`relative flex flex-col md:flex-row items-center gap-12 ${
                   idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                 }`}
               >
                 {/* Marker */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-sunrise-gold bg-himalaya-black z-10 hidden md:block" />
+                <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-sunrise-gold bg-himalaya-black z-10 hidden md:block ring-8 ring-himalaya-black" />
 
                 <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left">
-                  <div className="glass px-6 py-2 rounded-full mb-6">
+                  <div className="glass px-6 py-2 rounded-full mb-6 inline-block">
                     <span className="text-2xl font-display font-bold text-sunrise-gold">DAY 0{day.day}</span>
                   </div>
-                  <h3 className="text-3xl font-bold mb-4 tracking-tight">{day.title}</h3>
-                  <p className="text-white/60 mb-8 max-w-md">{day.description}</p>
+                  <h3 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">{day.title}</h3>
+                  <p className="text-white/60 text-lg leading-relaxed max-w-lg mb-8">
+                    {day.description}
+                  </p>
                   
-                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                    {day.highlights.map(h => (
-                      <span key={h} className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 border border-white/10 rounded-full bg-white/5">
+                  <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                    {day.highlights.map((h, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs font-bold text-white/40 uppercase tracking-widest border border-white/5 px-4 py-2 rounded-full bg-white/[0.02]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sunrise-gold/40" />
                         {h}
-                      </span>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="w-full md:w-1/2">
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="aspect-video glass-dark p-2 rounded-2xl overflow-hidden group"
-                  >
-                    <div className="w-full h-full rounded-xl overflow-hidden relative">
-                       <img 
-                        src={day.image}
-                        alt={`Experience of Day ${day.day}: ${day.title}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-himalaya-black/40" />
-                    </div>
-                  </motion.div>
+                <div className="w-full md:w-1/2 relative group">
+                  <div className="absolute -inset-2 bg-gradient-to-tr from-sunrise-gold/20 to-transparent rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-700" />
+                  <div className="relative aspect-[16/10] rounded-[2.5rem] overflow-hidden glass-dark border-white/5">
+                    <img 
+                      src={day.image} 
+                      alt={day.title}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
                 </div>
               </motion.div>
             ))}

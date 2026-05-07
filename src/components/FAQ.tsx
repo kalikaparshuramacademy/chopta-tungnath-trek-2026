@@ -3,63 +3,63 @@ import { useState } from 'react';
 import { FAQS } from '../constants';
 import { ChevronDown } from 'lucide-react';
 
+// Standard smooth easing for a premium feel
+const SMOOTH_EASE = [0.23, 1, 0.32, 1];
+
 export const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-32 px-6 bg-himalaya-black relative">
-      <div className="max-w-3xl mx-auto">
+    <section id="faq" className="py-32 px-6 bg-himalaya-black relative overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-sunrise-gold/5 blur-[120px] rounded-full pointer-events-none" />
+      
+      <div className="max-w-3xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
-          >
-            Clear Your Mind
-          </motion.p>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-5xl font-bold tracking-tighter"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: SMOOTH_EASE }}
           >
-            Common Queries
-          </motion.h2>
+            <p className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              Clear Your Mind
+            </p>
+            <h2 className="text-5xl font-bold tracking-tighter text-glow">
+              Common Queries
+            </h2>
+          </motion.div>
         </div>
 
         <div className="space-y-4">
           {FAQS.map((faq, idx) => (
-            <motion.div 
+            <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ delay: idx * 0.05 }}
-              className="group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: idx * 0.1 }}
+              className="glass-dark rounded-3xl overflow-hidden border-white/5"
             >
-              <button 
+              <button
                 onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
-                className={`w-full p-8 text-left glass-dark rounded-[32px] transition-all duration-300 border border-white/5 flex items-center justify-between ${
-                  activeIndex === idx ? 'ring-1 ring-sunrise-gold/30 ring-inset' : 'hover:bg-white/5'
-                }`}
+                className="w-full px-8 py-6 text-left flex items-center justify-between group"
               >
-                <span className={`font-bold transition-colors ${activeIndex === idx ? 'text-sunrise-gold' : 'text-white/80'}`}>
-                  {faq.question}
-                </span>
-                <ChevronDown className={`w-5 h-5 transition-transform duration-500 ${activeIndex === idx ? 'rotate-180 text-sunrise-gold' : 'text-white/40'}`} />
+                <span className="text-lg font-bold tracking-tight group-hover:text-sunrise-gold transition-colors">{faq.question}</span>
+                <ChevronDown 
+                  className={`w-5 h-5 text-sunrise-gold transition-transform duration-500 ${
+                    activeIndex === idx ? 'rotate-180' : ''
+                  }`} 
+                />
               </button>
-              
               <AnimatePresence>
                 {activeIndex === idx && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    className="overflow-hidden"
+                    transition={{ duration: 0.5, ease: SMOOTH_EASE }}
                   >
-                    <div className="p-8 pt-2 text-white/50 text-sm leading-relaxed">
+                    <div className="px-8 pb-8 text-white/50 leading-relaxed font-medium">
                       {faq.answer}
                     </div>
                   </motion.div>

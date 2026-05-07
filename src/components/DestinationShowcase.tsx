@@ -2,34 +2,34 @@ import { motion } from 'motion/react';
 import { DESTINATIONS } from '../constants';
 import { Wind, Thermometer, ArrowUpRight } from 'lucide-react';
 
+// Standard smooth easing for a premium feel
+const SMOOTH_EASE = [0.23, 1, 0.32, 1];
+
 export const DestinationShowcase = () => {
   return (
     <section id="destinations" className="py-32 px-6 bg-himalaya-black relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-end justify-between mb-20 gap-8">
-          <div className="max-w-2xl">
-            <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
-            >
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: SMOOTH_EASE }}
+            className="max-w-2xl"
+          >
+            <p className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">
               The Landscape of Grace
-            </motion.p>
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              className="text-5xl md:text-7xl font-bold tracking-tighter"
-            >
+            </p>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-glow">
               Himalayan Anchors
-            </motion.h2>
-          </div>
+            </h2>
+          </motion.div>
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-white/40 text-sm max-w-sm mb-2"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-white/40 text-sm max-w-sm mb-2 font-medium"
           >
             Explore the sacred points that define our expedition. From river confluences to the highest summit.
           </motion.p>
@@ -39,55 +39,45 @@ export const DestinationShowcase = () => {
           {DESTINATIONS.map((dest, idx) => (
             <motion.div 
               key={dest.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: idx * 0.1 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: SMOOTH_EASE, delay: idx * 0.15 }}
               viewport={{ once: true }}
+              whileHover={{ y: -10 }}
               className="group relative h-[500px] rounded-3xl overflow-hidden glass-dark border-white/5"
             >
               {/* Image with zoom on hover */}
               <img 
                 src={dest.image} 
                 alt={dest.name} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-himalaya-black via-himalaya-black/40 to-transparent" />
-
-              {/* Status Badges */}
-              <div className="absolute top-6 left-6 right-6 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="glass px-3 py-1 rounded-full flex items-center gap-2">
-                  <ArrowUpRight className="w-3 h-3 text-sunrise-gold" />
-                  <span className="text-[10px] font-bold uppercase">{dest.altitude}</span>
+              
+              {/* Overlay with subtle gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-himalaya-black via-himalaya-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+              
+              {/* Content within the card */}
+              <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full glass-dark text-[10px] font-bold text-white/90">
+                    <Wind className="w-3 h-3 text-sunrise-gold" />
+                    {dest.elevation}
+                  </div>
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full glass-dark text-[10px] font-bold text-white/90">
+                    <Thermometer className="w-3 h-3 text-sunrise-gold" />
+                    {dest.temp}
+                  </div>
                 </div>
-                <div className="glass px-3 py-1 rounded-full flex items-center gap-2">
-                  <Wind className="w-3 h-3 text-sunrise-gold" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Pristine</span>
-                </div>
-              </div>
 
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                <p className="text-sunrise-gold text-[10px] font-bold uppercase tracking-widest mb-2">
-                  {dest.significance}
+                <h3 className="text-3xl font-bold text-white mb-2 tracking-tight transition-transform duration-500 group-hover:translate-x-1">{dest.name}</h3>
+                <p className="text-white/60 text-sm leading-relaxed mb-6 line-clamp-2 transition-opacity duration-500 group-hover:opacity-100">
+                  {dest.description}
                 </p>
-                <h3 className="text-3xl font-bold mb-4 tracking-tight group-hover:text-glow-gold transition-all">
-                  {dest.name}
-                </h3>
-                <div className="h-0 group-hover:h-12 overflow-hidden transition-all duration-300">
-                  <p className="text-xs text-white/60 leading-relaxed">
-                    {dest.facts}
-                  </p>
-                </div>
-                
-                <div className="mt-6 flex items-center gap-6 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <div className="flex items-center gap-2">
-                    <Thermometer className="w-4 h-4 text-sunrise-gold/60" />
-                    <span className="text-[10px] text-white/60 uppercase">12°C - 20°C</span>
-                   </div>
-                   <button className="ml-auto text-xs font-bold uppercase tracking-widest text-sunrise-gold hover:underline">
-                    Explore
-                   </button>
+
+                <div className="flex items-center gap-2 text-sunrise-gold text-xs font-black uppercase tracking-widest cursor-pointer group/link">
+                  View Details
+                  <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
                 </div>
               </div>
             </motion.div>

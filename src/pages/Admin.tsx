@@ -27,6 +27,8 @@ interface Registration {
   is_campus_ambassador: boolean;
   offer_preference: string;
   declaration_accepted: boolean;
+  payment_id: string;
+  payment_status: string;
   created_at: string;
 }
 
@@ -378,12 +380,14 @@ export const Admin = () => {
                     <th className="px-5 py-4 font-medium">M / F</th>
                     <th className="px-5 py-4 font-medium">Discount</th>
                     <th className="px-5 py-4 font-medium">Offer</th>
+                    <th className="px-5 py-4 font-medium">Payment ID</th>
+                    <th className="px-5 py-4 font-medium">Status</th>
                     <th className="px-5 py-4 font-medium text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && registrations.length === 0 ? (
-                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={13} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredRegistrations.length === 0 ? (
                     <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
                   ) : filteredRegistrations.map((reg) => (

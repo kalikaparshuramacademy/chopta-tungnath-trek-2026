@@ -3,44 +3,43 @@ import { motion } from 'motion/react';
 import { PRICING_PLANS, INCLUSIONS, EXCLUSIONS } from '../constants';
 import { Check, X, ShieldCheck, Zap } from 'lucide-react';
 
+// Standard smooth easing for a premium feel
+const SMOOTH_EASE = [0.23, 1, 0.32, 1];
+
 export const Pricing = () => {
   return (
-    <section id="pricing" className="py-32 px-6 relative overflow-hidden">
-      <img src="/images/pricing_bg_1778044708749.webp" alt="Luxury Mountain Camping" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-20" />
-      <div className="absolute inset-0 bg-himalaya-black/80" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-himalaya-emerald/5 blur-[150px] -z-10" />
+    <section id="pricing" className="py-32 px-6 relative overflow-hidden bg-himalaya-black">
+      <img src="/images/pricing_bg_1778044708749.webp" alt="Luxury Mountain Camping" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-himalaya-black via-himalaya-black/90 to-himalaya-black" />
       
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-24">
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
-          >
-            Invest in Memories
-          </motion.p>
-          <motion.h2 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            className="text-5xl md:text-7xl font-bold tracking-tighter"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: SMOOTH_EASE }}
           >
-            Expedition Plans
-          </motion.h2>
-          <p className="mt-6 text-white/40 max-w-xl mx-auto">
-            Transparent pricing designed for students. Slotting right between budget and premium floors.
-          </p>
+            <p className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">
+              Invest in Memories
+            </p>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-glow">
+              Expedition Plans
+            </h2>
+            <p className="mt-6 text-white/40 max-w-xl mx-auto font-medium">
+              Transparent pricing designed for students. Slotting right between budget and premium floors.
+            </p>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
           {PRICING_PLANS.map((plan, idx) => (
             <motion.div
               key={plan.type}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              transition={{ duration: 1, ease: SMOOTH_EASE, delay: idx * 0.15 }}
               className={`relative glass-dark p-10 rounded-[40px] flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 group ${
                 plan.recommended ? 'border-sunrise-gold/30 ring-1 ring-sunrise-gold/20' : 'border-white/5'
               }`}

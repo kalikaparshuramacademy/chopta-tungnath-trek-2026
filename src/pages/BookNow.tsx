@@ -1,13 +1,20 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PAYMENT_LINK } from '../constants';
-import { ArrowLeft, CheckCircle, Shield, Users, User, ChevronDown, AlertTriangle, Info } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Shield, Users, User, AlertTriangle, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+
+// ── Razorpay Type Definition ──────────────────────────────────────────────────
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 // ── Pricing constants ────────────────────────────────────────────────────────
 const BASE_PRICE = 5499;
 const TOKEN_AMOUNT = 999;
+const TRIP_NAME = 'Chopta Tungnath Trek 2026';
 
 const GROUP_DISCOUNTS: Record<number, number> = {
   3: 200,
@@ -104,7 +111,17 @@ export const BookNow = () => {
     setIsSubmitting(true);
 
     try {
-      const payload = {
+      // ── Step 0: Check Razorpay Key ──────────────────────────────────────
+      const rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      if (!rzpKey) {
+        console.error('[BookNow] ❌ VITE_RAZORPAY_KEY_ID is missing in environment variables');
+        alert('Payment system configuration error. Please contact support.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ── Step 1: Create a PENDING registration ───────────────────────────
+      const initialPayload = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -121,25 +138,95 @@ export const BookNow = () => {
         is_campus_ambassador: formData.isCampusAmbassador,
         offer_preference: formData.offerPreference || 'none',
         declaration_accepted: formData.declarationAccepted,
+        payment_status: 'pending', // Initially pending
       };
 
-      const { data, error } = await supabase
+      console.log('[BookNow] 🚀 Creating pending registration...');
+      const { data: regData, error: regError } = await supabase
         .from('registrations')
-        .insert([payload])
-        .select();
+        .insert([initialPayload])
+        .select()
+        .single();
 
-      if (error) {
-        console.error('[BookNow] ❌ INSERT failed:', error.code, error.message);
-        alert(`Submission error [${error.code}]: ${error.message}`);
+      if (regError) {
+        console.error('[BookNow] ❌ Supabase Insert Error:', regError);
+        throw new Error(`Database Error: ${regError.message || 'Unknown error'}`);
+      }
+      
+      const registrationId = regData.id;
+      console.log('[BookNow] ✅ Registration created:', registrationId);
+
+      // ── Step 2: Trigger Razorpay ────────────────────────────────────────
+      const totalAmount = TOKEN_AMOUNT * effectiveGroupSize;
+
+      const options = {
+        key: rzpKey,
+        amount: totalAmount * 100, // amount in paisa
+        currency: 'INR',
+        name: 'Peak & River Travels',
+        description: `${TRIP_NAME} - ${registrationType === 'individual' ? 'Individual' : 'Group'} Booking`,
+        image: 'https://choptatungnathtrek.vercel.app/images/peak_river_travels_logo_circular_1778134539480.png',
+        handler: async function (response: any) {
+          console.log('[BookNow] 💳 Razorpay Payment Success:', response.razorpay_payment_id);
+          try {
+            // Update the pending record to 'paid'
+            const { error: updateError } = await supabase
+              .from('registrations')
+              .update({
+                payment_id: response.razorpay_payment_id,
+                payment_status: 'paid',
+              })
+              .eq('id', registrationId);
+
+            if (updateError) throw updateError;
+
+            console.log('[BookNow] 🎉 Payment status updated in database');
+            alert('Booking Successful! We will contact you shortly with trip details.');
+            window.location.href = '/';
+          } catch (err: any) {
+            console.error('[BookNow] ❌ Post-payment update failed:', err);
+            alert('Payment was successful, but we failed to update your record. PLEASE SCREENSHOT YOUR PAYMENT ID and contact us!');
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        notes: {
+          registration_id: registrationId, // CRITICAL: Used by Webhook
+          trip: TRIP_NAME,
+          batch: formData.date,
+        },
+        theme: {
+          color: '#FFD700',
+        },
+        modal: {
+          ondismiss: function () {
+            console.log('[BookNow] ℹ️ Razorpay modal dismissed');
+            setIsSubmitting(false);
+          }
+        }
+      };
+
+      if (!window.Razorpay) {
+        console.error('[BookNow] ❌ Razorpay SDK not found on window object');
+        alert('Razorpay SDK not loaded. Please check your internet connection.');
         setIsSubmitting(false);
         return;
       }
-
-      console.log('[BookNow] ✅ Registration saved:', data);
-      window.location.href = PAYMENT_LINK;
-    } catch (err) {
-      console.error('[BookNow] ❌ Unexpected error:', err);
-      alert('An unexpected error occurred. Please try again.');
+      
+      console.log('[BookNow] 💳 Opening Razorpay Modal...');
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response: any) {
+        console.error('[BookNow] ❌ Razorpay Payment Failed:', response.error);
+        alert(`Payment failed: ${response.error.description}`);
+      });
+      rzp.open();
+    } catch (err: any) {
+      console.error('[BookNow] ❌ Booking process failed:', err);
+      alert(err.message || 'Failed to initiate booking. Please try again.');
       setIsSubmitting(false);
     }
   };
