@@ -16,7 +16,7 @@ export const GoldenBackground = () => {
   const glowCount = isMobile ? 3 : 6;
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <div className="fixed inset-0 z-[15] pointer-events-none overflow-hidden mix-blend-screen">
       {/* ── FLOATING GLOW BLOBS ─────────────────────────────────────────── */}
       {[...Array(glowCount)].map((_, i) => (
         <motion.div
@@ -38,14 +38,14 @@ export const GoldenBackground = () => {
               Math.random() * 100 + '%',
               Math.random() * 100 + '%',
             ],
-            opacity: [0.03, 0.08, 0.03],
+            opacity: [0.05, 0.12, 0.05],
           }}
           transition={{
             duration: Math.random() * 20 + 20,
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute w-[40vw] h-[40vw] bg-sunrise-gold rounded-full blur-[120px]"
+          className="absolute w-[60vw] h-[60vw] bg-sunrise-gold/20 rounded-full blur-[150px]"
         />
       ))}
 
@@ -61,9 +61,8 @@ export const GoldenBackground = () => {
           }}
           animate={{
             y: ['-10%', '110%'],
-            x: (Math.random() * 100) + '%',
-            opacity: [0, 0.4, 0],
-            scale: [0.5, 1.2, 0.5],
+            opacity: [0, 0.6, 0],
+            scale: [0.5, 1.5, 0.5],
           }}
           transition={{
             duration: Math.random() * 15 + 15,
@@ -71,7 +70,7 @@ export const GoldenBackground = () => {
             ease: "linear",
             delay: Math.random() * 10,
           }}
-          className="absolute w-1 h-1 bg-sunrise-gold rounded-full shadow-[0_0_10px_rgba(255,183,0,0.8)]"
+          className="absolute w-1 h-1 bg-sunrise-gold rounded-full shadow-[0_0_10px_rgba(255,183,0,1)]"
           style={{
             left: (Math.random() * 100) + '%',
           }}
@@ -79,7 +78,7 @@ export const GoldenBackground = () => {
       ))}
 
       {/* ── SUBTLE RADIAL VIGNETTE ──────────────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-himalaya-black/40" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(10,10,10,0.4)_100%)]" />
     </div>
   );
 };
