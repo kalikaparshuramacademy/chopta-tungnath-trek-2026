@@ -13,9 +13,9 @@ export default defineConfig(({mode}) => {
       VitePWA({
         registerType: 'autoUpdate',
         manifest: {
-          name: 'Chopta Tungnath Trek 2026',
-          short_name: 'Chopta Trek',
-          description: 'Walk Through Clouds. Climb Beyond Fear. Experience Tungnath.',
+          name: 'Peak & River Travels — Chopta 2026',
+          short_name: 'P&R Travels',
+          description: 'Official Booking Platform for Peak & River Travels. Walk Through Clouds. Climb Beyond Fear. Experience Tungnath.',
           theme_color: '#0A0A0A',
           background_color: '#0A0A0A',
           display: 'standalone',
