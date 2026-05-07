@@ -29,6 +29,9 @@ const Admin = lazy(() => import('./pages/Admin').then(module => ({ default: modu
 const AmbassadorApply = lazy(() => import('./pages/AmbassadorApply').then(module => ({ default: module.AmbassadorApply })));
 const InfluencerApply = lazy(() => import('./pages/InfluencerApply').then(module => ({ default: module.InfluencerApply })));
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy').then(module => ({ default: module.RefundPolicy })));
+const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
+const Terms = lazy(() => import('./pages/Terms').then(module => ({ default: module.Terms })));
+const Privacy = lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
 
 const Loading = () => (
   <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
@@ -159,6 +162,9 @@ export default function App() {
         <Route path="/ambassador-apply" element={<AmbassadorApply />} />
         <Route path="/influencer-apply" element={<InfluencerApply />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

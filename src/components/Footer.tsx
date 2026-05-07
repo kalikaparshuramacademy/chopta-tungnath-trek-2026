@@ -57,6 +57,18 @@ export const Footer = () => {
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
+              <li>
+                <Link to="/terms" className="text-sm text-white/60 hover:text-sunrise-gold transition-colors flex items-center gap-2 group">
+                  Terms & Conditions
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" className="text-sm text-white/60 hover:text-sunrise-gold transition-colors flex items-center gap-2 group">
+                  Privacy Policy
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              </li>
             </ul>
           </div>
 

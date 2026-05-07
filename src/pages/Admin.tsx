@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import {
   Users, Mail, Phone, ArrowLeft, RefreshCw,
-  Instagram, GraduationCap, Trash2, Download, Lock, Eye, EyeOff, LogOut, Clock
+  Instagram, GraduationCap, Trash2, Download, Lock, Eye, EyeOff, LogOut, Clock,
+  Search, Copy, Check
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -145,6 +146,8 @@ export const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -215,6 +218,33 @@ export const Admin = () => {
     if (activeTab === 'ambassadors') setAmbassadors([]);
   };
 
+  const handleCopyEmails = () => {
+    const data = activeTab === 'registrations' ? registrations : activeTab === 'influencers' ? influencers : ambassadors;
+    const emails = data.map(item => item.email).filter(Boolean).join(', ');
+    if (!emails) { alert('No emails to copy.'); return; }
+    navigator.clipboard.writeText(emails);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+
+  const filteredRegistrations = !searchQuery ? registrations : registrations.filter(r => 
+    r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    r.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    r.phone.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredInfluencers = !searchQuery ? influencers : influencers.filter(i => 
+    i.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    i.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    i.phone.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredAmbassadors = !searchQuery ? ambassadors : ambassadors.filter(a => 
+    a.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    a.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    a.phone.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (!isUnlocked) return <PasswordGate onUnlock={() => setIsUnlocked(true)} />;
 
   const tabs = [
@@ -240,6 +270,13 @@ export const Admin = () => {
           </div>
 
           <div className="flex flex-wrap gap-3">
+            <button onClick={handleCopyEmails}
+              className={`flex items-center gap-2 border px-5 py-2.5 rounded-full transition-all font-bold text-sm ${
+                copySuccess ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
+              }`}>
+              {copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copySuccess ? 'Copied Emails!' : 'Copy Email List'}
+            </button>
             <button onClick={handleExport}
               className="flex items-center gap-2 bg-green-500/10 text-green-400 border border-green-500/20 px-5 py-2.5 rounded-full hover:bg-green-500/20 transition-colors font-bold text-sm">
               <Download className="w-4 h-4" />
@@ -288,18 +325,31 @@ export const Admin = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          {tabs.map(({ key, label, icon: Icon, count }) => (
-            <button key={key} onClick={() => setActiveTab(key)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-colors ${
-                activeTab === key ? 'bg-sunrise-gold text-black' : 'glass text-white/70 hover:text-white hover:bg-white/10'
-              }`}>
-              <Icon className="w-4 h-4" />
-              {label}
-              <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${activeTab === key ? 'bg-black/20' : 'bg-white/10'}`}>{count}</span>
-            </button>
-          ))}
+        {/* Tabs & Search */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+          <div className="flex flex-wrap gap-3">
+            {tabs.map(({ key, label, icon: Icon, count }) => (
+              <button key={key} onClick={() => setActiveTab(key)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-colors ${
+                  activeTab === key ? 'bg-sunrise-gold text-black' : 'glass text-white/70 hover:text-white hover:bg-white/10'
+                }`}>
+                <Icon className="w-4 h-4" />
+                {label}
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${activeTab === key ? 'bg-black/20' : 'bg-white/10'}`}>{count}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full lg:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-sunrise-gold transition-colors" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search by name, email or phone..."
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all placeholder:text-white/20"
+            />
+          </div>
         </div>
 
         {error && (
@@ -334,9 +384,9 @@ export const Admin = () => {
                 <tbody className="divide-y divide-white/5">
                   {loading && registrations.length === 0 ? (
                     <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
-                  ) : registrations.length === 0 ? (
-                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">No trip registrations yet.</td></tr>
-                  ) : registrations.map((reg) => (
+                  ) : filteredRegistrations.length === 0 ? (
+                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
+                  ) : filteredRegistrations.map((reg) => (
                     <tr key={reg.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(reg.created_at)}</span>
@@ -418,9 +468,9 @@ export const Admin = () => {
                 <tbody className="divide-y divide-white/5">
                   {loading && influencers.length === 0 ? (
                     <tr><td colSpan={7} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
-                  ) : influencers.length === 0 ? (
-                    <tr><td colSpan={7} className="px-5 py-12 text-center text-white/50">No influencer applications yet.</td></tr>
-                  ) : influencers.map((inf) => (
+                  ) : filteredInfluencers.length === 0 ? (
+                    <tr><td colSpan={7} className="px-5 py-12 text-center text-white/50">No influencers match your search.</td></tr>
+                  ) : filteredInfluencers.map((inf) => (
                     <tr key={inf.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(inf.created_at)}</span>
@@ -479,9 +529,9 @@ export const Admin = () => {
                 <tbody className="divide-y divide-white/5">
                   {loading && ambassadors.length === 0 ? (
                     <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
-                  ) : ambassadors.length === 0 ? (
-                    <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">No ambassador applications yet.</td></tr>
-                  ) : ambassadors.map((amb) => (
+                  ) : filteredAmbassadors.length === 0 ? (
+                    <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">No ambassadors match your search.</td></tr>
+                  ) : filteredAmbassadors.map((amb) => (
                     <tr key={amb.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(amb.created_at)}</span>
