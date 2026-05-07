@@ -1,242 +1,476 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { PAYMENT_LINK } from '../constants';
-import { ArrowLeft, CheckCircle, Shield } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Shield, Users, User, ChevronDown, AlertTriangle, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 import { supabase } from '../lib/supabase';
+
+// ── Pricing constants ────────────────────────────────────────────────────────
+const BASE_PRICE = 5499;
+const TOKEN_AMOUNT = 999;
+
+const GROUP_DISCOUNTS: Record<number, number> = {
+  3: 200,
+  4: 300,
+  6: 400,
+  8: 500,
+};
+
+function getGroupDiscount(size: number): number {
+  if (size >= 8) return GROUP_DISCOUNTS[8];
+  if (size >= 6) return GROUP_DISCOUNTS[6];
+  if (size >= 4) return GROUP_DISCOUNTS[4];
+  if (size >= 3) return GROUP_DISCOUNTS[3];
+  return 0;
+}
+
+// ── Input style ───────────────────────────────────────────────────────────────
+const INPUT = 'w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20';
+const LABEL = 'text-xs font-bold tracking-widest text-white/50 uppercase';
 
 export const BookNow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registrationType, setRegistrationType] = useState<'individual' | 'group'>('individual');
+
   const [formData, setFormData] = useState({
+    // Lead contact
     name: '',
     email: '',
     phone: '',
-    college: '',
-    date: '21st June 2026'
+    occupation: '',
+    organisation: '',        // college / company / institute
+    date: '21st June 2026',
+
+    // Group-specific
+    groupSize: 1,
+    memberNames: '',         // comma-separated full names
+    maleCount: 0,
+    femaleCount: 0,
+
+    // Offer
+    isCampusAmbassador: false,
+    offerPreference: '',     // 'group_discount' | 'free_trip' | ''
+
+    // Declaration
+    declarationAccepted: false,
   });
+
+  // ── Computed discount ────────────────────────────────────────────────────
+  const effectiveGroupSize = registrationType === 'group' ? formData.groupSize : 1;
+  const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
+
+  // If ambassador prefers group discount, they get that; if free_trip, discount = 0 on price display
+  const appliedDiscount = formData.isCampusAmbassador && formData.offerPreference === 'free_trip'
+    ? 0
+    : groupDiscountPerPerson;
+
+  const effectivePrice = Math.max(0, BASE_PRICE - appliedDiscount);
+  const totalGroupSaving = appliedDiscount * effectiveGroupSize;
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate declaration
+    if (!formData.declarationAccepted) {
+      alert('Please accept the declaration to proceed.');
+      return;
+    }
+
+    // Validate gender count for groups
+    if (registrationType === 'group') {
+      const totalGenderCount = formData.maleCount + formData.femaleCount;
+      if (totalGenderCount !== effectiveGroupSize) {
+        alert(`Male + Female count must equal group size (${effectiveGroupSize}). Currently: ${totalGenderCount}`);
+        return;
+      }
+    }
+
+    // Ambassador must choose one offer
+    if (formData.isCampusAmbassador && !formData.offerPreference) {
+      alert('Please select which offer you want to avail as a Campus Ambassador.');
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     try {
-      // --- DEBUG: Log Supabase config ---
-      console.log('[BookNow] Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-      console.log('[BookNow] Anon Key present:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
-      console.log('[BookNow] Submitting registration payload:', {
+      const payload = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        college: formData.college,
+        occupation: formData.occupation,
+        college: formData.organisation,
         batch_date: formData.date,
-      });
+        registration_type: registrationType,
+        group_size: effectiveGroupSize,
+        member_names: registrationType === 'group' ? formData.memberNames : formData.name,
+        male_count: formData.maleCount || (registrationType === 'individual' ? 1 : 0),
+        female_count: formData.femaleCount,
+        discount_per_person: appliedDiscount,
+        total_discount: totalGroupSaving,
+        is_campus_ambassador: formData.isCampusAmbassador,
+        offer_preference: formData.offerPreference || 'none',
+        declaration_accepted: formData.declarationAccepted,
+      };
 
       const { data, error } = await supabase
         .from('registrations')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            college: formData.college,
-            batch_date: formData.date
-          }
-        ])
+        .insert([payload])
         .select();
-        
-      if (error) {
-        // --- DETAILED ERROR LOGGING ---
-        console.error('[BookNow] ❌ Supabase INSERT failed:');
-        console.error('  code:', error.code);         // e.g. "42501" = RLS violation
-        console.error('  message:', error.message);
-        console.error('  details:', error.details);
-        console.error('  hint:', error.hint);
-        console.error('  Full error object:', JSON.stringify(error, null, 2));
 
-        const userMessage = error.code === '42501'
-          ? 'Permission denied. The database is blocking this submission (RLS policy issue). Check the browser console for details.'
-          : `Submission error [${error.code}]: ${error.message}`;
-        alert(userMessage);
+      if (error) {
+        console.error('[BookNow] ❌ INSERT failed:', error.code, error.message);
+        alert(`Submission error [${error.code}]: ${error.message}`);
         setIsSubmitting(false);
         return;
       }
 
-      console.log('[BookNow] ✅ Registration saved successfully:', data);
-      // Redirect to Razorpay payment link after saving data
+      console.log('[BookNow] ✅ Registration saved:', data);
       window.location.href = PAYMENT_LINK;
     } catch (err) {
-      console.error('[BookNow] ❌ Unexpected JS error during submit:', err);
-      alert('An unexpected error occurred. Please check the browser console.');
+      console.error('[BookNow] ❌ Unexpected error:', err);
+      alert('An unexpected error occurred. Please try again.');
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   return (
-    <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-6 pb-12">
-      {/* Background element */}
-      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-overlay backdrop-blur-[2px]" />
-      
-      <div className="max-w-6xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Left Side: Information */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+    <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-4 pb-16">
+      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-overlay" />
+
+      <div className="max-w-6xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+        {/* ── LEFT: Pricing Summary ─────────────────────────────────────── */}
+        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <Link to="/" className="inline-flex items-center gap-2 text-sunrise-gold hover:text-white transition-colors mb-8 text-sm font-bold uppercase tracking-widest">
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
-          
+
           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-glow mb-6">
             Secure Your <span className="text-sunrise-gold">Seat</span>
           </h1>
-          
-          <div className="glass-dark p-8 rounded-3xl border border-white/10 mb-8 space-y-6">
-            <div className="flex justify-between items-end border-b border-white/10 pb-6">
+
+          <div className="glass-dark p-8 rounded-3xl border border-white/10 mb-6 space-y-5">
+            <div className="flex justify-between items-end border-b border-white/10 pb-5">
               <div>
-                <p className="text-sm text-white/50 mb-1">Total Trek Cost</p>
+                <p className="text-sm text-white/50 mb-1">Trek Cost Per Person</p>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold line-through text-white/30">₹7,499</span>
-                  <span className="text-5xl font-bold text-sunrise-gold">₹5,499</span>
+                  <span className="text-2xl font-bold line-through text-white/30">₹7,499</span>
+                  <span className="text-4xl font-bold text-sunrise-gold">₹{effectivePrice.toLocaleString('en-IN')}</span>
                 </div>
+                {appliedDiscount > 0 && (
+                  <p className="text-green-400 text-sm mt-1 font-bold">
+                    🎉 ₹{appliedDiscount} off per person
+                    {registrationType === 'group' && effectiveGroupSize > 1 && ` × ${effectiveGroupSize} = ₹${totalGroupSaving.toLocaleString('en-IN')} total saved`}
+                  </p>
+                )}
               </div>
               <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-500/30">
-                Discounted Rate
+                {appliedDiscount > 0 ? `₹${appliedDiscount} Discount Applied` : 'Best Price'}
               </div>
             </div>
-            
+
+            {/* Group discount ladder */}
             <div>
-              <p className="text-sm text-white/50 mb-2">Book Your Seat Now At</p>
-              <p className="text-4xl font-bold text-white mb-2">₹999/- <span className="text-sm font-normal text-white/40">only</span></p>
-              <p className="text-xs text-white/50 italic">Pay the remaining amount 7 days before departure.</p>
+              <p className="text-xs font-bold tracking-widest text-white/40 uppercase mb-3">Group Discounts</p>
+              <div className="grid grid-cols-2 gap-2">
+                {[{ n: 3, off: 200 }, { n: 4, off: 300 }, { n: 6, off: 400 }, { n: '8+', off: 500 }].map(({ n, off }) => {
+                  const isActive = registrationType === 'group' &&
+                    (typeof n === 'number' ? effectiveGroupSize === n : effectiveGroupSize >= 8);
+                  return (
+                    <div key={n} className={`flex justify-between items-center px-3 py-2 rounded-xl border text-sm transition-colors ${
+                      isActive ? 'bg-sunrise-gold/10 border-sunrise-gold/40 text-sunrise-gold' : 'bg-white/5 border-white/10 text-white/60'
+                    }`}>
+                      <span>{typeof n === 'number' ? `Group of ${n}` : `Group of ${n}`}</span>
+                      <span className="font-bold">₹{off} off</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-white/30 mt-2">* One extra person can be added to any group and avail the same discount.</p>
             </div>
 
-            <ul className="space-y-3 pt-4 border-t border-white/10">
-              {[
-                "Priority Seating (Front rows)",
-                "Exclusive DU Batch 2026 T-Shirt",
-                "Free Photography Coverage",
-                "Instant Confirmation"
-              ].map((benefit, idx) => (
-                <li key={idx} className="flex items-center gap-3 text-sm text-white/80">
-                  <CheckCircle className="w-4 h-4 text-sunrise-gold" />
-                  {benefit}
+            <div className="border-t border-white/10 pt-5">
+              <p className="text-sm text-white/50 mb-1">Book Now — Pay Token</p>
+              <p className="text-3xl font-bold text-white">₹{TOKEN_AMOUNT}/- <span className="text-sm font-normal text-white/40">per person</span></p>
+              <p className="text-xs text-white/50 italic mt-1">Remaining amount due 7 days before departure.</p>
+            </div>
+
+            <ul className="space-y-2 border-t border-white/10 pt-4">
+              {['Priority Seating', 'Exclusive DU Batch 2026 T-Shirt', 'Free Photography Coverage', 'Instant Confirmation'].map((b, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-white/80">
+                  <CheckCircle className="w-4 h-4 text-sunrise-gold shrink-0" />{b}
                 </li>
               ))}
             </ul>
           </div>
-          
-          <div className="flex items-center gap-4 text-white/40 text-sm bg-white/5 p-4 rounded-2xl border border-white/5">
-            <Shield className="w-6 h-6 text-sunrise-gold shrink-0" />
+
+          <div className="flex items-center gap-3 text-white/40 text-sm bg-white/5 p-4 rounded-2xl border border-white/5">
+            <Shield className="w-5 h-5 text-sunrise-gold shrink-0" />
             <p>100% Secure Payment via Razorpay. Encrypted & Safe.</p>
           </div>
         </motion.div>
 
-        {/* Right Side: Form */}
+        {/* ── RIGHT: Form ──────────────────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
           className="glass p-8 rounded-3xl border border-white/10 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-sunrise-gold/10 blur-[100px] rounded-full pointer-events-none" />
-          
-          <h2 className="text-2xl font-bold mb-6">Traveler Details</h2>
-          
+
+          <h2 className="text-2xl font-bold mb-2 relative z-10">Traveler Details</h2>
+          <p className="text-white/40 text-sm mb-6 relative z-10">Open to students, working professionals & everyone adventurous!</p>
+
           <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-xs font-bold tracking-widest text-white/50 uppercase">Full Name</label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                placeholder="Enter your name"
-              />
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-xs font-bold tracking-widest text-white/50 uppercase">Email Address</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                  placeholder="you@example.com"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="phone" className="text-xs font-bold tracking-widest text-white/50 uppercase">WhatsApp Number</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                  placeholder="+91"
-                />
+            {/* ── REGISTRATION TYPE ────────────────────────────────────── */}
+            <div className="space-y-2">
+              <p className={LABEL}>Registration Type *</p>
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" onClick={() => { setRegistrationType('individual'); setFormData(p => ({ ...p, groupSize: 1 })); }}
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm transition-all ${
+                    registrationType === 'individual' ? 'bg-sunrise-gold text-black border-sunrise-gold' : 'bg-himalaya-black/50 border-white/10 text-white/70 hover:border-white/30'
+                  }`}>
+                  <User className="w-4 h-4" />
+                  Individual
+                </button>
+                <button type="button" onClick={() => { setRegistrationType('group'); setFormData(p => ({ ...p, groupSize: 3 })); }}
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl border font-bold text-sm transition-all ${
+                    registrationType === 'group' ? 'bg-sunrise-gold text-black border-sunrise-gold' : 'bg-himalaya-black/50 border-white/10 text-white/70 hover:border-white/30'
+                  }`}>
+                  <Users className="w-4 h-4" />
+                  Group
+                </button>
               </div>
             </div>
 
+            {/* ── LEAD CONTACT DETAILS ─────────────────────────────────── */}
             <div className="space-y-2">
-              <label htmlFor="college" className="text-xs font-bold tracking-widest text-white/50 uppercase">College / University</label>
-              <input
-                id="college"
-                name="college"
-                type="text"
-                required
-                value={formData.college}
-                onChange={handleChange}
-                className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                placeholder="E.g., Hindu College, DU"
-              />
+              <label htmlFor="name" className={LABEL}>Your Full Name (Lead Contact) *</label>
+              <input id="name" name="name" type="text" required value={formData.name} onChange={handleChange}
+                className={INPUT} placeholder="Enter your full name" />
             </div>
-            
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="email" className={LABEL}>Email *</label>
+                <input id="email" name="email" type="email" required value={formData.email} onChange={handleChange}
+                  className={INPUT} placeholder="you@example.com" />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="phone" className={LABEL}>WhatsApp No. *</label>
+                <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange}
+                  className={INPUT} placeholder="+91" />
+              </div>
+            </div>
+
+            {/* Occupation */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="occupation" className={LABEL}>Occupation *</label>
+                <select id="occupation" name="occupation" required value={formData.occupation} onChange={handleChange}
+                  className={INPUT + ' appearance-none'}>
+                  <option value="">Select Occupation</option>
+                  <option value="Student">Student</option>
+                  <option value="Working Professional">Working Professional</option>
+                  <option value="Self-employed">Self-employed / Freelancer</option>
+                  <option value="Business Owner">Business Owner</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="organisation" className={LABEL}>
+                  {formData.occupation === 'Student' ? 'College / University' : 'Organisation / Company'} *
+                </label>
+                <input id="organisation" name="organisation" type="text" required value={formData.organisation} onChange={handleChange}
+                  className={INPUT} placeholder={formData.occupation === 'Student' ? 'E.g., Hindu College, DU' : 'E.g., TCS, Google...'} />
+              </div>
+            </div>
+
+            {/* Batch */}
             <div className="space-y-2">
-              <label htmlFor="date" className="text-xs font-bold tracking-widest text-white/50 uppercase">Select Batch</label>
-              <select
-                id="date"
-                name="date"
-                required
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white appearance-none"
-              >
-                <option value="21st June 2026">21st June - 25th June 2026 (DU Special)</option>
-                <option value="28th June 2026">28th June - 2nd July 2026</option>
+              <label htmlFor="date" className={LABEL}>Select Batch *</label>
+              <select id="date" name="date" required value={formData.date} onChange={handleChange}
+                className={INPUT + ' appearance-none'}>
+                <option value="21st June 2026">21st June – 25th June 2026 (DU Special)</option>
+                <option value="28th June 2026">28th June – 2nd July 2026</option>
               </select>
             </div>
 
+            {/* ── GROUP SECTION ──────────────────────────────────────────── */}
+            <AnimatePresence>
+              {registrationType === 'group' && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-5 pt-2 border-t border-white/10">
+                    <div className="flex items-center gap-2 text-sunrise-gold">
+                      <Users className="w-4 h-4" />
+                      <span className="text-sm font-bold">Group Details</span>
+                      {groupDiscountPerPerson > 0 && (
+                        <span className="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded-full border border-green-500/30 font-bold">
+                          ₹{groupDiscountPerPerson} off each applied!
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Group Size */}
+                    <div className="space-y-2">
+                      <label htmlFor="groupSize" className={LABEL}>
+                        Total Group Size *
+                        <span className="ml-2 text-white/30 normal-case font-normal">(min. 2 people)</span>
+                      </label>
+                      <input id="groupSize" name="groupSize" type="number" min={2} max={50} required
+                        value={formData.groupSize} onChange={handleChange}
+                        className={INPUT} />
+                      {effectiveGroupSize >= 2 && effectiveGroupSize < 3 && (
+                        <p className="text-white/40 text-xs">Add 1 more for a ₹200/person group discount!</p>
+                      )}
+                    </div>
+
+                    {/* Member Names */}
+                    <div className="space-y-2">
+                      <label htmlFor="memberNames" className={LABEL}>
+                        Full Names of ALL Members *
+                        <span className="ml-2 text-white/30 normal-case font-normal">(comma-separated)</span>
+                      </label>
+                      <textarea id="memberNames" name="memberNames" required value={formData.memberNames} onChange={handleChange}
+                        rows={3}
+                        className={INPUT + ' resize-none'}
+                        placeholder={`E.g., Rahul Sharma, Priya Singh, Ankit Verma${effectiveGroupSize > 3 ? ', ...' : ''}`} />
+                      <p className="text-xs text-white/30">List names of all {effectiveGroupSize} members including yourself.</p>
+                    </div>
+
+                    {/* Male / Female count */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label htmlFor="maleCount" className={LABEL}>Male Members *</label>
+                        <input id="maleCount" name="maleCount" type="number" min={0} max={effectiveGroupSize}
+                          value={formData.maleCount} onChange={handleChange} className={INPUT} />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="femaleCount" className={LABEL}>Female Members *</label>
+                        <input id="femaleCount" name="femaleCount" type="number" min={0} max={effectiveGroupSize}
+                          value={formData.femaleCount} onChange={handleChange} className={INPUT} />
+                      </div>
+                    </div>
+                    {formData.maleCount + formData.femaleCount !== effectiveGroupSize && effectiveGroupSize > 0 && (
+                      <p className="text-amber-400 text-xs flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" />
+                        Male ({formData.maleCount}) + Female ({formData.femaleCount}) = {formData.maleCount + formData.femaleCount}, should equal {effectiveGroupSize}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* ── CAMPUS AMBASSADOR SECTION ────────────────────────────── */}
+            <div className="space-y-3 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" name="isCampusAmbassador" checked={formData.isCampusAmbassador}
+                  onChange={handleChange} className="mt-0.5 accent-sunrise-gold w-4 h-4" />
+                <span className="text-sm text-white/80">
+                  I am a <span className="text-sunrise-gold font-bold">Campus Ambassador</span> with 8+ confirmed registrations
+                </span>
+              </label>
+
+              <AnimatePresence>
+                {formData.isCampusAmbassador && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-3 space-y-2">
+                      <p className={LABEL}>Choose Your Ambassador Benefit *</p>
+                      <p className="text-xs text-white/40 flex items-center gap-1 mb-2">
+                        <Info className="w-3 h-3" />
+                        One benefit only — you cannot combine group discount + free trip
+                      </p>
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 cursor-pointer hover:border-sunrise-gold/30 transition-colors">
+                          <input type="radio" name="offerPreference" value="group_discount"
+                            checked={formData.offerPreference === 'group_discount'} onChange={handleChange}
+                            className="accent-sunrise-gold" />
+                          <div>
+                            <p className="text-sm font-bold">Group Discount</p>
+                            <p className="text-xs text-white/40">₹{groupDiscountPerPerson > 0 ? groupDiscountPerPerson : '200–500'} off per person based on group size</p>
+                          </div>
+                        </label>
+                        <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 cursor-pointer hover:border-green-500/30 transition-colors">
+                          <input type="radio" name="offerPreference" value="free_trip"
+                            checked={formData.offerPreference === 'free_trip'} onChange={handleChange}
+                            className="accent-green-400" />
+                          <div>
+                            <p className="text-sm font-bold text-green-400">Free Trip (Ambassador Reward)</p>
+                            <p className="text-xs text-white/40">Your trip is fully sponsored (8+ referrals confirmed)</p>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* ── DECLARATION ──────────────────────────────────────────── */}
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <p className="text-xs font-bold tracking-widest text-white/50 uppercase">Declaration</p>
+              <p className="text-xs text-white/60 leading-relaxed">
+                I, the undersigned, hereby declare that:
+                (1) All information provided is accurate and complete.
+                (2) I understand the trek involves physical exertion and undertake it at my own risk.
+                (3) I will abide by all guidelines set by the organizer during the trek.
+                (4) I understand the cancellation and refund policy.
+                (5) I confirm that only one offer/discount shall be availed per registration.
+                {registrationType === 'group' && ' (6) I am authorised to register on behalf of all group members listed above and confirm their consent.'}
+              </p>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" name="declarationAccepted" checked={formData.declarationAccepted}
+                  onChange={handleChange} className="mt-0.5 accent-sunrise-gold w-4 h-4" required />
+                <span className="text-sm text-white/80 font-medium">
+                  I have read and agree to the above declaration *
+                </span>
+              </label>
+            </div>
+
+            {/* ── SUBMIT ───────────────────────────────────────────────── */}
             <motion.button
               whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               type="submit"
-              disabled={isSubmitting}
-              className={`w-full font-bold text-lg py-4 rounded-xl mt-6 shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all ${
-                isSubmitting ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-sunrise-gold text-black hover:shadow-[0_0_30px_rgba(255,215,0,0.5)]'
+              disabled={isSubmitting || !formData.declarationAccepted}
+              className={`w-full font-bold text-lg py-4 rounded-xl mt-2 shadow-[0_0_20px_rgba(255,215,0,0.2)] transition-all ${
+                isSubmitting || !formData.declarationAccepted
+                  ? 'bg-white/10 text-white/40 cursor-not-allowed'
+                  : 'bg-sunrise-gold text-black hover:shadow-[0_0_40px_rgba(255,215,0,0.5)]'
               }`}
             >
-              {isSubmitting ? 'Securing Seat...' : 'Pay ₹999 & Book Seat'}
+              {isSubmitting
+                ? 'Securing Seat...'
+                : registrationType === 'group'
+                  ? `Pay ₹${TOKEN_AMOUNT} × ${effectiveGroupSize} = ₹${(TOKEN_AMOUNT * effectiveGroupSize).toLocaleString('en-IN')} & Book`
+                  : `Pay ₹${TOKEN_AMOUNT} & Secure Seat`}
             </motion.button>
-            <p className="text-center text-xs text-white/30 mt-4">
-              You will be redirected to Razorpay securely.
-            </p>
+            <p className="text-center text-xs text-white/30">You will be redirected to Razorpay securely.</p>
           </form>
         </motion.div>
       </div>

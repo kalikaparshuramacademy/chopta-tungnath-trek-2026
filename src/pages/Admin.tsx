@@ -14,8 +14,18 @@ interface Registration {
   name: string;
   email: string;
   phone: string;
+  occupation: string;
   college: string;
   batch_date: string;
+  registration_type: string;
+  group_size: number;
+  member_names: string;
+  male_count: number;
+  female_count: number;
+  discount_per_person: number;
+  is_campus_ambassador: boolean;
+  offer_preference: string;
+  declaration_accepted: boolean;
   created_at: string;
 }
 
@@ -310,16 +320,22 @@ export const Admin = () => {
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Traveler Info</th>
-                    <th className="px-5 py-4 font-medium">College</th>
+                    <th className="px-5 py-4 font-medium">Type</th>
+                    <th className="px-5 py-4 font-medium">Occupation</th>
+                    <th className="px-5 py-4 font-medium">Organisation</th>
                     <th className="px-5 py-4 font-medium">Batch</th>
+                    <th className="px-5 py-4 font-medium">Group / Members</th>
+                    <th className="px-5 py-4 font-medium">M / F</th>
+                    <th className="px-5 py-4 font-medium">Discount</th>
+                    <th className="px-5 py-4 font-medium">Offer</th>
                     <th className="px-5 py-4 font-medium text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && registrations.length === 0 ? (
-                    <tr><td colSpan={5} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : registrations.length === 0 ? (
-                    <tr><td colSpan={5} className="px-5 py-12 text-center text-white/50">No trip registrations yet.</td></tr>
+                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">No trip registrations yet.</td></tr>
                   ) : registrations.map((reg) => (
                     <tr key={reg.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
@@ -333,11 +349,44 @@ export const Admin = () => {
                         </div>
                       </td>
                       <td className="px-5 py-4 align-top">
-                        <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs border border-white/10">{reg.college || 'N/A'}</span>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold border ${
+                          reg.registration_type === 'group'
+                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+                            : 'bg-white/10 text-white/60 border-white/10'
+                        }`}>
+                          {reg.registration_type === 'group' ? `Group (${reg.group_size})` : 'Solo'}
+                        </span>
                       </td>
                       <td className="px-5 py-4 align-top">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${reg.batch_date?.includes('21st') ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30'}`}>
-                          {reg.batch_date}
+                        <span className="text-white/70 text-xs whitespace-nowrap">{reg.occupation || '—'}</span>
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        <span className="inline-block px-2 py-1 rounded-full bg-white/10 text-xs border border-white/10 whitespace-nowrap">{reg.college || '—'}</span>
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold border whitespace-nowrap ${
+                          reg.batch_date?.includes('21st') ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30'
+                        }`}>{reg.batch_date}</span>
+                      </td>
+                      <td className="px-5 py-4 align-top max-w-[200px]">
+                        <p className="text-white/70 text-xs line-clamp-2">{reg.member_names || reg.name}</p>
+                      </td>
+                      <td className="px-5 py-4 align-top whitespace-nowrap">
+                        <span className="text-white/70 text-xs">
+                          {reg.male_count ?? '—'}M / {reg.female_count ?? '—'}F
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        {reg.discount_per_person > 0 ? (
+                          <span className="inline-block px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs border border-green-500/30 font-bold whitespace-nowrap">
+                            ₹{reg.discount_per_person}/pp
+                          </span>
+                        ) : <span className="text-white/30 text-xs">—</span>}
+                      </td>
+                      <td className="px-5 py-4 align-top">
+                        <span className="text-white/60 text-xs">
+                          {reg.offer_preference === 'free_trip' ? '🎁 Free Trip' : reg.offer_preference === 'group_discount' ? '💰 Group' : '—'}
+                          {reg.is_campus_ambassador ? ' 🏫' : ''}
                         </span>
                       </td>
                       <td className="px-5 py-4 align-top text-center">
