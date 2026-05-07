@@ -14,6 +14,7 @@ import { AmbassadorProgram } from './components/AmbassadorProgram';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
+import { GoldenBackground } from './components/GoldenBackground';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
@@ -78,6 +79,7 @@ const Home = () => {
         className="fixed top-0 left-0 right-0 h-1 bg-sunrise-gold origin-left z-[60]"
         style={{ scaleX }}
       />
+      <GoldenBackground />
       <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-screen" />
       
       <Navbar />
