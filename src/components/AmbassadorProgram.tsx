@@ -36,6 +36,7 @@ export const AmbassadorProgram = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
           >
             Lead Your Campus
@@ -43,6 +44,7 @@ export const AmbassadorProgram = () => {
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-5xl md:text-7xl font-bold tracking-tighter"
           >
             Become an Ambassador
@@ -58,6 +60,7 @@ export const AmbassadorProgram = () => {
               key={reward.title}
               initial={{ opacity: 0, x: i === 0 ? -20 : 20 }}
               whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
               className={`p-10 rounded-[40px] border glass-dark relative overflow-hidden group ${reward.classes}`}
             >
               <reward.icon className="w-12 h-12 text-sunrise-gold mb-6 group-hover:scale-110 transition-transform" />
@@ -78,6 +81,7 @@ export const AmbassadorProgram = () => {
                 key={step.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: idx * 0.1 }}
                 className="relative z-10 flex flex-col items-center text-center p-8 bg-black/40 backdrop-blur-xl rounded-3xl border border-white/5"
               >

@@ -43,9 +43,35 @@
   }
 }
 
-/* Custom Smooth Scroll */
+/* ── Smooth Scroll ─────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  /* GPU-smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* GPU-accelerate all animated motion elements */
+[data-framer-motion],
+.motion-safe\:animate-* {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Atmospheric effects */
@@ -53,3 +79,7 @@ html {
   background: radial-gradient(circle at 50% -20%, rgba(6, 78, 59, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

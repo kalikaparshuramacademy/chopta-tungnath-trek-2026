@@ -11,6 +11,7 @@ export const DestinationShowcase = () => {
             <motion.p 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
               className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
             >
               The Landscape of Grace
@@ -18,6 +19,7 @@ export const DestinationShowcase = () => {
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
               className="text-5xl md:text-7xl font-bold tracking-tighter"
             >
               Himalayan Anchors
@@ -26,6 +28,7 @@ export const DestinationShowcase = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-white/40 text-sm max-w-sm mb-2"
           >
             Explore the sacred points that define our expedition. From river confluences to the highest summit.

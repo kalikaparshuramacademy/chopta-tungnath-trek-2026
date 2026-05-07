@@ -13,6 +13,7 @@ export const FAQ = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
           >
             Clear Your Mind
@@ -20,6 +21,7 @@ export const FAQ = () => {
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-5xl font-bold tracking-tighter"
           >
             Common Queries
@@ -32,6 +34,7 @@ export const FAQ = () => {
               key={idx}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
               transition={{ delay: idx * 0.05 }}
               className="group"
             >

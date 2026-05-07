@@ -19,6 +19,7 @@ export const CreatorProgram = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
           >
             Travel. Create. Grow.
@@ -26,6 +27,7 @@ export const CreatorProgram = () => {
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-5xl md:text-7xl font-bold tracking-tighter"
           >
             Creator Collaboration
@@ -42,6 +44,7 @@ export const CreatorProgram = () => {
                 key={item.title}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: idx * 0.1 }}
                 className="glass-dark p-8 rounded-3xl border-white/5 hover:border-sunrise-gold/30 transition-colors group"
               >

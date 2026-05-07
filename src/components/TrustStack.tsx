@@ -19,6 +19,7 @@ export const TrustStack = () => {
             <motion.p 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
               className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
             >
               The Science of Safety
@@ -26,6 +27,7 @@ export const TrustStack = () => {
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
               className="text-5xl font-bold tracking-tighter mb-8"
             >
               Our Commitment to <br/>
@@ -41,6 +43,7 @@ export const TrustStack = () => {
                   key={stat.label}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
                   transition={{ delay: idx * 0.1 }}
                   className="space-y-2"
                 >

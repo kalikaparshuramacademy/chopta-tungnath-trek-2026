@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import {
-  Users, Mail, Phone, Calendar, ArrowLeft, RefreshCw,
+  Users, Mail, Phone, ArrowLeft, RefreshCw,
   Instagram, GraduationCap, Trash2, Download, Lock, Eye, EyeOff, LogOut, Clock
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -190,6 +190,21 @@ export const Admin = () => {
     if (activeTab === 'ambassadors') exportCSV(ambassadors, 'ambassador_applications');
   };
 
+  const handleDeleteAll = async () => {
+    const tableLabel = activeTab === 'registrations' ? 'Trip Registrations' : activeTab === 'influencers' ? 'Influencer Applications' : 'Ambassador Applications';
+    const count = activeTab === 'registrations' ? registrations.length : activeTab === 'influencers' ? influencers.length : ambassadors.length;
+    if (count === 0) { alert('No entries to delete.'); return; }
+    const confirm1 = window.confirm(`Delete ALL ${count} entries from "${tableLabel}"? This cannot be undone.`);
+    if (!confirm1) return;
+    const confirm2 = window.confirm(`Final confirmation: permanently delete all ${count} records?`);
+    if (!confirm2) return;
+    const { error } = await supabase.from(activeTab).delete().neq('id', 0);
+    if (error) { alert(`Delete all failed: ${error.message}`); return; }
+    if (activeTab === 'registrations') setRegistrations([]);
+    if (activeTab === 'influencers') setInfluencers([]);
+    if (activeTab === 'ambassadors') setAmbassadors([]);
+  };
+
   if (!isUnlocked) return <PasswordGate onUnlock={() => setIsUnlocked(true)} />;
 
   const tabs = [
@@ -219,6 +234,11 @@ export const Admin = () => {
               className="flex items-center gap-2 bg-green-500/10 text-green-400 border border-green-500/20 px-5 py-2.5 rounded-full hover:bg-green-500/20 transition-colors font-bold text-sm">
               <Download className="w-4 h-4" />
               Export CSV
+            </button>
+            <button onClick={handleDeleteAll}
+              className="flex items-center gap-2 bg-red-500/10 text-red-400 border border-red-500/20 px-5 py-2.5 rounded-full hover:bg-red-500/20 transition-colors font-bold text-sm">
+              <Trash2 className="w-4 h-4" />
+              Delete All
             </button>
             <button onClick={fetchData} disabled={loading}
               className="flex items-center gap-2 glass px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors disabled:opacity-50 text-sm">

@@ -15,6 +15,7 @@ export const Pricing = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-sunrise-gold text-xs font-bold tracking-[0.3em] uppercase mb-4"
           >
             Invest in Memories
@@ -22,6 +23,7 @@ export const Pricing = () => {
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
             className="text-5xl md:text-7xl font-bold tracking-tighter"
           >
             Expedition Plans
