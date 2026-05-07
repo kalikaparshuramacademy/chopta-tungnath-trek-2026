@@ -4,7 +4,12 @@ export interface Destination {
   significance: string;
   facts: string;
   altitude: string;
+  temp?: string;
+  description: string;
   image: string;
+  longDescription?: string;
+  highlights?: string[];
+  proTip?: string;
 }
 
 export interface DayItinerary {

@@ -16,7 +16,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "Sacred river energy",
     facts: "Gateway to the Garhwal Himalayas",
     altitude: "340m",
-    image: "/images/dest_rishikesh_1778044611078.webp"
+    temp: "25-35°C",
+    description: "Gateway to the Garhwal Himalayas and the Yoga Capital of the world.",
+    image: "/images/dest_rishikesh_1778044611078.webp",
+    longDescription: "Known as the Yoga Capital of the World, Rishikesh is where the holy Ganges leaves the mountains to flow into the plains. It's a land of ancient temples, world-famous cafes, and the high-energy evening Aarti at Triveni Ghat.",
+    highlights: ["Evening Ganga Aarti", "Ram Jhula & Laxman Jhula", "Cafe Hopping", "Adventure Water Sports"],
+    proTip: "Try the ginger-lemon-honey tea at the local cafes overlooking the river."
   },
   {
     id: "devprayag",
@@ -24,7 +29,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "Confluence of rivers",
     facts: "Where Bhagirathi meets Alaknanda to become Ganga",
     altitude: "830m",
-    image: "/images/dest_devprayag_1778044625556.webp"
+    temp: "22-32°C",
+    description: "Sacred confluence where Alaknanda and Bhagirathi merge to become Ganga.",
+    image: "/images/dest_devprayag_1778044625556.webp",
+    longDescription: "The most sacred of the Panch Prayags, Devprayag is where the Alaknanda and Bhagirathi rivers merge to officially become the Ganga. The distinct colors of the two rivers meeting is a sight of divine beauty.",
+    highlights: ["Sangam Viewpoint", "Raghunathji Temple", "Ancient Stone Steps", "River Confluence Photography"],
+    proTip: "Observe the clear color difference between the steady Alaknanda and the turbulent Bhagirathi."
   },
   {
     id: "deoriatal",
@@ -32,7 +42,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "Mirror lake reflections",
     facts: "Crystal-clear water with Chaukhamba peaks reflection",
     altitude: "2,438m",
-    image: "/images/day2_deoria_tal_1778044472269.webp"
+    temp: "10-18°C",
+    description: "A pristine high-altitude lake offering hypnotic reflections of Chaukhamba peaks.",
+    image: "/images/day2_deoria_tal_1778044472269.webp",
+    longDescription: "A crystal clear lake located amidst dense forests of rhododendrons. Legend says it was built by the Yakshas for the Pandavas. The reflection of the massive Chaukhamba peak in the lake water is truly hypnotic.",
+    highlights: ["Lake Reflection of Chaukhamba", "Camping under the stars", "Rhododendron Forest Trail", "Bird Watching"],
+    proTip: "The best reflections happen early in the morning when the water is perfectly still."
   },
   {
     id: "chopta",
@@ -40,7 +55,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "Mini Switzerland atmosphere",
     facts: "Lush green meadows and dense forests",
     altitude: "2,680m",
-    image: "/images/dest_chopta_1778044654935.webp"
+    temp: "8-15°C",
+    description: "The 'Mini Switzerland of India', home to lush meadows and dense forests.",
+    image: "/images/dest_chopta_1778044654935.webp",
+    longDescription: "Often called the 'Mini Switzerland of India', Chopta is an unspoiled natural beauty destination. It's the base for the trek to Tungnath and Chandrashila, offering 360-degree views of the majestic Himalayas.",
+    highlights: ["Velvet Green Meadows", "Kedarnath Wildlife Sanctuary", "Diverse Flora & Fauna", "Snowy Winter Landscapes"],
+    proTip: "Keep your camera ready for the Himalayan Monal, the state bird of Uttarakhand."
   },
   {
     id: "tungnath",
@@ -48,7 +68,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "Highest Shiva temple experience",
     facts: "Lord Shiva's hands appeared here after Mahabharat",
     altitude: "3,680m",
-    image: "/images/day3_tungnath_1778044489559.webp"
+    temp: "2-10°C",
+    description: "The highest Shiva temple in the world, over 1,000 years old and rich in legend.",
+    image: "/images/day3_tungnath_1778044489559.webp",
+    longDescription: "The highest Shiva temple in the world, Tungnath is over 1,000 years old. It's one of the Panch Kedar temples and is steeped in legends from the Mahabharata era. The trek up is spiritually fulfilling and visually stunning.",
+    highlights: ["Ancient Stone Architecture", "Spiritual Peace", "High-Altitude Trek", "Cloud Level Views"],
+    proTip: "Respect the local customs and take a moment of silence at the temple courtyard."
   },
   {
     id: "chandrashila",
@@ -56,7 +81,12 @@ export const DESTINATIONS: Destination[] = [
     significance: "360° Himalayan summit panorama",
     facts: "Panoramic views of Nanda Devi, Trishul, and Chaukhamba",
     altitude: "4,000m",
-    image: "/images/dest_chandrashila_1778044684173.webp"
+    temp: "-2-8°C",
+    description: "A majestic summit offering a 360-degree panorama of the highest Himalayan peaks.",
+    image: "/images/dest_chandrashila_1778044684173.webp",
+    longDescription: "Chandrashila, meaning 'Moon Rock', is the summit of the Tungnath trek. It offers one of the most comprehensive views of the Himalayas, including Nanda Devi, Trishul, Nanda Ghunti, and the Kedar range.",
+    highlights: ["360-Degree Mountain Panorama", "Summit Temple", "Sunrise/Sunset Views", "Sense of Achievement"],
+    proTip: "Stay hydrated and take slow, steady steps as the oxygen levels are lower at the summit."
   }
 ];
 
