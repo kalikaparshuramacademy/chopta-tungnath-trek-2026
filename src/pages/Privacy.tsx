@@ -89,7 +89,7 @@ export const Privacy = () => {
             <div className="pt-12 border-t border-white/5 text-center">
               <div className="inline-flex items-center gap-2 text-sunrise-gold font-bold mb-4">
                 <Mail className="w-4 h-4" />
-                privacy@peakandrivertravels.com
+                peakandrivertravels@gmail.com
               </div>
               <p className="text-white/40 text-sm">If you wish to have your data removed from our records, please contact us.</p>
             </div>

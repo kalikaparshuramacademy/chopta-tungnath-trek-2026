@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import {
   Users, Mail, Phone, ArrowLeft, RefreshCw,
   Instagram, GraduationCap, Trash2, Download, Lock, Eye, EyeOff, LogOut, Clock,
-  Search, Copy, Check
+  Search, Copy, Check, FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ interface Registration {
   name: string;
   email: string;
   phone: string;
+  gender: string;
   occupation: string;
   college: string;
   batch_date: string;
@@ -265,10 +266,15 @@ export const Admin = () => {
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
-              Admin <span className="text-sunrise-gold">Dashboard</span>
-            </h1>
-            <p className="text-white/50 mt-2">Chopta Tungnath Trek 2026 — Lead Management</p>
+            <div className="flex items-center gap-4">
+              <img src="/images/logo_circular.png" alt="Logo" className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10" />
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
+                  Admin <span className="text-sunrise-gold">Dashboard</span>
+                </h1>
+                <p className="text-white/50 mt-1 text-sm md:text-base">Chopta Tungnath Trek 2026 — Lead Management</p>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -372,6 +378,7 @@ export const Admin = () => {
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Traveler Info</th>
+                    <th className="px-5 py-4 font-medium text-sunrise-gold">Gender</th>
                     <th className="px-5 py-4 font-medium">Type</th>
                     <th className="px-5 py-4 font-medium">Occupation</th>
                     <th className="px-5 py-4 font-medium">Organisation</th>
@@ -382,14 +389,14 @@ export const Admin = () => {
                     <th className="px-5 py-4 font-medium">Offer</th>
                     <th className="px-5 py-4 font-medium">Payment ID</th>
                     <th className="px-5 py-4 font-medium">Status</th>
-                    <th className="px-5 py-4 font-medium text-center">Action</th>
+                    <th className="px-5 py-4 font-medium text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && registrations.length === 0 ? (
-                    <tr><td colSpan={13} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={14} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredRegistrations.length === 0 ? (
-                    <tr><td colSpan={11} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
+                    <tr><td colSpan={14} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
                   ) : filteredRegistrations.map((reg) => (
                     <tr key={reg.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
@@ -401,6 +408,9 @@ export const Admin = () => {
                           <p className="flex items-center gap-1"><Mail className="w-3 h-3" /><a href={`mailto:${reg.email}`} className="hover:text-white transition-colors">{reg.email}</a></p>
                           <p className="flex items-center gap-1"><Phone className="w-3 h-3" /><a href={`tel:${reg.phone}`} className="hover:text-white transition-colors">{reg.phone}</a></p>
                         </div>
+                      </td>
+                      <td className="px-5 py-4 align-top whitespace-nowrap">
+                        <span className="text-white/80 font-bold">{reg.gender || '—'}</span>
                       </td>
                       <td className="px-5 py-4 align-top">
                         <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold border ${
@@ -443,11 +453,21 @@ export const Admin = () => {
                           {reg.is_campus_ambassador ? ' 🏫' : ''}
                         </span>
                       </td>
-                      <td className="px-5 py-4 align-top text-center">
-                        <button onClick={() => handleDelete('registrations', reg.id)} disabled={deletingId === reg.id}
-                          className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-40" title="Delete">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                      <td className="px-5 py-4 align-top text-center whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link 
+                            to={`/invoice/${reg.id}`} 
+                            target="_blank"
+                            className="p-2 rounded-lg bg-sunrise-gold/10 text-sunrise-gold hover:bg-sunrise-gold/20 transition-colors" 
+                            title="View/Print Bill"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </Link>
+                          <button onClick={() => handleDelete('registrations', reg.id)} disabled={deletingId === reg.id}
+                            className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-40" title="Delete">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { TRIP_NAME, CONTACT_PHONE } from '../constants';
+import { TRIP_NAME, CONTACT_PHONE, CONTACT_EMAIL } from '../constants';
 import { MapPin, Instagram, Mail, Phone, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -27,16 +27,28 @@ export const Footer = () => {
               Crafting elite Himalayan experiences for the next generation of explorers. We believe every mountain has a story, and we're here to help you write yours.
             </p>
             <div className="flex gap-4">
-              {[Instagram, Mail, Phone].map((Icon, idx) => (
-                <motion.a 
-                  key={idx}
-                  href="#"
-                  whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
-                  className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-sunrise-gold transition-colors"
-                >
-                  <Icon className="w-5 h-5" />
-                </motion.a>
-              ))}
+              <motion.a 
+                href="https://instagram.com/peakandrivertravels" 
+                target="_blank"
+                whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
+                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-sunrise-gold transition-colors"
+              >
+                <Instagram className="w-5 h-5" />
+              </motion.a>
+              <motion.a 
+                href={`mailto:${CONTACT_EMAIL}`} 
+                whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
+                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-sunrise-gold transition-colors"
+              >
+                <Mail className="w-5 h-5" />
+              </motion.a>
+              <motion.a 
+                href={`tel:${CONTACT_PHONE}`}
+                whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
+                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-sunrise-gold transition-colors"
+              >
+                <Phone className="w-5 h-5" />
+              </motion.a>
             </div>
           </div>
 

@@ -38,12 +38,14 @@ const LABEL = 'text-xs font-bold tracking-widest text-white/50 uppercase';
 export const BookNow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationType, setRegistrationType] = useState<'individual' | 'group'>('individual');
+  const [successId, setSuccessId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     // Lead contact
     name: '',
     email: '',
     phone: '',
+    gender: '',              // Male | Female | Other
     occupation: '',
     organisation: '',        // college / company / institute
     date: '21st June 2026',
@@ -125,6 +127,7 @@ export const BookNow = () => {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        gender: formData.gender,
         occupation: formData.occupation,
         college: formData.organisation,
         batch_date: formData.date,
@@ -181,8 +184,8 @@ export const BookNow = () => {
             if (updateError) throw updateError;
 
             console.log('[BookNow] 🎉 Payment status updated in database');
-            alert('Booking Successful! We will contact you shortly with trip details.');
-            window.location.href = '/';
+            setSuccessId(registrationId);
+            setIsSubmitting(false);
           } catch (err: any) {
             console.error('[BookNow] ❌ Post-payment update failed:', err);
             alert('Payment was successful, but we failed to update your record. PLEASE SCREENSHOT YOUR PAYMENT ID and contact us!');
@@ -230,6 +233,51 @@ export const BookNow = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (successId) {
+    return (
+      <div className="min-h-screen bg-himalaya-black text-white flex items-center justify-center px-6 py-20 relative overflow-hidden">
+        <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-overlay" />
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-xl w-full glass p-12 rounded-[3rem] border border-white/10 text-center relative z-10"
+        >
+          <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(34,197,94,0.3)] ring-8 ring-green-500/10">
+            <CheckCircle className="w-12 h-12 text-white" />
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">Booking <span className="text-sunrise-gold italic font-serif">Confirmed!</span></h1>
+          <p className="text-white/60 mb-10 leading-relaxed">
+            Your seat for the Chopta Tungnath Trek 2026 is successfully secured. A confirmation receipt has been generated for your records.
+          </p>
+          
+          <div className="space-y-4">
+            <Link 
+              to={`/invoice/${successId}`}
+              className="flex items-center justify-center gap-3 w-full bg-sunrise-gold text-black py-5 rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_20px_40px_rgba(255,215,0,0.2)]"
+            >
+              <Info className="w-5 h-5" />
+              Download Receipt
+            </Link>
+            
+            <Link 
+              to="/"
+              className="flex items-center justify-center gap-2 w-full glass py-5 rounded-2xl font-bold text-white/70 hover:bg-white/10 transition-all"
+            >
+              Back to Home
+            </Link>
+          </div>
+          
+          <div className="mt-12 pt-10 border-t border-white/5 flex flex-col items-center gap-4">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-white/20 uppercase">Next Steps</p>
+            <p className="text-xs text-white/40 italic">Check your WhatsApp for the onboarding guide within 24 hours.</p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-4 pb-16">
@@ -349,16 +397,27 @@ export const BookNow = () => {
                 className={INPUT} placeholder="Enter your full name" />
             </div>
 
+            <div className="space-y-2">
+              <label htmlFor="email" className={LABEL}>Email *</label>
+              <input id="email" name="email" type="email" required value={formData.email} onChange={handleChange}
+                className={INPUT} placeholder="you@example.com" />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="email" className={LABEL}>Email *</label>
-                <input id="email" name="email" type="email" required value={formData.email} onChange={handleChange}
-                  className={INPUT} placeholder="you@example.com" />
-              </div>
               <div className="space-y-2">
                 <label htmlFor="phone" className={LABEL}>WhatsApp No. *</label>
                 <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange}
                   className={INPUT} placeholder="+91" />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="gender" className={LABEL}>Gender *</label>
+                <select id="gender" name="gender" required value={formData.gender} onChange={handleChange}
+                  className={INPUT}>
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
             </div>
 
@@ -367,7 +426,7 @@ export const BookNow = () => {
               <div className="space-y-2">
                 <label htmlFor="occupation" className={LABEL}>Occupation *</label>
                 <select id="occupation" name="occupation" required value={formData.occupation} onChange={handleChange}
-                  className={INPUT + ' appearance-none'}>
+                  className={INPUT}>
                   <option value="">Select Occupation</option>
                   <option value="Student">Student</option>
                   <option value="Working Professional">Working Professional</option>
@@ -389,7 +448,7 @@ export const BookNow = () => {
             <div className="space-y-2">
               <label htmlFor="date" className={LABEL}>Select Batch *</label>
               <select id="date" name="date" required value={formData.date} onChange={handleChange}
-                className={INPUT + ' appearance-none'}>
+                className={INPUT}>
                 <option value="21st June 2026">21st June – 25th June 2026 (DU Special)</option>
                 <option value="28th June 2026">28th June – 2nd July 2026</option>
               </select>
@@ -558,6 +617,58 @@ export const BookNow = () => {
                   : `Pay ₹${TOKEN_AMOUNT} & Secure Seat`}
             </motion.button>
             <p className="text-center text-xs text-white/30">You will be redirected to Razorpay securely.</p>
+
+            {/* Dev Test Button */}
+            {import.meta.env.DEV && (
+              <button
+                type="button"
+                onClick={async () => {
+                  const confirmTest = window.confirm("Bypass Payment? This will create a real database entry but SKIP the Razorpay gateway.");
+                  if (!confirmTest) return;
+
+                  setIsSubmitting(true);
+                  try {
+                    const registrationData = {
+                      name: formData.name,
+                      email: formData.email,
+                      phone: formData.phone,
+                      gender: formData.gender,
+                      occupation: formData.occupation,
+                      college: formData.organisation,
+                      batch_date: formData.date,
+                      registration_type: registrationType,
+                      group_size: effectiveGroupSize,
+                      member_names: registrationType === 'group' ? formData.memberNames : formData.name,
+                      male_count: Number(formData.maleCount) || (registrationType === 'individual' ? 1 : 0),
+                      female_count: Number(formData.femaleCount) || 0,
+                      discount_per_person: Number(appliedDiscount) || 0,
+                      total_discount: totalGroupSaving,
+                      is_campus_ambassador: formData.isCampusAmbassador,
+                      offer_preference: formData.offerPreference || 'none',
+                      declaration_accepted: formData.declarationAccepted,
+                      payment_status: 'paid', // Simulate success
+                      payment_id: 'TEST_BYPASS_' + Date.now()
+                    };
+
+                    const { data: reg, error } = await supabase
+                      .from('registrations')
+                      .insert([registrationData])
+                      .select()
+                      .single();
+
+                    if (error) throw error;
+                    setSuccessId(reg.id);
+                  } catch (err: any) {
+                    alert("Test failed: " + err.message);
+                  } finally {
+                    setIsSubmitting(false);
+                  }
+                }}
+                className="w-full mt-4 py-2 border border-dashed border-white/20 rounded-2xl text-[10px] uppercase tracking-widest font-bold text-white/30 hover:text-white/60 hover:border-white/40 transition-all"
+              >
+                Dev: Test Success Flow (Skip Payment)
+              </button>
+            )}
           </form>
         </motion.div>
       </div>

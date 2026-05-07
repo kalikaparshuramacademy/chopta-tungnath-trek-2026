@@ -76,7 +76,7 @@ export const Terms = () => {
             </section>
 
             <div className="pt-12 border-t border-white/5 text-center">
-              <p className="text-white/40 text-sm">For any legal inquiries, please contact us at <span className="text-white/60">legal@peakandrivertravels.com</span></p>
+              <p className="text-white/40 text-sm">For any legal inquiries, please contact us at <span className="text-white/60">peakandrivertravels@gmail.com</span></p>
             </div>
           </div>
         </motion.div>

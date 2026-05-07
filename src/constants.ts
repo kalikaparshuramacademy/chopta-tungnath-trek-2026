@@ -5,6 +5,7 @@ export const TRIP_DATES = "21st June to 25th June";
 export const DURATION = "4 Nights / 5 Days";
 export const TAGLINE = "Walk Through Clouds. Climb Beyond Fear. Experience Tungnath.";
 export const CONTACT_PHONE = "9266910290";
+export const CONTACT_EMAIL = "peakandrivertravels@gmail.com";
 export const OFFICIAL_ADDRESS = "H.no 18, KH No. 62/18, Block D-1, 1st Floor, Phase 1, Budh Vihar, North West Delhi, Delhi, India - 110086";
 export const PAYMENT_LINK = "https://rzp.io/l/chopta-june-2026"; // Actual Razorpay link can be updated here
 
