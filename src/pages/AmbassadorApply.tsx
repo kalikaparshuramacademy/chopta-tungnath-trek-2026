@@ -13,46 +13,42 @@ export const AmbassadorApply = () => {
     email: '',
     phone: '',
     college: '',
+    year_of_study: '',
+    date_of_birth: '',
+    gender: '',
+    societies: '',
     why_join: ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    try {
-      console.log('[AmbassadorApply] Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-      console.log('[AmbassadorApply] Key present:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
 
+    try {
       const { data, error } = await supabase
         .from('ambassadors')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            college: formData.college,
-            why_join: formData.why_join
-          }
-        ])
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          college: formData.college,
+          year_of_study: formData.year_of_study,
+          date_of_birth: formData.date_of_birth || null,
+          gender: formData.gender,
+          societies: formData.societies,
+          why_join: formData.why_join
+        }])
         .select();
-        
+
       if (error) {
-        console.error('[AmbassadorApply] ❌ INSERT failed:');
-        console.error('  code:', error.code);
-        console.error('  message:', error.message);
-        console.error('  details:', error.details);
-        console.error('  hint:', error.hint);
-        console.error('  Full:', JSON.stringify(error, null, 2));
+        console.error('[AmbassadorApply] ❌ INSERT failed:', error.code, error.message);
         alert(`Error [${error.code}]: ${error.message}`);
         return;
       }
 
       console.log('[AmbassadorApply] ✅ Saved:', data);
       setIsSuccess(true);
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
+      setTimeout(() => navigate('/'), 3000);
     } catch (err: any) {
       console.error('[AmbassadorApply] ❌ JS error:', err);
       alert('There was an error submitting your application. Please try again.');
@@ -61,7 +57,7 @@ export const AmbassadorApply = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -69,11 +65,8 @@ export const AmbassadorApply = () => {
     return (
       <div className="min-h-screen bg-himalaya-black text-white flex items-center justify-center px-6">
         <div className="text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="w-24 h-24 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+            className="w-24 h-24 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-12 h-12" />
           </motion.div>
           <h2 className="text-4xl font-bold mb-4">Application Received!</h2>
@@ -89,42 +82,28 @@ export const AmbassadorApply = () => {
   return (
     <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black pt-24 px-6 pb-12 relative">
       <div className="fixed inset-0 z-0 opacity-10 pointer-events-none bg-[url('/images/campus_ambassador_1778044724349.webp')] bg-cover bg-center mix-blend-screen" />
-      
-      <div className="max-w-4xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
-        {/* Left Side: Information */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="md:col-span-2"
-        >
+
+      <div className="max-w-6xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Left Side */}
+        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <Link to="/" className="inline-flex items-center gap-2 text-sunrise-gold hover:text-white transition-colors mb-8 text-sm font-bold uppercase tracking-widest">
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
-          
-          <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mb-6">
+          <div className="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mb-6">
             <GraduationCap className="w-8 h-8" />
           </div>
-
-          <h1 className="text-4xl font-bold tracking-tighter mb-4">
-            Become a <br/><span className="text-sunrise-gold">Campus Leader</span>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">
+            Become a <span className="text-sunrise-gold">Campus Leader</span>
           </h1>
-          
-          <p className="text-white/60 mb-8 leading-relaxed">
+          <p className="text-white/60 text-lg leading-relaxed mb-8">
             Lead the charge at your college. Bring 8 friends, travel for free, and earn real cash bonuses for your network.
           </p>
-
           <ul className="space-y-4">
-            {[
-              "Free fully-funded trip",
-              "₹500 bonus per referral",
-              "Official CV Certificate",
-              "Exclusive Networking"
-            ].map((benefit, idx) => (
-              <li key={idx} className="flex items-center gap-3 text-sm font-bold text-white/80">
-                <CheckCircle className="w-5 h-5 text-sunrise-gold" />
-                {benefit}
+            {['Free fully-funded trip', '₹500 bonus per referral', 'Official CV Certificate', 'Exclusive Networking'].map((b, i) => (
+              <li key={i} className="flex items-center gap-3 text-white/80">
+                <CheckCircle className="w-5 h-5 text-sunrise-gold shrink-0" />
+                {b}
               </li>
             ))}
           </ul>
@@ -132,61 +111,95 @@ export const AmbassadorApply = () => {
 
         {/* Right Side: Form */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass p-8 rounded-3xl border border-white/10 relative overflow-hidden md:col-span-3"
+          initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+          className="glass p-8 rounded-3xl border border-white/10 relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-sunrise-gold/10 blur-[100px] rounded-full pointer-events-none" />
-          
-          <h2 className="text-2xl font-bold mb-6">Ambassador Application</h2>
-          
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <h2 className="text-2xl font-bold mb-6 relative z-10">Your Application</h2>
+
           <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+            {/* Name */}
             <div className="space-y-2">
-              <label htmlFor="name" className="text-xs font-bold tracking-widest text-white/50 uppercase">Full Name</label>
-              <input
-                id="name" name="name" type="text" required value={formData.name} onChange={handleChange}
+              <label htmlFor="name" className="text-xs font-bold tracking-widest text-white/50 uppercase">Full Name *</label>
+              <input id="name" name="name" type="text" required value={formData.name} onChange={handleChange}
                 className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                placeholder="Enter your name"
-              />
+                placeholder="Enter your full name" />
             </div>
 
+            {/* Email + Phone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-xs font-bold tracking-widest text-white/50 uppercase">Email Address</label>
-                <input
-                  id="email" name="email" type="email" required value={formData.email} onChange={handleChange}
+                <label htmlFor="email" className="text-xs font-bold tracking-widest text-white/50 uppercase">Email *</label>
+                <input id="email" name="email" type="email" required value={formData.email} onChange={handleChange}
                   className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                  placeholder="you@example.com"
-                />
+                  placeholder="you@example.com" />
               </div>
-              
               <div className="space-y-2">
-                <label htmlFor="phone" className="text-xs font-bold tracking-widest text-white/50 uppercase">WhatsApp Number</label>
-                <input
-                  id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange}
+                <label htmlFor="phone" className="text-xs font-bold tracking-widest text-white/50 uppercase">WhatsApp No. *</label>
+                <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange}
                   className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                  placeholder="+91"
-                />
+                  placeholder="+91" />
               </div>
             </div>
 
+            {/* College */}
             <div className="space-y-2">
-              <label htmlFor="college" className="text-xs font-bold tracking-widest text-white/50 uppercase">College / University</label>
-              <input
-                id="college" name="college" type="text" required value={formData.college} onChange={handleChange}
+              <label htmlFor="college" className="text-xs font-bold tracking-widest text-white/50 uppercase">College / University *</label>
+              <input id="college" name="college" type="text" required value={formData.college} onChange={handleChange}
                 className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
-                placeholder="E.g., Hindu College, DU"
-              />
+                placeholder="E.g., Hindu College, DU" />
             </div>
 
+            {/* Year + Gender */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <label htmlFor="year_of_study" className="text-xs font-bold tracking-widest text-white/50 uppercase">Year of Study *</label>
+                <select id="year_of_study" name="year_of_study" required value={formData.year_of_study} onChange={handleChange}
+                  className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white appearance-none">
+                  <option value="">Select Year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                  <option value="Postgraduate">Postgraduate</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="gender" className="text-xs font-bold tracking-widest text-white/50 uppercase">Gender *</label>
+                <select id="gender" name="gender" required value={formData.gender} onChange={handleChange}
+                  className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white appearance-none">
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Date of Birth */}
             <div className="space-y-2">
-              <label htmlFor="why_join" className="text-xs font-bold tracking-widest text-white/50 uppercase">Why do you want to join?</label>
-              <textarea
-                id="why_join" name="why_join" required value={formData.why_join} onChange={handleChange} rows={3}
+              <label htmlFor="date_of_birth" className="text-xs font-bold tracking-widest text-white/50 uppercase">Date of Birth *</label>
+              <input id="date_of_birth" name="date_of_birth" type="date" required value={formData.date_of_birth} onChange={handleChange}
+                className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white"
+                max={new Date().toISOString().split('T')[0]} />
+            </div>
+
+            {/* Societies */}
+            <div className="space-y-2">
+              <label htmlFor="societies" className="text-xs font-bold tracking-widest text-white/50 uppercase">Societies / Clubs you're in</label>
+              <input id="societies" name="societies" type="text" value={formData.societies} onChange={handleChange}
+                className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20"
+                placeholder="E.g., Dramatics Society, NSS, Photography Club..." />
+            </div>
+
+            {/* Why Join */}
+            <div className="space-y-2">
+              <label htmlFor="why_join" className="text-xs font-bold tracking-widest text-white/50 uppercase">Why do you want to join? *</label>
+              <textarea id="why_join" name="why_join" required value={formData.why_join} onChange={handleChange}
+                rows={3}
                 className="w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20 resize-none"
-                placeholder="Tell us about your campus influence and why you'd be a great fit."
-              />
+                placeholder="Tell us your motivation..." />
             </div>
 
             <motion.button
@@ -194,11 +207,11 @@ export const AmbassadorApply = () => {
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               type="submit"
               disabled={isSubmitting}
-              className={`w-full font-bold text-lg py-4 rounded-xl mt-6 shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all ${
-                isSubmitting ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-sunrise-gold text-black hover:shadow-[0_0_30px_rgba(255,215,0,0.5)]'
+              className={`w-full font-bold text-lg py-4 rounded-xl mt-2 transition-all ${
+                isSubmitting ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-sunrise-gold text-black hover:shadow-[0_0_30px_rgba(255,215,0,0.4)]'
               }`}
             >
-              {isSubmitting ? 'Submitting Application...' : 'Submit Application'}
+              {isSubmitting ? 'Submitting Application...' : 'Apply as Campus Ambassador'}
             </motion.button>
           </form>
         </motion.div>
