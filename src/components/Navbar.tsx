@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { TRIP_NAME, PAYMENT_LINK } from '../constants';
-import { MapPin, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
@@ -33,11 +33,17 @@ export const Navbar = () => {
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-3"
         >
-          <div className="w-10 h-10 bg-sunrise-gold rounded-full flex items-center justify-center">
-            <MapPin className="text-black w-6 h-6" />
-          </div>
+          {/* Peak & River Travels circular logo */}
+          <Link to="/" className="shrink-0">
+            <img
+              src="/images/logo_circular.png"
+              alt="Peak & River Travels"
+              className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10 hover:ring-sunrise-gold/40 transition-all duration-300"
+              loading="eager"
+            />
+          </Link>
           <span className="font-display font-bold text-lg tracking-tighter hidden sm:block">
             PEAK & RIVER <span className="text-sunrise-gold">TRAVELS</span>
           </span>
