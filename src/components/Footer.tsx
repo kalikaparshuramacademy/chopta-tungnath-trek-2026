@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { TRIP_NAME, CONTACT_PHONE } from '../constants';
 import { MapPin, Instagram, Mail, Phone, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   return (
@@ -10,10 +11,14 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           <div className="col-span-1 lg:col-span-2">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 bg-sunrise-gold rounded-full flex items-center justify-center">
-                <MapPin className="text-black w-6 h-6" />
-              </div>
+            <div className="flex items-center gap-3 mb-8">
+              <Link to="/" className="shrink-0">
+                <img
+                  src="/images/logo_circular.png"
+                  alt="Peak & River Travels"
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10"
+                />
+              </Link>
               <span className="font-display font-bold text-xl tracking-tighter">
                 PEAK & RIVER <span className="text-sunrise-gold">TRAVELS</span>
               </span>
@@ -38,14 +43,20 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold uppercase tracking-widest text-xs mb-8 text-sunrise-gold">Quick Links</h4>
             <ul className="space-y-4">
-              {['Journey', 'Destinations', 'Pricing', 'Terms', 'Privacy'].map(link => (
+              {['Journey', 'Destinations', 'Pricing', 'FAQs'].map(link => (
                 <li key={link}>
-                  <a href="#" className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-2 group">
+                  <a href={`#${link.toLowerCase()}`} className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-2 group">
                     {link}
                     <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </li>
               ))}
+              <li>
+                <Link to="/refund-policy" className="text-sm text-white/60 hover:text-sunrise-gold transition-colors flex items-center gap-2 group">
+                  Refund Policy
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              </li>
             </ul>
           </div>
 

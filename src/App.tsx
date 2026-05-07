@@ -28,6 +28,7 @@ const BookNow = lazy(() => import('./pages/BookNow').then(module => ({ default: 
 const Admin = lazy(() => import('./pages/Admin').then(module => ({ default: module.Admin })));
 const AmbassadorApply = lazy(() => import('./pages/AmbassadorApply').then(module => ({ default: module.AmbassadorApply })));
 const InfluencerApply = lazy(() => import('./pages/InfluencerApply').then(module => ({ default: module.InfluencerApply })));
+const RefundPolicy = lazy(() => import('./pages/RefundPolicy').then(module => ({ default: module.RefundPolicy })));
 
 const Loading = () => (
   <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
@@ -157,6 +158,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/ambassador-apply" element={<AmbassadorApply />} />
         <Route path="/influencer-apply" element={<InfluencerApply />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
       </Routes>
     </Suspense>
   );
