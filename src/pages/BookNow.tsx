@@ -48,7 +48,7 @@ export const BookNow = () => {
     gender: '',              // Male | Female | Other
     occupation: '',
     organisation: '',        // college / company / institute
-    date: '21st June 2026',
+    date: '11th June 2026',
 
     // Group-specific
     groupSize: 1,
@@ -449,7 +449,7 @@ export const BookNow = () => {
               <label htmlFor="date" className={LABEL}>Select Batch *</label>
               <select id="date" name="date" required value={formData.date} onChange={handleChange}
                 className={INPUT}>
-                <option value="21st June 2026">21st June – 25th June 2026 (DU Special)</option>
+                <option value="11th June 2026">11th June – 15th June 2026 (DU Special)</option>
                 <option value="28th June 2026">28th June – 2nd July 2026</option>
               </select>
             </div>
