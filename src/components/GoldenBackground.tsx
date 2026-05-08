@@ -12,8 +12,8 @@ export const GoldenBackground = () => {
   }, []);
 
   // Reduce particle count on mobile for performance
-  const particleCount = isMobile ? 15 : 40;
-  const glowCount = isMobile ? 3 : 6;
+  const particleCount = isMobile ? 8 : 20;
+  const glowCount = isMobile ? 2 : 3;
 
   return (
     <div className="fixed inset-0 z-[15] pointer-events-none overflow-hidden mix-blend-screen">

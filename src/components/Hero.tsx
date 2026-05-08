@@ -47,16 +47,6 @@ export const Hero = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-himalaya-black/40 via-transparent to-himalaya-black" />
           
           {/* Moving Fog / Cloud Shaders (Layered) */}
-          <svg className="absolute inset-0 w-full h-full opacity-20 mix-blend-screen pointer-events-none">
-            <filter id="fog-shader">
-              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3">
-                <animate attributeName="baseFrequency" dur="60s" values="0.012;0.008;0.012" repeatCount="indefinite" />
-              </feTurbulence>
-              <feDisplacementMap in="SourceGraphic" scale="20" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#fog-shader)" className="fill-white/10" />
-          </svg>
-
           <motion.div 
             style={{ y: fogY }}
             animate={{ x: [-50, 50], opacity: [0.1, 0.2, 0.1] }}
