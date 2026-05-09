@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { TRIP_NAME, TAGLINE, TRIP_DATES, DURATION } from '../constants';
 import { Users, ArrowRight, ShieldCheck } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // Standard smooth easing for a premium feel
@@ -19,6 +19,14 @@ export const Hero = () => {
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section ref={containerRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-himalaya-black">
       {/* Background with Video and Atmosphere */}
@@ -30,18 +38,25 @@ export const Hero = () => {
           transition={{ duration: 2.5, ease: SMOOTH_EASE }}
           className="relative w-full h-full"
         >
-          {/* Cinematic Video Layer - High Resolution Loop */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/images/hero_bg_1778044589465.webp"
-            className="absolute inset-0 w-full h-full object-cover"
-            title="Cinematic view of Himalayan clouds"
-          >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-clouds-among-the-mountain-peaks-at-sunset-41604-large.mp4" type="video/mp4" />
-          </video>
+          {/* Cinematic Video Layer - High Resolution Loop on Desktop only */}
+          {isMobile ? (
+            <div 
+              className="absolute inset-0 bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center"
+              aria-label="Cinematic view of Himalayan clouds"
+            />
+          ) : (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/images/hero_bg_1778044589465.webp"
+              className="absolute inset-0 w-full h-full object-cover"
+              title="Cinematic view of Himalayan clouds"
+            >
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-clouds-among-the-mountain-peaks-at-sunset-41604-large.mp4" type="video/mp4" />
+            </video>
+          )}
           
           {/* Enhanced Visibility Overlays */}
           <div className="absolute inset-0 bg-gradient-to-b from-himalaya-black/40 via-transparent to-himalaya-black" />

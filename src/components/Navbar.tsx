@@ -71,7 +71,7 @@ export const Navbar = () => {
         >
           <a 
             href={`tel:9266910290`}
-            className="hidden sm:flex items-center gap-2 text-sm font-semibold hover:text-sunrise-gold transition-colors"
+            className="hidden sm:flex items-center gap-2 text-sm font-bold hover:text-sunrise-gold transition-colors"
           >
             <Phone className="w-4 h-4 text-sunrise-gold" />
             9266910290
