@@ -1,6 +1,6 @@
 import { Destination, DayItinerary, PricePlan, FAQItem } from './types';
 
-export const TRIP_NAME = "Chopta Tungnath Trek 2026";
+export const TRIP_NAME = "Chopta Tungnath Trip 2026";
 export const TRIP_DATES = "11th June to 15th June";
 export const DURATION = "4 Nights / 5 Days";
 export const TAGLINE = "Walk Through Clouds. Climb Beyond Fear. Experience Tungnath.";

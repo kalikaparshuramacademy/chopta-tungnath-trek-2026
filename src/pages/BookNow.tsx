@@ -14,7 +14,7 @@ declare global {
 // ── Pricing constants ────────────────────────────────────────────────────────
 const BASE_PRICE = 5499;
 const TOKEN_AMOUNT = 999;
-const TRIP_NAME = 'Chopta Tungnath Trek 2026';
+const TRIP_NAME = 'Chopta Tungnath Trip 2026';
 
 const GROUP_DISCOUNTS: Record<number, number> = {
   3: 200,

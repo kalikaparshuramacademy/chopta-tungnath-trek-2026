@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'motion/react';
 import { Printer, ArrowLeft, Download, CheckCircle, MapPin, Clock, ShieldCheck, Mail, Phone } from 'lucide-react';
 
-const TRIP_NAME = 'Chopta Tungnath Trek 2026';
+const TRIP_NAME = 'Chopta Tungnath Trip 2026';
 
 interface Registration {
   id: number;
