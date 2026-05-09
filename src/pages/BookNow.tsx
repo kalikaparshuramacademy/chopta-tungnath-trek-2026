@@ -450,6 +450,7 @@ export const BookNow = () => {
               <select id="date" name="date" required value={formData.date} onChange={handleChange}
                 className={INPUT}>
                 <option value="11th June 2026">11th June – 15th June 2026 (DU Special)</option>
+                <option value="14th June 2026">14th June – 18th June 2026</option>
                 <option value="28th June 2026">28th June – 2nd July 2026</option>
               </select>
             </div>
