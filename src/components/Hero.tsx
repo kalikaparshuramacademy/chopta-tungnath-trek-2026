@@ -57,32 +57,6 @@ export const Hero = () => {
           {/* Glowing Sunrise Rays Layer */}
           <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,215,0,0.1)_0%,transparent_40%)] pointer-events-none" />
           
-          {/* Animated Snow Particles (Optimized) */}
-          <div className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ 
-                  x: Math.random() * 100 + "%", 
-                  y: -20, 
-                  opacity: 0,
-                  scale: Math.random() * 0.5 + 0.3
-                }}
-                animate={{ 
-                  y: "110vh",
-                  x: (Math.random() * 60 - 30) + "px",
-                  opacity: [0, 0.4, 0],
-                }}
-                transition={{ 
-                  duration: Math.random() * 10 + 15, 
-                  repeat: Infinity, 
-                  ease: "linear",
-                  delay: Math.random() * 10
-                }}
-                className="absolute w-1 h-1 bg-white rounded-full blur-[1px] will-change-transform"
-              />
-            ))}
-          </div>
         </motion.div>
       </div>
 

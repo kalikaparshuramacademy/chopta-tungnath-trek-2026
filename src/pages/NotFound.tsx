@@ -30,7 +30,7 @@ export const NotFound = () => {
           </h2>
           
           <p className="text-white/60 text-lg mb-12 max-w-md mx-auto">
-            The path you're looking for has been covered by snow or doesn't exist on our trail map yet.
+            The path you're looking for has been covered by mist or doesn't exist on our trail map yet.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

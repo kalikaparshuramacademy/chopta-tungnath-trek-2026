@@ -59,7 +59,7 @@ export const DESTINATIONS: Destination[] = [
     description: "The 'Mini Switzerland of India', home to lush meadows and dense forests.",
     image: "/images/dest_chopta_1778044654935.webp",
     longDescription: "Often called the 'Mini Switzerland of India', Chopta is an unspoiled natural beauty destination. It's the base for the trek to Tungnath and Chandrashila, offering 360-degree views of the majestic Himalayas.",
-    highlights: ["Velvet Green Meadows", "Kedarnath Wildlife Sanctuary", "Diverse Flora & Fauna", "Snowy Winter Landscapes"],
+    highlights: ["Velvet Green Meadows", "Kedarnath Wildlife Sanctuary", "Diverse Flora & Fauna", "Breathtaking Himalayan Views"],
     proTip: "Keep your camera ready for the Himalayan Monal, the state bird of Uttarakhand."
   },
   {
