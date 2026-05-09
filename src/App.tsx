@@ -107,7 +107,7 @@ const Home = () => {
               transition={{ duration: 1, ease: SMOOTH_EASE, delay: 0.1 }}
               className="text-5xl md:text-7xl font-bold tracking-tighter text-glow leading-tight"
             >
-              Why this trek for your <br/>
+              Why this trip for your <br/>
               <span className="text-sunrise-gold italic font-serif">Graduating Summer?</span>
             </motion.h2>
 
