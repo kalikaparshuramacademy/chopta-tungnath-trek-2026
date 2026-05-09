@@ -32,7 +32,7 @@ export const Hero = () => {
       {/* Background with Video and Atmosphere */}
       <div className="absolute inset-0 z-0">
         <motion.div 
-          style={{ y: videoY }}
+          style={{ y: isMobile ? 0 : videoY }}
           initial={{ scale: 1.15, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 2.5, ease: SMOOTH_EASE }}
@@ -63,7 +63,7 @@ export const Hero = () => {
           
           {/* Moving Fog / Cloud Shaders (Layered) */}
           <motion.div 
-            style={{ y: fogY }}
+            style={{ y: isMobile ? 0 : fogY }}
             animate={{ x: [-50, 50], opacity: [0.1, 0.2, 0.1] }}
             transition={{ duration: 30, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
             className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/fog.png')] mix-blend-screen scale-150 pointer-events-none will-change-transform"
@@ -77,7 +77,7 @@ export const Hero = () => {
 
       {/* Content */}
       <motion.div 
-        style={{ y: contentY, opacity }}
+        style={{ y: isMobile ? 0 : contentY, opacity }}
         className="relative z-20 text-center px-6 max-w-5xl"
       >
         <motion.div
