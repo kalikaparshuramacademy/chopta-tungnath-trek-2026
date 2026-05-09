@@ -272,7 +272,7 @@ export const Admin = () => {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
                   Admin <span className="text-sunrise-gold">Dashboard</span>
                 </h1>
-                <p className="text-white/50 mt-1 text-sm md:text-base">Chopta Tungnath Trek 2026 — Lead Management</p>
+                <p className="text-white/50 mt-1 text-sm md:text-base">Chopta Tungnath Trip 2026 — Lead Management</p>
               </div>
             </div>
           </div>

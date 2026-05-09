@@ -193,7 +193,7 @@ const Home = () => {
                 </Link>
                 
                 <a 
-                  href="https://wa.me/919266910290?text=Hi!%20I%20want%20to%20know%20more%20about%20the%20Chopta%20Tungnath%20Trek%202026." 
+                  href="https://wa.me/919266910290?text=Hi!%20I%20want%20to%20know%20more%20about%20the%20Chopta%20Tungnath%20Trip%202026." 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="glass px-12 py-6 rounded-full font-bold text-xl hover:bg-white/15 transition-all duration-300 active:scale-95"

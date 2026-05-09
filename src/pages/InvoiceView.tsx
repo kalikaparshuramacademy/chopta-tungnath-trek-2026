@@ -205,7 +205,7 @@ export const InvoiceView = () => {
               <div className="space-y-4 bg-neutral-50 p-6 rounded-3xl border border-neutral-100">
                 <div>
                   <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Expedition</p>
-                  <p className="font-bold text-neutral-800">Chopta Tungnath Trek 2026</p>
+                  <p className="font-bold text-neutral-800">Chopta Tungnath Trip 2026</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Batch Dates</p>

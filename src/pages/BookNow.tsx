@@ -250,7 +250,7 @@ export const BookNow = () => {
           
           <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">Booking <span className="text-sunrise-gold italic font-serif">Confirmed!</span></h1>
           <p className="text-white/60 mb-10 leading-relaxed">
-            Your seat for the Chopta Tungnath Trek 2026 is successfully secured. A confirmation receipt has been generated for your records.
+            Your seat for the Chopta Tungnath Trip 2026 is successfully secured. A confirmation receipt has been generated for your records.
           </p>
           
           <div className="space-y-4">

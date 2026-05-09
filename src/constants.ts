@@ -150,7 +150,7 @@ export const PRICING_PLANS: PricePlan[] = [
 export const FAQS: FAQItem[] = [
   {
     question: "Is this trek beginner friendly?",
-    answer: "Yes, the Chopta Tungnath trek is considered easy to moderate and is perfect for first-timers."
+    answer: "Yes, the Chopta Tungnath Trip 2026 is considered easy to moderate and is perfect for first-timers."
   },
   {
     question: "Is Tungnath safe in June?",
