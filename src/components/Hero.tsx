@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { TRIP_NAME, TAGLINE, TRIP_DATES, DURATION } from '../constants';
-import { Users, ArrowRight } from 'lucide-react';
+import { Users, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -144,6 +144,15 @@ export const Hero = () => {
               </div>
             </motion.div>
           </motion.div>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 2 }}
+            className="text-xs text-white/40 mt-6 flex items-center justify-center gap-1"
+          >
+            <ShieldCheck className="w-4 h-4 text-sunrise-gold" />
+            Secure payments with Razorpay
+          </motion.p>
         </motion.div>
       </motion.div>
 

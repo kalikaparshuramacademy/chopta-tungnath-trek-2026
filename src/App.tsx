@@ -136,6 +136,58 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Why June Section */}
+        <section className="py-24 px-6 bg-black/30 backdrop-blur-sm text-center relative overflow-hidden border-t border-b border-white/5">
+          <div className="max-w-6xl mx-auto space-y-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: SMOOTH_EASE }}
+              className="inline-block glass px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] text-sunrise-gold"
+            >
+              SEASON INSIGHTS
+            </motion.div>
+            
+            <motion.h2 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: SMOOTH_EASE, delay: 0.1 }}
+              className="text-4xl md:text-6xl font-bold tracking-tighter text-glow"
+            >
+              Why June is the <br/>
+              <span className="text-sunrise-gold italic font-serif">Perfect Time</span>
+            </motion.h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+              {[
+                { title: "Cool Weather Escape", desc: "Delhi 45°C vs Chopta 15°C. A massive temperature drop.", icon: "🌡️" },
+                { title: "Peak Rhododendrons", desc: "Meadows are at their greenest with wildflowers everywhere.", icon: "🌸" },
+                { title: "Clear Summit Views", desc: "Clearest skies of the year for majestic mountain views.", icon: "🏔️" },
+                { title: "Ganga at Full Flow", desc: "Snowmelt feeds the river, making the Aarti intense.", icon: "🌊" },
+                { title: "Roaring Waterfalls", desc: "Roadside waterfalls are in full flow in June only.", icon: "💦" },
+                { title: "Long Daylight", desc: "5:15 AM sunrise to 7:15 PM sunset. Full day to explore.", icon: "☀️" },
+                { title: "Stable Roads", desc: "Safe pocket before the monsoon landslides start.", icon: "🛡️" },
+                { title: "Premium Homestays", desc: "Best rooms available at standard rates before off-season.", icon: "🏡" }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  className="glass p-6 rounded-3xl border-white/5 hover:border-white/10 transition-colors"
+                >
+                  <div className="text-3xl mb-4">{item.icon}</div>
+                  <h3 className="text-lg font-bold mb-2 tracking-tight">{item.title}</h3>
+                  <p className="text-xs text-white/50 leading-relaxed">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <JourneyTimeline />
         <DestinationShowcase />
         <Pricing />
