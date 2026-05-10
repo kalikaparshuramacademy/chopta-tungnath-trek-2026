@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import {
   Users, Mail, Phone, ArrowLeft, RefreshCw,
   Instagram, GraduationCap, Trash2, Download, Lock, Eye, EyeOff, LogOut, Clock,
-  Search, Copy, Check, FileText
+  Search, Copy, Check, FileText, X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -155,6 +155,7 @@ export const Admin = () => {
   const [isUnlocked, setIsUnlocked] = useState(() => sessionStorage.getItem('admin_unlocked') === '1');
   const [activeTab, setActiveTab] = useState<'registrations' | 'influencers' | 'ambassadors'>('registrations');
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [viewingRegistration, setViewingRegistration] = useState<Registration | null>(null);
 
   useEffect(() => {
     setSelectedIds([]);
@@ -526,6 +527,13 @@ export const Admin = () => {
                       </td>
                       <td className="px-5 py-4 align-top text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
+                          <button 
+                            onClick={() => setViewingRegistration(reg)}
+                            className="p-2 rounded-lg bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors" 
+                            title="View Full Details"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
                           <Link 
                             to={`/invoice/${reg.id}`} 
                             target="_blank"
@@ -710,6 +718,124 @@ export const Admin = () => {
               </table>
             )}
           </div>
+
+          {/* Modal */}
+          {viewingRegistration && (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-himalaya-black border border-white/10 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto glass-dark">
+                <div className="p-6 border-b border-white/10 flex justify-between items-center">
+                  <h2 className="text-xl font-bold text-glow">Registration Details</h2>
+                  <button 
+                    onClick={() => setViewingRegistration(null)}
+                    className="p-2 hover:bg-white/5 rounded-full transition-colors"
+                    title="Close"
+                  >
+                    <X className="w-5 h-5 text-white/50 hover:text-white" />
+                  </button>
+                </div>
+                
+                <div className="p-6 space-y-6">
+                  {/* Personal Info */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Personal Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-white/40">Name</p>
+                        <p className="text-white font-medium">{viewingRegistration.name}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Email</p>
+                        <p className="text-white font-medium">{viewingRegistration.email}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Phone</p>
+                        <p className="text-white font-medium">{viewingRegistration.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Gender</p>
+                        <p className="text-white font-medium">{viewingRegistration.gender}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Occupation</p>
+                        <p className="text-white font-medium">{viewingRegistration.occupation}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">College</p>
+                        <p className="text-white font-medium">{viewingRegistration.college || '—'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trip Info */}
+                  <div className="border-t border-white/5 pt-6">
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Trip Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-white/40">Batch Date</p>
+                        <p className="text-white font-medium">{viewingRegistration.batch_date}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Sharing Type</p>
+                        <p className="text-white font-medium capitalize">{viewingRegistration.sharing_type}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Registration Type</p>
+                        <p className="text-white font-medium capitalize">{viewingRegistration.registration_type}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Group Size</p>
+                        <p className="text-white font-medium">{viewingRegistration.group_size}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Group Members */}
+                  {(viewingRegistration.member_names || viewingRegistration.group_contacts) && (
+                    <div className="border-t border-white/5 pt-6">
+                      <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Group Members</h3>
+                      <div className="space-y-4">
+                        {viewingRegistration.member_names && (
+                          <div>
+                            <p className="text-xs text-white/40">Member Names</p>
+                            <p className="text-white font-medium whitespace-pre-wrap">{viewingRegistration.member_names}</p>
+                          </div>
+                        )}
+                        {viewingRegistration.group_contacts && (
+                          <div>
+                            <p className="text-xs text-white/40">Member Contacts</p>
+                            <p className="text-white font-medium whitespace-pre-wrap">{viewingRegistration.group_contacts}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Additional Info */}
+                  <div className="border-t border-white/5 pt-6">
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Additional Info</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-white/40">Male Count</p>
+                        <p className="text-white font-medium">{viewingRegistration.male_count}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Female Count</p>
+                        <p className="text-white font-medium">{viewingRegistration.female_count}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Discount Per Person</p>
+                        <p className="text-white font-medium">₹{viewingRegistration.discount_per_person}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/40">Campus Ambassador</p>
+                        <p className="text-white font-medium">{viewingRegistration.is_campus_ambassador ? 'Yes' : 'No'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Export hint */}
           <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between text-xs text-white/30">
