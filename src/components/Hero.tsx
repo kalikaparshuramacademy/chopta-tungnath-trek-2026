@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { TRIP_NAME, TAGLINE, TRIP_DATES, DURATION } from '../constants';
-import { Users, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Users, ArrowRight, ShieldCheck, GraduationCap, Instagram } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -168,6 +168,21 @@ export const Hero = () => {
               </div>
             </motion.div>
           </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: SMOOTH_EASE, delay: 2.0 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6"
+          >
+            <Link to="/ambassador-apply" className="text-white/70 hover:text-sunrise-gold text-sm font-bold border border-white/10 hover:border-sunrise-gold/30 px-6 py-3 rounded-full bg-white/5 hover:bg-sunrise-gold/5 transition-all flex items-center gap-2">
+              <GraduationCap className="w-4 h-4" /> Apply as Campus Ambassador
+            </Link>
+            <Link to="/influencer-apply" className="text-white/70 hover:text-sunrise-gold text-sm font-bold border border-white/10 hover:border-sunrise-gold/30 px-6 py-3 rounded-full bg-white/5 hover:bg-sunrise-gold/5 transition-all flex items-center gap-2">
+              <Instagram className="w-4 h-4" /> Apply as Influencer
+            </Link>
+          </motion.div>
+
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
