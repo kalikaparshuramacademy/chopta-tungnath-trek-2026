@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, CheckCircle, Shield, Users, User, AlertTriangle, Info } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Shield, Users, User, AlertTriangle, Info, Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -40,6 +40,7 @@ export const BookNow = () => {
   const [registrationType, setRegistrationType] = useState<'individual' | 'group'>('individual');
   const [sharingType, setSharingType] = useState<'quad' | 'triple' | 'double'>('quad');
   const [successId, setSuccessId] = useState<number | null>(null);
+  const [members, setMembers] = useState<{ name: string; phone: string }[]>([]);
 
   const [formData, setFormData] = useState({
     // Lead contact
@@ -67,7 +68,7 @@ export const BookNow = () => {
   });
 
   // ── Computed discount ────────────────────────────────────────────────────
-  const effectiveGroupSize = registrationType === 'group' ? formData.groupSize : 1;
+  const effectiveGroupSize = registrationType === 'group' ? 1 + members.length : 1;
   const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
 
   // If ambassador prefers group discount, they get that; if free_trip, discount = 0 on price display
@@ -137,8 +138,8 @@ export const BookNow = () => {
         registration_type: registrationType,
         sharing_type: sharingType,
         group_size: effectiveGroupSize,
-        member_names: registrationType === 'group' ? formData.memberNames : formData.name,
-        group_contacts: registrationType === 'group' ? formData.memberContacts : formData.phone,
+        member_names: registrationType === 'group' ? [formData.name, ...members.map(m => m.name)].filter(Boolean).join(', ') : formData.name,
+        group_contacts: registrationType === 'group' ? [`${formData.name}: ${formData.phone}`, ...members.map(m => `${m.name}: ${m.phone}`)].join('\n') : formData.phone,
         male_count: formData.maleCount || (registrationType === 'individual' ? 1 : 0),
         female_count: formData.femaleCount,
         discount_per_person: appliedDiscount,
@@ -301,9 +302,15 @@ export const BookNow = () => {
             Secure Your <span className="text-sunrise-gold">Seat</span>
           </h1>
           
-          <p className="text-sunrise-gold font-bold text-sm mb-6 uppercase tracking-widest">
+          <p className="text-sunrise-gold font-bold text-sm mb-2 uppercase tracking-widest">
             🔥 Discounts valid till 16th May! Register Fast!
           </p>
+
+          <div className="mb-6">
+            <Link to="/find-booking" className="text-white/50 hover:text-sunrise-gold transition-colors text-sm font-medium">
+              Already booked? <span className="underline">Find your receipt here</span> →
+            </Link>
+          </div>
 
           <div className="glass-dark p-8 rounded-3xl border border-white/10 mb-6 space-y-5">
             <div className="flex justify-between items-end border-b border-white/10 pb-5">
@@ -508,38 +515,76 @@ export const BookNow = () => {
                         Total Group Size *
                         <span className="ml-2 text-white/30 normal-case font-normal">(min. 2 people)</span>
                       </label>
-                      <input id="groupSize" name="groupSize" type="number" min={2} max={50} required
-                        value={formData.groupSize} onChange={handleChange}
-                        className={INPUT} />
+                      <div className={INPUT + " bg-white/5 flex items-center justify-between"}>
+                        <span className="text-white font-bold">{effectiveGroupSize}</span>
+                        <span className="text-white/50 text-xs">(Leader + {members.length} Members)</span>
+                      </div>
                       {effectiveGroupSize >= 2 && effectiveGroupSize < 3 && (
-                        <p className="text-white/40 text-xs">Add 1 more for a ₹200/person group discount!</p>
+                        <p className="text-white/40 text-xs mt-1">Add 1 more for a ₹200/person group discount!</p>
                       )}
                     </div>
 
-                    {/* Member Names */}
-                    <div className="space-y-2">
-                      <label htmlFor="memberNames" className={LABEL}>
-                        Full Names of ALL Members *
-                        <span className="ml-2 text-white/30 normal-case font-normal">(comma-separated)</span>
-                      </label>
-                      <textarea id="memberNames" name="memberNames" required value={formData.memberNames} onChange={handleChange}
-                        rows={3}
-                        className={INPUT + ' resize-none'}
-                        placeholder={`E.g., Rahul Sharma, Priya Singh, Ankit Verma${effectiveGroupSize > 3 ? ', ...' : ''}`} />
-                      <p className="text-xs text-white/30">List names of all {effectiveGroupSize} members including yourself.</p>
-                    </div>
-
-                    {/* Member Contacts */}
-                    <div className="space-y-2">
-                      <label htmlFor="memberContacts" className={LABEL}>
-                        Contact Numbers of Members *
-                        <span className="ml-2 text-white/30 normal-case font-normal">(comma-separated)</span>
-                      </label>
-                      <textarea id="memberContacts" name="memberContacts" required={registrationType === 'group'} value={formData.memberContacts} onChange={handleChange}
-                        rows={2}
-                        className={INPUT + ' resize-none'}
-                        placeholder="E.g., 9876543210, 8765432109" />
-                      <p className="text-xs text-white/30">Provide contact numbers in the same order as names.</p>
+                    {/* Dynamic Members List */}
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <label className={LABEL}>Group Members Details *</label>
+                        <button
+                          type="button"
+                          onClick={() => setMembers([...members, { name: '', phone: '' }])}
+                          className="text-xs font-bold text-sunrise-gold hover:text-white transition-colors flex items-center gap-1"
+                        >
+                          <Plus className="w-3 h-3" /> Add Member
+                        </button>
+                      </div>
+                      
+                      {members.map((member, index) => (
+                        <div key={index} className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/5 p-4 rounded-xl relative border border-white/10">
+                          <button
+                            type="button"
+                            onClick={() => setMembers(members.filter((_, i) => i !== index))}
+                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                            aria-label="Remove member"
+                          >
+                            ×
+                          </button>
+                          <div className="space-y-1">
+                            <label className="text-[10px] uppercase font-black tracking-widest text-white/50">Name</label>
+                            <input
+                              type="text"
+                              value={member.name}
+                              onChange={(e) => {
+                                const newMembers = [...members];
+                                newMembers[index].name = e.target.value;
+                                setMembers(newMembers);
+                              }}
+                              className={INPUT}
+                              placeholder="Full Name"
+                              required
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] uppercase font-black tracking-widest text-white/50">Mobile Number</label>
+                            <input
+                              type="tel"
+                              value={member.phone}
+                              onChange={(e) => {
+                                const newMembers = [...members];
+                                newMembers[index].phone = e.target.value;
+                                setMembers(newMembers);
+                              }}
+                              className={INPUT}
+                              placeholder="Mobile Number"
+                              required
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      {members.length === 0 && (
+                        <p className="text-sm text-white/50 text-center py-4 border border-dashed border-white/10 rounded-xl">
+                          No additional members added yet. Click "Add Member" to add details.
+                        </p>
+                      )}
+                      <p className="text-xs text-white/30">Add details of all other members in your group.</p>
                     </div>
 
                     {/* Male / Female count */}
@@ -678,7 +723,8 @@ export const BookNow = () => {
                       batch_date: formData.date,
                       registration_type: registrationType,
                       group_size: effectiveGroupSize,
-                      member_names: registrationType === 'group' ? formData.memberNames : formData.name,
+                      member_names: registrationType === 'group' ? [formData.name, ...members.map(m => m.name)].filter(Boolean).join(', ') : formData.name,
+                      group_contacts: registrationType === 'group' ? [`${formData.name}: ${formData.phone}`, ...members.map(m => `${m.name}: ${m.phone}`)].join('\n') : formData.phone,
                       male_count: Number(formData.maleCount) || (registrationType === 'individual' ? 1 : 0),
                       female_count: Number(formData.femaleCount) || 0,
                       discount_per_person: Number(appliedDiscount) || 0,

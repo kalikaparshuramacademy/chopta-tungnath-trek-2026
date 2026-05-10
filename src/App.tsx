@@ -32,6 +32,7 @@ const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default
 const Terms = lazy(() => import('./pages/Terms').then(module => ({ default: module.Terms })));
 const Privacy = lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
 const InvoiceView = lazy(() => import('./pages/InvoiceView').then(module => ({ default: module.InvoiceView })));
+const FindBooking = lazy(() => import('./pages/FindBooking').then(module => ({ default: module.FindBooking })));
 
 const Loading = () => (
   <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
@@ -291,6 +292,7 @@ export default function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/invoice/:id" element={<InvoiceView />} />
+        <Route path="/find-booking" element={<FindBooking />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
