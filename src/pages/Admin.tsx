@@ -154,6 +154,40 @@ const PasswordGate = ({ onUnlock }: { onUnlock: () => void }) => {
 export const Admin = () => {
   const [isUnlocked, setIsUnlocked] = useState(() => sessionStorage.getItem('admin_unlocked') === '1');
   const [activeTab, setActiveTab] = useState<'registrations' | 'influencers' | 'ambassadors'>('registrations');
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [activeTab]);
+
+  const handleSelectAll = (ids: number[]) => {
+    if (selectedIds.length === ids.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(ids);
+    }
+  };
+
+  const handleSelectOne = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} entries? This cannot be undone.`)) return;
+    
+    const { error } = await supabase.from(activeTab).delete().in('id', selectedIds);
+    if (error) {
+      alert(`Bulk delete failed: ${error.message}`);
+    } else {
+      if (activeTab === 'registrations') setRegistrations(r => r.filter(x => !selectedIds.includes(x.id)));
+      if (activeTab === 'influencers') setInfluencers(r => r.filter(x => !selectedIds.includes(x.id)));
+      if (activeTab === 'ambassadors') setAmbassadors(r => r.filter(x => !selectedIds.includes(x.id)));
+      setSelectedIds([]);
+    }
+  };
   const [selectedBatch, setSelectedBatch] = useState<string>('all');
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
@@ -317,6 +351,13 @@ export const Admin = () => {
               <Download className="w-4 h-4" />
               Export CSV
             </button>
+            {selectedIds.length > 0 && (
+              <button onClick={handleBulkDelete}
+                className="flex items-center gap-2 bg-red-500 text-white border border-red-600 px-5 py-2.5 rounded-full hover:bg-red-600 transition-colors font-bold text-sm">
+                <Trash2 className="w-4 h-4" />
+                Delete Selected ({selectedIds.length})
+              </button>
+            )}
             <button onClick={handleDeleteAll}
               className="flex items-center gap-2 bg-red-500/10 text-red-400 border border-red-500/20 px-5 py-2.5 rounded-full hover:bg-red-500/20 transition-colors font-bold text-sm">
               <Trash2 className="w-4 h-4" />
@@ -419,6 +460,14 @@ export const Admin = () => {
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
+                    <th className="px-5 py-4 font-medium">
+                      <input 
+                        type="checkbox" 
+                        onChange={() => handleSelectAll(filteredRegistrations.map(r => r.id))} 
+                        checked={selectedIds.length === filteredRegistrations.length && filteredRegistrations.length > 0} 
+                        className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                      />
+                    </th>
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Traveler Info</th>
                     <th className="px-5 py-4 font-medium">Batch</th>
@@ -431,11 +480,19 @@ export const Admin = () => {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && registrations.length === 0 ? (
-                    <tr><td colSpan={14} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={15} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredRegistrations.length === 0 ? (
-                    <tr><td colSpan={8} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
+                    <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
                   ) : filteredRegistrations.map((reg) => (
-                    <tr key={reg.id} className="hover:bg-white/5 transition-colors">
+                    <tr key={reg.id} className={`hover:bg-white/5 transition-colors ${selectedIds.includes(reg.id) ? 'bg-white/5' : ''}`}>
+                      <td className="px-5 py-4 align-top">
+                        <input 
+                          type="checkbox" 
+                          onChange={() => handleSelectOne(reg.id)} 
+                          checked={selectedIds.includes(reg.id)} 
+                          className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                        />
+                      </td>
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(reg.created_at)}</span>
                       </td>
@@ -502,6 +559,14 @@ export const Admin = () => {
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
+                    <th className="px-5 py-4 font-medium">
+                      <input 
+                        type="checkbox" 
+                        onChange={() => handleSelectAll(filteredInfluencers.map(i => i.id))} 
+                        checked={selectedIds.length === filteredInfluencers.length && filteredInfluencers.length > 0} 
+                        className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                      />
+                    </th>
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Influencer Info</th>
                     <th className="px-5 py-4 font-medium">Instagram</th>
@@ -513,11 +578,19 @@ export const Admin = () => {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && influencers.length === 0 ? (
-                    <tr><td colSpan={7} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={8} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredInfluencers.length === 0 ? (
-                    <tr><td colSpan={7} className="px-5 py-12 text-center text-white/50">No influencers match your search.</td></tr>
+                    <tr><td colSpan={8} className="px-5 py-12 text-center text-white/50">No influencers match your search.</td></tr>
                   ) : filteredInfluencers.map((inf) => (
-                    <tr key={inf.id} className="hover:bg-white/5 transition-colors">
+                    <tr key={inf.id} className={`hover:bg-white/5 transition-colors ${selectedIds.includes(inf.id) ? 'bg-white/5' : ''}`}>
+                      <td className="px-5 py-4 align-top">
+                        <input 
+                          type="checkbox" 
+                          onChange={() => handleSelectOne(inf.id)} 
+                          checked={selectedIds.includes(inf.id)} 
+                          className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                        />
+                      </td>
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(inf.created_at)}</span>
                       </td>
@@ -561,6 +634,14 @@ export const Admin = () => {
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
+                    <th className="px-5 py-4 font-medium">
+                      <input 
+                        type="checkbox" 
+                        onChange={() => handleSelectAll(filteredAmbassadors.map(a => a.id))} 
+                        checked={selectedIds.length === filteredAmbassadors.length && filteredAmbassadors.length > 0} 
+                        className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                      />
+                    </th>
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Student Info</th>
                     <th className="px-5 py-4 font-medium">College</th>
@@ -574,11 +655,19 @@ export const Admin = () => {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading && ambassadors.length === 0 ? (
-                    <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
+                    <tr><td colSpan={10} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredAmbassadors.length === 0 ? (
-                    <tr><td colSpan={9} className="px-5 py-12 text-center text-white/50">No ambassadors match your search.</td></tr>
+                    <tr><td colSpan={10} className="px-5 py-12 text-center text-white/50">No ambassadors match your search.</td></tr>
                   ) : filteredAmbassadors.map((amb) => (
-                    <tr key={amb.id} className="hover:bg-white/5 transition-colors">
+                    <tr key={amb.id} className={`hover:bg-white/5 transition-colors ${selectedIds.includes(amb.id) ? 'bg-white/5' : ''}`}>
+                      <td className="px-5 py-4 align-top">
+                        <input 
+                          type="checkbox" 
+                          onChange={() => handleSelectOne(amb.id)} 
+                          checked={selectedIds.includes(amb.id)} 
+                          className="rounded border-white/20 bg-white/5 text-sunrise-gold focus:ring-sunrise-gold"
+                        />
+                      </td>
                       <td className="px-5 py-4 align-top whitespace-nowrap">
                         <span className="text-white/60 text-xs">{formatDateTime(amb.created_at)}</span>
                       </td>
