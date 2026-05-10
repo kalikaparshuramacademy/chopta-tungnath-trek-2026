@@ -97,6 +97,15 @@ export const Hero = () => {
             </span>
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: SMOOTH_EASE, delay: 0.9 }}
+            className="text-sunrise-gold font-bold text-sm mb-4 uppercase tracking-widest"
+          >
+            🔥 Discounts valid till 16th May 2026! Register ASAP!
+          </motion.div>
+
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-bold mb-8 tracking-tighter leading-[0.85] text-glow">
             {TRIP_NAME.split(' ').map((word, i) => (
               <motion.span 

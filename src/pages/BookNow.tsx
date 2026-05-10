@@ -38,6 +38,7 @@ const LABEL = 'text-xs font-bold tracking-widest text-white/50 uppercase';
 export const BookNow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationType, setRegistrationType] = useState<'individual' | 'group'>('individual');
+  const [sharingType, setSharingType] = useState<'quad' | 'triple' | 'double'>('quad');
   const [successId, setSuccessId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
@@ -53,6 +54,7 @@ export const BookNow = () => {
     // Group-specific
     groupSize: 1,
     memberNames: '',         // comma-separated full names
+    memberContacts: '',      // comma-separated contact numbers
     maleCount: 0,
     femaleCount: 0,
 
@@ -73,7 +75,8 @@ export const BookNow = () => {
     ? 0
     : groupDiscountPerPerson;
 
-  const effectivePrice = Math.max(0, BASE_PRICE - appliedDiscount);
+  const currentBasePrice = sharingType === 'quad' ? 5499 : sharingType === 'triple' ? 5999 : 6499;
+  const effectivePrice = Math.max(0, currentBasePrice - appliedDiscount);
   const totalGroupSaving = appliedDiscount * effectiveGroupSize;
 
   // ── Handlers ─────────────────────────────────────────────────────────────
@@ -132,8 +135,10 @@ export const BookNow = () => {
         college: formData.organisation,
         batch_date: formData.date,
         registration_type: registrationType,
+        sharing_type: sharingType,
         group_size: effectiveGroupSize,
         member_names: registrationType === 'group' ? formData.memberNames : formData.name,
+        group_contacts: registrationType === 'group' ? formData.memberContacts : formData.phone,
         male_count: formData.maleCount || (registrationType === 'individual' ? 1 : 0),
         female_count: formData.femaleCount,
         discount_per_person: appliedDiscount,
@@ -292,9 +297,13 @@ export const BookNow = () => {
             Back to Home
           </Link>
 
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-glow mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-glow mb-2">
             Secure Your <span className="text-sunrise-gold">Seat</span>
           </h1>
+          
+          <p className="text-sunrise-gold font-bold text-sm mb-6 uppercase tracking-widest">
+            🔥 Discounts valid till 16th May! Register Fast!
+          </p>
 
           <div className="glass-dark p-8 rounded-3xl border border-white/10 mb-6 space-y-5">
             <div className="flex justify-between items-end border-b border-white/10 pb-5">
@@ -388,6 +397,22 @@ export const BookNow = () => {
                   Group
                 </button>
               </div>
+            </div>
+
+            {/* ── SHARING TYPE ────────────────────────────────────────── */}
+            <div className="space-y-2">
+              <label htmlFor="sharingType" className={LABEL}>Select Sharing *</label>
+              <select 
+                id="sharingType" 
+                name="sharingType" 
+                className={INPUT}
+                value={sharingType}
+                onChange={(e) => setSharingType(e.target.value as 'quad' | 'triple' | 'double')}
+              >
+                <option value="quad">Quad Sharing (₹5,499)</option>
+                <option value="triple">Triple Sharing (₹5,999)</option>
+                <option value="double">Double Sharing (₹6,499)</option>
+              </select>
             </div>
 
             {/* ── LEAD CONTACT DETAILS ─────────────────────────────────── */}
@@ -502,6 +527,19 @@ export const BookNow = () => {
                         className={INPUT + ' resize-none'}
                         placeholder={`E.g., Rahul Sharma, Priya Singh, Ankit Verma${effectiveGroupSize > 3 ? ', ...' : ''}`} />
                       <p className="text-xs text-white/30">List names of all {effectiveGroupSize} members including yourself.</p>
+                    </div>
+
+                    {/* Member Contacts */}
+                    <div className="space-y-2">
+                      <label htmlFor="memberContacts" className={LABEL}>
+                        Contact Numbers of Members *
+                        <span className="ml-2 text-white/30 normal-case font-normal">(comma-separated)</span>
+                      </label>
+                      <textarea id="memberContacts" name="memberContacts" required={registrationType === 'group'} value={formData.memberContacts} onChange={handleChange}
+                        rows={2}
+                        className={INPUT + ' resize-none'}
+                        placeholder="E.g., 9876543210, 8765432109" />
+                      <p className="text-xs text-white/30">Provide contact numbers in the same order as names.</p>
                     </div>
 
                     {/* Male / Female count */}

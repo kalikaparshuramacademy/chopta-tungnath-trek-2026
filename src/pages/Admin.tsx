@@ -20,8 +20,10 @@ interface Registration {
   college: string;
   batch_date: string;
   registration_type: string;
+  sharing_type: string;
   group_size: number;
   member_names: string;
+  group_contacts: string;
   male_count: number;
   female_count: number;
   discount_per_person: number;
@@ -32,6 +34,15 @@ interface Registration {
   payment_status: string;
   created_at: string;
 }
+
+const getBasePrice = (type: string) => {
+  switch (type) {
+    case 'quad': return 5499;
+    case 'triple': return 5999;
+    case 'double': return 6499;
+    default: return 5499;
+  }
+};
 
 interface Influencer {
   id: number;
@@ -143,6 +154,7 @@ const PasswordGate = ({ onUnlock }: { onUnlock: () => void }) => {
 export const Admin = () => {
   const [isUnlocked, setIsUnlocked] = useState(() => sessionStorage.getItem('admin_unlocked') === '1');
   const [activeTab, setActiveTab] = useState<'registrations' | 'influencers' | 'ambassadors'>('registrations');
+  const [selectedBatch, setSelectedBatch] = useState<string>('all');
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
@@ -230,11 +242,26 @@ export const Admin = () => {
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
-  const filteredRegistrations = !searchQuery ? registrations : registrations.filter(r => 
-    r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    r.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    r.phone.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const batches = Array.from(new Set(registrations.map(r => r.batch_date))).filter(Boolean);
+
+  const filteredRegistrations = registrations.filter(r => {
+    const matchesSearch = !searchQuery || 
+      r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      r.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      r.phone.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    const matchesBatch = selectedBatch === 'all' || r.batch_date === selectedBatch;
+    
+    return matchesSearch && matchesBatch;
+  });
+
+  const totalPaid = filteredRegistrations.reduce((acc, reg) => acc + (999 * reg.group_size), 0);
+  const totalPending = filteredRegistrations.reduce((acc, reg) => {
+    const base = getBasePrice(reg.sharing_type);
+    const total = (base - reg.discount_per_person) * reg.group_size;
+    const paid = 999 * reg.group_size;
+    return acc + (total - paid);
+  }, 0);
   
   const filteredInfluencers = !searchQuery ? influencers : influencers.filter(i => 
     i.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -348,15 +375,31 @@ export const Admin = () => {
             ))}
           </div>
 
-          <div className="relative w-full lg:w-96 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-sunrise-gold transition-colors" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name, email or phone..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all placeholder:text-white/20"
-            />
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+            {activeTab === 'registrations' && (
+              <select
+                value={selectedBatch}
+                onChange={e => setSelectedBatch(e.target.value)}
+                aria-label="Filter by Batch"
+                className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all"
+              >
+                <option value="all">All Batches</option>
+                {batches.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            )}
+
+            <div className="relative w-full lg:w-96 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-sunrise-gold transition-colors" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search by name, email or phone..."
+                className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all placeholder:text-white/20"
+              />
+            </div>
           </div>
         </div>
 
@@ -378,17 +421,11 @@ export const Admin = () => {
                   <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-white/50">
                     <th className="px-5 py-4 font-medium"><Clock className="w-3 h-3 inline mr-1" />Submitted</th>
                     <th className="px-5 py-4 font-medium">Traveler Info</th>
-                    <th className="px-5 py-4 font-medium text-sunrise-gold">Gender</th>
-                    <th className="px-5 py-4 font-medium">Type</th>
-                    <th className="px-5 py-4 font-medium">Occupation</th>
-                    <th className="px-5 py-4 font-medium">Organisation</th>
                     <th className="px-5 py-4 font-medium">Batch</th>
+                    <th className="px-5 py-4 font-medium">Sharing</th>
                     <th className="px-5 py-4 font-medium">Group / Members</th>
-                    <th className="px-5 py-4 font-medium">M / F</th>
-                    <th className="px-5 py-4 font-medium">Discount</th>
-                    <th className="px-5 py-4 font-medium">Offer</th>
-                    <th className="px-5 py-4 font-medium">Payment ID</th>
-                    <th className="px-5 py-4 font-medium">Status</th>
+                    <th className="px-5 py-4 font-medium">Paid</th>
+                    <th className="px-5 py-4 font-medium">Pending</th>
                     <th className="px-5 py-4 font-medium text-center">Actions</th>
                   </tr>
                 </thead>
@@ -396,7 +433,7 @@ export const Admin = () => {
                   {loading && registrations.length === 0 ? (
                     <tr><td colSpan={14} className="px-5 py-12 text-center text-white/50">Loading...</td></tr>
                   ) : filteredRegistrations.length === 0 ? (
-                    <tr><td colSpan={14} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
+                    <tr><td colSpan={8} className="px-5 py-12 text-center text-white/50">No registrations match your search.</td></tr>
                   ) : filteredRegistrations.map((reg) => (
                     <tr key={reg.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-4 align-top whitespace-nowrap">
@@ -409,49 +446,26 @@ export const Admin = () => {
                           <p className="flex items-center gap-1"><Phone className="w-3 h-3" /><a href={`tel:${reg.phone}`} className="hover:text-white transition-colors">{reg.phone}</a></p>
                         </div>
                       </td>
-                      <td className="px-5 py-4 align-top whitespace-nowrap">
-                        <span className="text-white/80 font-bold">{reg.gender || '—'}</span>
+                      <td className="px-5 py-4 align-top">
+                        <span className="inline-block px-2 py-1 rounded-full text-xs font-bold border border-white/10 bg-white/5 whitespace-nowrap">{reg.batch_date}</span>
                       </td>
                       <td className="px-5 py-4 align-top">
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold border ${
-                          reg.registration_type === 'group'
-                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-                            : 'bg-white/10 text-white/60 border-white/10'
-                        }`}>
-                          {reg.registration_type === 'group' ? `Group (${reg.group_size})` : 'Solo'}
+                        <span className="inline-block px-2 py-1 rounded-full text-xs font-bold border border-sunrise-gold/30 bg-sunrise-gold/10 text-sunrise-gold whitespace-nowrap">
+                          {reg.sharing_type ? `${reg.sharing_type.charAt(0).toUpperCase() + reg.sharing_type.slice(1)}` : 'Quad'}
                         </span>
-                      </td>
-                      <td className="px-5 py-4 align-top">
-                        <span className="text-white/70 text-xs whitespace-nowrap">{reg.occupation || '—'}</span>
-                      </td>
-                      <td className="px-5 py-4 align-top">
-                        <span className="inline-block px-2 py-1 rounded-full bg-white/10 text-xs border border-white/10 whitespace-nowrap">{reg.college || '—'}</span>
-                      </td>
-                      <td className="px-5 py-4 align-top">
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold border whitespace-nowrap ${
-                          reg.batch_date?.includes('21st') ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30'
-                        }`}>{reg.batch_date}</span>
                       </td>
                       <td className="px-5 py-4 align-top max-w-[200px]">
-                        <p className="text-white/70 text-xs line-clamp-2">{reg.member_names || reg.name}</p>
+                        <p className="text-white font-medium text-xs mb-1">{reg.registration_type === 'group' ? `Group (${reg.group_size})` : 'Solo'}</p>
+                        <p className="text-white/50 text-xs line-clamp-2">{reg.member_names || '—'}</p>
+                        {reg.group_contacts && (
+                          <p className="text-white/30 text-xs line-clamp-2 mt-1">{reg.group_contacts}</p>
+                        )}
                       </td>
-                      <td className="px-5 py-4 align-top whitespace-nowrap">
-                        <span className="text-white/70 text-xs">
-                          {reg.male_count ?? '—'}M / {reg.female_count ?? '—'}F
-                        </span>
+                      <td className="px-5 py-4 align-top font-bold text-green-400">
+                        ₹{(999 * reg.group_size).toLocaleString('en-IN')}
                       </td>
-                      <td className="px-5 py-4 align-top">
-                        {reg.discount_per_person > 0 ? (
-                          <span className="inline-block px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs border border-green-500/30 font-bold whitespace-nowrap">
-                            ₹{reg.discount_per_person}/pp
-                          </span>
-                        ) : <span className="text-white/30 text-xs">—</span>}
-                      </td>
-                      <td className="px-5 py-4 align-top">
-                        <span className="text-white/60 text-xs">
-                          {reg.offer_preference === 'free_trip' ? '🎁 Free Trip' : reg.offer_preference === 'group_discount' ? '💰 Group' : '—'}
-                          {reg.is_campus_ambassador ? ' 🏫' : ''}
-                        </span>
+                      <td className="px-5 py-4 align-top font-bold text-white/70">
+                        ₹{(((getBasePrice(reg.sharing_type) - reg.discount_per_person) * reg.group_size) - (999 * reg.group_size)).toLocaleString('en-IN')}
                       </td>
                       <td className="px-5 py-4 align-top text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
@@ -472,6 +486,14 @@ export const Admin = () => {
                     </tr>
                   ))}
                 </tbody>
+                <tfoot>
+                  <tr className="bg-white/5 font-bold border-t border-white/10">
+                    <td className="px-5 py-4" colSpan={5}>Total</td>
+                    <td className="px-5 py-4 text-green-400">₹{totalPaid.toLocaleString('en-IN')}</td>
+                    <td className="px-5 py-4 text-white/70">₹{totalPending.toLocaleString('en-IN')}</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
               </table>
             )}
 

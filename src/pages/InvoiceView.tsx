@@ -17,6 +17,8 @@ interface Registration {
   group_size: number;
   discount_per_person: number;
   total_discount: number;
+  sharing_type: string;
+  group_contacts: string;
   payment_id: string;
   payment_status: string;
   created_at: string;
@@ -70,7 +72,15 @@ export const InvoiceView = () => {
     </div>
   );
 
-  const BASE_PRICE = 5499;
+  const getBasePrice = (type: string) => {
+    switch (type) {
+      case 'quad': return 5499;
+      case 'triple': return 5999;
+      case 'double': return 6499;
+      default: return 5499;
+    }
+  };
+  const BASE_PRICE = getBasePrice(data.sharing_type);
   const TOKEN_AMOUNT = 999;
   const totalAmount = (BASE_PRICE - data.discount_per_person) * data.group_size;
   const paidAmount = TOKEN_AMOUNT * data.group_size;
@@ -135,40 +145,65 @@ export const InvoiceView = () => {
           </div>
 
           {/* Booking Status Banner */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-green-50 p-8 rounded-[2.5rem] mb-12 border border-green-100 relative overflow-hidden print:bg-green-50 print:border-green-200" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-green-200/20 blur-3xl rounded-full print:hidden" />
-            
-            <div className="flex items-center gap-6 relative z-10">
-              <div className="relative">
-                <div className="w-16 h-16 bg-green-600 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-xl shadow-green-600/20 rotate-3 print:bg-green-600" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
-                  <CheckCircle className="w-8 h-8 text-white" />
+          {data.payment_status === 'paid' ? (
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-green-50 p-8 rounded-[2.5rem] mb-12 border border-green-100 relative overflow-hidden print:bg-green-50 print:border-green-200" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-green-200/20 blur-3xl rounded-full print:hidden" />
+              
+              <div className="flex items-center gap-6 relative z-10">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-green-600 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-xl shadow-green-600/20 rotate-3 print:bg-green-600" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
+                    <CheckCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <img 
+                    src="/images/logo_circular.png" 
+                    alt="Peak & River" 
+                    className="w-8 h-8 rounded-full border-2 border-white absolute -bottom-1 -right-1 shadow-md print:border-white"
+                  />
                 </div>
-                <img 
-                  src="/images/logo_circular.png" 
-                  alt="Peak & River" 
-                  className="w-8 h-8 rounded-full border-2 border-white absolute -bottom-1 -right-1 shadow-md print:border-white"
-                />
+                <div>
+                  <p className="font-black text-green-700 uppercase tracking-widest text-xs mb-1">Payment Confirmed</p>
+                  <p className="text-green-600 font-bold text-base">Your seat for the {TRIP_NAME} is successfully secured.</p>
+                  <p className="text-[10px] text-green-600/60 uppercase tracking-widest font-black mt-1 flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3" /> 100% Secure Transaction
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-black text-green-700 uppercase tracking-widest text-xs mb-1">Payment Confirmed</p>
-                <p className="text-green-600 font-bold text-base">Your seat for the {TRIP_NAME} is successfully secured.</p>
-                <p className="text-[10px] text-green-600/60 uppercase tracking-widest font-black mt-1 flex items-center gap-2">
-                  <ShieldCheck className="w-3 h-3" /> 100% Secure Transaction
-                </p>
-              </div>
-            </div>
 
-            <div className="flex flex-col items-center md:items-end gap-2 relative z-10">
-              <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-xl border border-green-100">
-                <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Powered by</span>
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" 
-                  alt="Razorpay" 
-                  className="h-4 opacity-70"
-                />
+              <div className="flex flex-col items-center md:items-end gap-2 relative z-10">
+                <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-xl border border-green-100">
+                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Powered by</span>
+                  <img 
+                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" 
+                    alt="Razorpay" 
+                    className="h-4 opacity-70"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-yellow-50 p-8 rounded-[2.5rem] mb-12 border border-yellow-100 relative overflow-hidden print:bg-yellow-50 print:border-yellow-200" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-200/20 blur-3xl rounded-full print:hidden" />
+              
+              <div className="flex items-center gap-6 relative z-10">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-yellow-600 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-xl shadow-yellow-600/20 rotate-3 print:bg-yellow-600" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
+                    <Clock className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <p className="font-black text-yellow-700 uppercase tracking-widest text-xs mb-1">Payment Pending</p>
+                  <p className="text-yellow-600 font-bold text-base">This receipt is invalid until payment is confirmed.</p>
+                  <p className="text-[10px] text-yellow-600/60 uppercase tracking-widest font-black mt-1 flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3" /> Awaiting Confirmation
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-1">Status</p>
+                <p className="text-lg font-black text-yellow-700 uppercase">{data.payment_status || 'PENDING'}</p>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-16">
             {/* Traveler Info */}
@@ -264,7 +299,7 @@ export const InvoiceView = () => {
               <tbody className="divide-y divide-neutral-50">
                 <tr className="text-sm">
                   <td className="py-6 px-2">
-                    <p className="font-bold text-neutral-800">Trek Package (Full Itinerary)</p>
+                    <p className="font-bold text-neutral-800">Trip Package ({data.sharing_type ? `${data.sharing_type.charAt(0).toUpperCase() + data.sharing_type.slice(1)} Sharing` : 'Standard Sharing'})</p>
                     <p className="text-xs text-neutral-500">Includes stays, meals, guide & T-shirt</p>
                   </td>
                   <td className="py-6 px-2 text-right font-medium text-neutral-700">₹{BASE_PRICE.toLocaleString('en-IN')}</td>
