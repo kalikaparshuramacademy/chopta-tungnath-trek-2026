@@ -719,29 +719,35 @@ export const Admin = () => {
             )}
           </div>
 
-          {/* Modal */}
+          {/* Full Screen Details View */}
           {viewingRegistration && (
-            <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-[#0a0a0a] border border-white/20 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/50">
-                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#111]">
-                  <h2 className="text-xl font-bold text-glow">Registration Details</h2>
+            <div className="fixed inset-0 bg-[#050505] z-50 overflow-y-auto">
+              <div className="min-h-screen flex flex-col">
+                {/* Header */}
+                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#0a0a0a] sticky top-0 z-10">
+                  <div>
+                    <h2 className="text-xl font-bold text-glow">Registration Details</h2>
+                    <p className="text-sm text-white/60 mt-1">ID: {viewingRegistration.id}</p>
+                  </div>
                   <button 
                     onClick={() => setViewingRegistration(null)}
-                    className="p-2 hover:bg-white/5 rounded-full transition-colors"
+                    className="p-3 hover:bg-white/5 rounded-full transition-colors flex items-center gap-2 border border-white/10"
                     title="Close"
                   >
-                    <X className="w-5 h-5 text-white/50 hover:text-white" />
+                    <X className="w-5 h-5 text-white" />
+                    <span className="text-sm text-white font-medium">Close</span>
                   </button>
                 </div>
                 
-                <div className="p-6 space-y-6">
+                {/* Content */}
+                <div className="p-6 md:p-10 space-y-8 max-w-5xl mx-auto w-full flex-1">
                   {/* Personal Info */}
-                  <div>
-                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Personal Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/5">
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-4 font-bold">Personal Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       <div>
                         <p className="text-xs text-white/60">Name</p>
-                        <p className="text-white font-medium">{viewingRegistration.name}</p>
+                        <p className="text-white font-medium text-lg">{viewingRegistration.name}</p>
                       </div>
                       <div>
                         <p className="text-xs text-white/60">Email</p>
@@ -753,11 +759,11 @@ export const Admin = () => {
                       </div>
                       <div>
                         <p className="text-xs text-white/60">Gender</p>
-                        <p className="text-white font-medium">{viewingRegistration.gender}</p>
+                        <p className="text-white font-medium capitalize">{viewingRegistration.gender}</p>
                       </div>
                       <div>
                         <p className="text-xs text-white/60">Occupation</p>
-                        <p className="text-white font-medium">{viewingRegistration.occupation}</p>
+                        <p className="text-white font-medium capitalize">{viewingRegistration.occupation}</p>
                       </div>
                       <div>
                         <p className="text-xs text-white/60">College</p>
@@ -767,9 +773,9 @@ export const Admin = () => {
                   </div>
 
                   {/* Trip Info */}
-                  <div className="border-t border-white/5 pt-6">
-                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Trip Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/5">
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-4 font-bold">Trip Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                       <div>
                         <p className="text-xs text-white/60">Batch Date</p>
                         <p className="text-white font-medium">{viewingRegistration.batch_date}</p>
@@ -791,19 +797,23 @@ export const Admin = () => {
 
                   {/* Group Members */}
                   {(viewingRegistration.member_names || viewingRegistration.group_contacts) && (
-                    <div className="border-t border-white/5 pt-6">
-                      <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Group Members</h3>
-                      <div className="space-y-4">
+                    <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/5">
+                      <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-4 font-bold">Group Members</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {viewingRegistration.member_names && (
                           <div>
                             <p className="text-xs text-white/60">Member Names</p>
-                            <p className="text-white font-medium whitespace-pre-wrap">{viewingRegistration.member_names}</p>
+                            <div className="mt-1 bg-black/20 p-4 rounded-xl border border-white/5">
+                              <p className="text-white whitespace-pre-wrap">{viewingRegistration.member_names}</p>
+                            </div>
                           </div>
                         )}
                         {viewingRegistration.group_contacts && (
                           <div>
                             <p className="text-xs text-white/60">Member Contacts</p>
-                            <p className="text-white font-medium whitespace-pre-wrap">{viewingRegistration.group_contacts}</p>
+                            <div className="mt-1 bg-black/20 p-4 rounded-xl border border-white/5">
+                              <p className="text-white whitespace-pre-wrap">{viewingRegistration.group_contacts}</p>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -811,9 +821,9 @@ export const Admin = () => {
                   )}
 
                   {/* Additional Info */}
-                  <div className="border-t border-white/5 pt-6">
-                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-3 font-bold">Additional Info</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/5">
+                    <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-4 font-bold">Additional Info</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                       <div>
                         <p className="text-xs text-white/60">Male Count</p>
                         <p className="text-white font-medium">{viewingRegistration.male_count}</p>
