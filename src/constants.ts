@@ -96,35 +96,67 @@ export const ITINERARY: DayItinerary[] = [
     title: "Departure + Overnight Journey",
     description: "Depart from Delhi in the evening and begin your exciting journey toward the Himalayas.",
     highlights: ["Departure from Delhi", "Group road trip experience", "Overnight journey", "Scenic Himalayan route"],
-    image: "/images/day1_departure_1778044457321.webp"
+    image: "/images/day1_departure_1778044457321.webp",
+    details: [
+      "Depart from Delhi in the evening and begin your exciting journey toward the Himalayas.",
+      "Travel overnight through scenic highways and mountain routes as you head towards Rishikesh, the gateway to the Garhwal Himalayas.",
+      "Enjoy the road trip with fellow travelers while experiencing the thrill of an upcoming mountain adventure."
+    ]
   },
   {
     day: 2,
     title: "Scenic Drive + Deoria Tal Trek",
     description: "Arrive in Rishikesh, drive towards Sari Village, and trek to the beautiful Deoria Tal lake.",
     highlights: ["Devprayag Sangam viewpoint", "2.5 km trek to Deoria Tal", "Lake reflection views", "Overnight stay in Sari Village"],
-    image: "/images/day2_deoria_tal_1778044472269.webp"
+    image: "/images/day2_deoria_tal_1778044472269.webp",
+    details: [
+      "Arrive in Rishikesh in the morning and begin the scenic drive towards Sari Village, the starting point of the Deoria Tal trek.",
+      "Stop at Devprayag to witness the spectacular confluence of the Bhagirathi and Alaknanda rivers, forming the sacred Ganga.",
+      "Continue the journey through the beautiful Garhwal mountains and reach Sari Village by afternoon.",
+      "Begin the 2.5 km trek to Deoria Tal Lake, known for its crystal-clear water and breathtaking reflections of Himalayan peaks.",
+      "Return to the village by evening for dinner and overnight stay."
+    ]
   },
   {
     day: 3,
     title: "Tungnath Temple + Chandrashila Summit",
     description: "The marquee day. Begin the trek to the highest Shiva temple and explore Chandrashila peak.",
     highlights: ["3.5 km Himalayan trek", "Highest Shiva Temple in the world", "360° panoramic summit views", "Descent back to Chopta"],
-    image: "/images/day3_tungnath_1778044489559.webp"
+    image: "/images/day3_tungnath_1778044489559.webp",
+    details: [
+      "Wake up early and witness a breathtaking Himalayan sunrise over the mountains.",
+      "After breakfast, drive towards Chopta, often called the 'Mini Switzerland of India'.",
+      "Begin the 3.5 km trek to Tungnath Temple, the highest Shiva temple in the world, located at an altitude of around 3,680 meters.",
+      "Continue trekking further to Chandrashila Summit, which offers spectacular 360° panoramic views of Himalayan peaks such as Nanda Devi, Trishul, Chaukhamba, and Kedarnath ranges.",
+      "After spending time at the summit, descend back to Chopta / Sari Village by evening for dinner and overnight stay."
+    ]
   },
   {
     day: 4,
     title: "Mountain Retreat + Return Drive",
     description: "Wake up to fresh mountain air, visit local temples, and begin the journey back towards Rishikesh.",
-    highlights: ["Morning views of Chopta valley", "Dhari Devi Temple visit", "Scenic road journey", "Overnight drive to Delhi"],
-    image: "/images/day4_return_1778044507903.webp"
+    highlights: ["Morning views of Chopta valley", "Dhari Devi Temple visit", "Optional River Rafting", "Overnight drive to Delhi"],
+    image: "/images/day4_return_1778044507903.webp",
+    details: [
+      "Wake up to the fresh mountain air of Chopta and enjoy a peaceful morning surrounded by the beautiful Himalayan landscape.",
+      "After breakfast, prepare for departure and begin the journey back towards Rishikesh.",
+      "During the journey, visit famous temples such as Omkareshwar Temple and Dhari Devi Temple, located along the scenic Alaknanda river.",
+      "Optional: Enjoy thrilling White Water River Rafting in Rishikesh (Self Paid) before departing for Delhi.",
+      "Continue the drive and reach Rishikesh by evening, after which the group will begin the overnight journey back to Delhi."
+    ]
   },
   {
     day: 5,
     title: "Arrival in Delhi",
     description: "Early morning arrival in Delhi, marking the end of an incredible journey.",
     highlights: ["Completion of journey", "Memorable Himalayan experience", "New friends", "Trip conclusions"],
-    image: "/images/day5_arrival_1778044527261.webp"
+    image: "/images/day5_arrival_1778044527261.webp",
+    details: [
+      "After an unforgettable adventure in the Himalayas, the group continues the journey back towards Delhi.",
+      "Arrive in Delhi early in the morning, marking the end of the incredible Chopta Tungnath Trek.",
+      "Carry back beautiful memories of mountain landscapes, spiritual temples, and thrilling trekking experiences.",
+      "The journey may end here, but the memories of the Himalayas will stay with you forever."
+    ]
   }
 ];
 

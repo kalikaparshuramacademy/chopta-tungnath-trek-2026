@@ -18,6 +18,7 @@ export interface DayItinerary {
   description: string;
   highlights: string[];
   image?: string;
+  details?: string[];
 }
 
 export interface PricePlan {
