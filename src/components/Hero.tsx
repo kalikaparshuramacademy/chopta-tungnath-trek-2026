@@ -133,25 +133,43 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: SMOOTH_EASE, delay: 1.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-8"
+            className="flex flex-col items-center justify-center gap-6"
           >
-            <Link to="/book" className="group">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-5 bg-sunrise-gold text-black rounded-full font-bold shadow-2xl shadow-sunrise-gold/20 flex items-center gap-4 transition-all hover:shadow-sunrise-gold/40"
-              >
-                <div className="flex flex-col text-left">
-                  <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">Total: ₹5,499</span>
-                  <span className="text-xl leading-none font-black">Book Now at ₹999</span>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <ArrowRight className="w-6 h-6" />
-                </div>
-              </motion.button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link to="/book" className="group">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-5 bg-sunrise-gold text-black rounded-full font-bold shadow-2xl shadow-sunrise-gold/20 flex items-center gap-4 transition-all hover:shadow-sunrise-gold/40"
+                >
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">Total: ₹5,499</span>
+                    <span className="text-xl leading-none font-black">Book Now at ₹999</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <ArrowRight className="w-6 h-6" />
+                  </div>
+                </motion.button>
+              </Link>
+
+              <a href="#itinerary" className="group">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-5 glass text-white rounded-full font-bold shadow-2xl flex items-center gap-4 transition-all hover:bg-white/10 border border-white/10 hover:border-sunrise-gold/30"
+                >
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">View Plan</span>
+                    <span className="text-xl leading-none font-black">Itinerary</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <ArrowRight className="w-6 h-6" />
+                  </div>
+                </motion.button>
+              </a>
+            </div>
             
-            <motion.div 
+            <div 
               className="flex items-center gap-5 text-white/80 glass px-8 py-4 rounded-full"
             >
               <div className="flex -space-x-3">
@@ -166,7 +184,7 @@ export const Hero = () => {
                 <p className="text-sm font-black leading-none text-sunrise-gold">47 / 60 Seats</p>
                 <p className="text-[10px] opacity-60 font-bold uppercase tracking-wider mt-1">Reserved by DU Students</p>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
           <motion.div 
