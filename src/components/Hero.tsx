@@ -28,7 +28,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-himalaya-black">
+    <section ref={containerRef} className="relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden bg-himalaya-black">
       {/* Background with Video and Atmosphere */}
       <div className="absolute inset-0 z-0">
         <motion.div 
@@ -78,7 +78,7 @@ export const Hero = () => {
       {/* Content */}
       <motion.div 
         style={{ y: isMobile ? 0 : contentY, opacity }}
-        className="relative z-20 text-center px-6 max-w-5xl"
+        className="relative z-20 text-center px-6 max-w-5xl pt-24 md:pt-0 pb-24 md:pb-0"
       >
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -89,10 +89,10 @@ export const Hero = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: SMOOTH_EASE, delay: 0.8 }}
-            className="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full mb-8"
+            className="inline-flex items-center gap-2 glass px-3 py-1 sm:px-4 sm:py-1.5 rounded-full mb-8 max-w-full"
           >
-            <span className="w-2 h-2 bg-sunrise-gold rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/80">
+            <span className="w-2 h-2 bg-sunrise-gold rounded-full animate-pulse flex-shrink-0" />
+            <span className="text-[8px] sm:text-[10px] font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase text-white/80 text-center">
               {TRIP_DATES} • {DURATION}
             </span>
           </motion.div>
