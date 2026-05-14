@@ -83,7 +83,8 @@ export const InvoiceView = () => {
   const BASE_PRICE = getBasePrice(data.sharing_type);
   const TOKEN_AMOUNT = 999;
   const totalAmount = (BASE_PRICE - data.discount_per_person) * data.group_size;
-  const paidAmount = TOKEN_AMOUNT * data.group_size;
+  const isPaid = data.payment_status === 'paid';
+  const paidAmount = isPaid ? TOKEN_AMOUNT * data.group_size : 0;
   const pendingAmount = totalAmount - paidAmount;
 
   return (

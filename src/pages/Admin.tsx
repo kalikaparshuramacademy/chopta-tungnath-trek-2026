@@ -290,11 +290,15 @@ export const Admin = () => {
     return matchesSearch && matchesBatch;
   });
 
-  const totalPaid = filteredRegistrations.reduce((acc, reg) => acc + (999 * reg.group_size), 0);
+  const totalPaid = filteredRegistrations.reduce((acc, reg) => {
+    const isPaid = reg.payment_status === 'paid';
+    return acc + (isPaid ? 999 * reg.group_size : 0);
+  }, 0);
   const totalPending = filteredRegistrations.reduce((acc, reg) => {
     const base = getBasePrice(reg.sharing_type);
     const total = (base - reg.discount_per_person) * reg.group_size;
-    const paid = 999 * reg.group_size;
+    const isPaid = reg.payment_status === 'paid';
+    const paid = isPaid ? 999 * reg.group_size : 0;
     return acc + (total - paid);
   }, 0);
   
@@ -520,10 +524,13 @@ export const Admin = () => {
                         )}
                       </td>
                       <td className="px-5 py-4 align-top font-bold text-green-400">
-                        ₹{(999 * reg.group_size).toLocaleString('en-IN')}
+                        ₹{(reg.payment_status === 'paid' ? 999 * reg.group_size : 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-5 py-4 align-top font-bold text-white/70">
-                        ₹{(((getBasePrice(reg.sharing_type) - reg.discount_per_person) * reg.group_size) - (999 * reg.group_size)).toLocaleString('en-IN')}
+                        ₹{(reg.payment_status === 'paid' 
+                          ? (((getBasePrice(reg.sharing_type) - reg.discount_per_person) * reg.group_size) - (999 * reg.group_size))
+                          : ((getBasePrice(reg.sharing_type) - reg.discount_per_person) * reg.group_size)
+                        ).toLocaleString('en-IN')}
                       </td>
                       <td className="px-5 py-4 align-top text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
