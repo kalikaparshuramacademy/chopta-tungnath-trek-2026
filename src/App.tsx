@@ -15,6 +15,13 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { GoldenBackground } from './components/GoldenBackground';
+import { CountdownTimer } from './components/CountdownTimer';
+import { LiveSeatCounter } from './components/LiveSeatCounter';
+import { PhotoGallery } from './components/PhotoGallery';
+import { TrekRouteMap } from './components/TrekRouteMap';
+import { BatchCapacityBar } from './components/BatchCapacityBar';
+import { WhatsAppButton } from './components/WhatsAppButton';
+import { SocialProofTicker } from './components/SocialProofTicker';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
@@ -34,6 +41,8 @@ const Privacy = lazy(() => import('./pages/Privacy').then(module => ({ default: 
 const InvoiceView = lazy(() => import('./pages/InvoiceView').then(module => ({ default: module.InvoiceView })));
 const FindBooking = lazy(() => import('./pages/FindBooking').then(module => ({ default: module.FindBooking })));
 const CreatorLogin = lazy(() => import('./pages/CreatorLogin').then(module => ({ default: module.CreatorLogin })));
+const PackingChecklist = lazy(() => import('./pages/PackingChecklist').then(module => ({ default: module.PackingChecklist })));
+const CancelReschedule = lazy(() => import('./pages/CancelReschedule').then(module => ({ default: module.CancelReschedule })));
 
 const Loading = () => (
   <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
@@ -216,7 +225,11 @@ const Home = () => {
         </section>
 
         <JourneyTimeline />
+        <CountdownTimer />
+        <TrekRouteMap />
         <DestinationShowcase />
+        <PhotoGallery />
+        <BatchCapacityBar />
         <Pricing />
         <AmbassadorProgram />
         <CreatorProgram />
@@ -262,7 +275,7 @@ const Home = () => {
                   <div className="absolute -inset-1 bg-sunrise-gold rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
                   <div className="relative bg-sunrise-gold text-black px-12 py-6 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-4">
                     <div className="flex flex-col text-left">
-                      <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">Total: ₹5,499</span>
+                      <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">Total: ₹5,999</span>
                       <span className="text-2xl font-black leading-none">Book Now at ₹999</span>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
@@ -298,6 +311,8 @@ const Home = () => {
       
       <Footer />
       <MobileStickyBar />
+      <WhatsAppButton />
+      <SocialProofTicker />
     </div>
   );
 };
@@ -317,6 +332,8 @@ export default function App() {
         <Route path="/invoice/:id" element={<InvoiceView />} />
         <Route path="/find-booking" element={<FindBooking />} />
         <Route path="/creator-login" element={<CreatorLogin />} />
+        <Route path="/packing-checklist" element={<PackingChecklist />} />
+        <Route path="/cancel-reschedule" element={<CancelReschedule />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

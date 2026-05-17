@@ -3,6 +3,7 @@ import { TRIP_NAME, TAGLINE, TRIP_DATES, DURATION } from '../constants';
 import { Users, ArrowRight, ShieldCheck, GraduationCap, Instagram } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { LiveSeatCounter } from './LiveSeatCounter';
 
 // Standard smooth easing for a premium feel
 const SMOOTH_EASE = [0.23, 1, 0.32, 1];
@@ -143,7 +144,7 @@ export const Hero = () => {
                   className="px-8 py-5 bg-sunrise-gold text-black rounded-full font-bold shadow-2xl shadow-sunrise-gold/20 flex items-center gap-4 transition-all hover:shadow-sunrise-gold/40"
                 >
                   <div className="flex flex-col text-left">
-                    <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">Total: ₹5,499</span>
+                    <span className="text-[10px] uppercase tracking-widest opacity-70 leading-none mb-1 font-black">From ₹5,999</span>
                     <span className="text-xl leading-none font-black">Book Now at ₹999</span>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
@@ -169,21 +170,8 @@ export const Hero = () => {
               </a>
             </div>
             
-            <div 
-              className="flex items-center gap-5 text-white/80 glass px-8 py-4 rounded-full"
-            >
-              <div className="flex -space-x-3">
-                {[1,2,3].map(i => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-himalaya-black bg-himalaya-black/80 flex items-center justify-center relative overflow-hidden">
-                    <Users className="w-5 h-5 text-sunrise-gold" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-sunrise-gold/10 to-transparent" />
-                  </div>
-                ))}
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-black leading-none text-sunrise-gold">47 / 60 Seats</p>
-                <p className="text-[10px] opacity-60 font-bold uppercase tracking-wider mt-1">Reserved by DU Students</p>
-              </div>
+            <div className="flex justify-center mt-2">
+              <LiveSeatCounter />
             </div>
           </motion.div>
 

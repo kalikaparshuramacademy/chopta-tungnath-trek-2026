@@ -16,20 +16,6 @@ const BASE_PRICE = 5999;
 const TOKEN_AMOUNT = 999;
 const TRIP_NAME = 'Chopta Tungnath Trip 2026';
 
-const GROUP_DISCOUNTS: Record<number, number> = {
-  3: 200,
-  4: 300,
-  6: 400,
-  8: 500,
-};
-
-function getGroupDiscount(size: number): number {
-  if (size >= 8) return GROUP_DISCOUNTS[8];
-  if (size >= 6) return GROUP_DISCOUNTS[6];
-  if (size >= 4) return GROUP_DISCOUNTS[4];
-  if (size >= 3) return GROUP_DISCOUNTS[3];
-  return 0;
-}
 
 // ── Input style ───────────────────────────────────────────────────────────────
 const INPUT = 'w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20';
@@ -68,10 +54,9 @@ export const BookNow = () => {
 
   // ── Computed discount ────────────────────────────────────────────────────
   const effectiveGroupSize = registrationType === 'group' ? 1 + members.length : 1;
-  const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
 
   const referralDiscount = formData.referralCode.trim().length > 0 ? 500 : 0;
-  const appliedDiscount = groupDiscountPerPerson + referralDiscount;
+  const appliedDiscount = referralDiscount;
 
   const currentBasePrice = sharingType === 'quad' ? 5999 : sharingType === 'triple' ? 6499 : 6999;
   const effectivePrice = Math.max(0, currentBasePrice - appliedDiscount);
@@ -324,26 +309,6 @@ export const BookNow = () => {
               </div>
             </div>
 
-            {/* Group discount ladder */}
-            <div>
-              <p className="text-xs font-bold tracking-widest text-white/40 uppercase mb-3">Group Discounts</p>
-              <div className="grid grid-cols-2 gap-2">
-                {[{ n: 3, off: 200 }, { n: 4, off: 300 }, { n: 6, off: 400 }, { n: '8+', off: 500 }].map(({ n, off }) => {
-                  const isActive = registrationType === 'group' &&
-                    (typeof n === 'number' ? effectiveGroupSize === n : effectiveGroupSize >= 8);
-                  return (
-                    <div key={n} className={`flex justify-between items-center px-3 py-2 rounded-xl border text-sm transition-colors ${
-                      isActive ? 'bg-sunrise-gold/10 border-sunrise-gold/40 text-sunrise-gold' : 'bg-white/5 border-white/10 text-white/60'
-                    }`}>
-                      <span>{typeof n === 'number' ? `Group of ${n}` : `Group of ${n}`}</span>
-                      <span className="font-bold">₹{off} off</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <p className="text-xs text-white/30 mt-2">* One extra person can be added to any group and avail the same discount.</p>
-            </div>
-
             <div className="border-t border-white/10 pt-5">
               <p className="text-sm text-white/50 mb-1">Book Now — Pay Token</p>
               <p className="text-3xl font-bold text-white">₹{TOKEN_AMOUNT}/- <span className="text-sm font-normal text-white/40">per person</span></p>
@@ -351,7 +316,7 @@ export const BookNow = () => {
             </div>
 
             <ul className="space-y-2 border-t border-white/10 pt-4">
-              {['Priority Seating', 'Chopta Tungnath Trip T-Shirt', 'Free Photography Coverage', 'Instant Confirmation'].map((b, i) => (
+              {['Priority Seating', 'Free Photography Coverage', 'Instant Confirmation', 'Dedicated Trip Support'].map((b, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm text-white/80">
                   <CheckCircle className="w-4 h-4 text-sunrise-gold shrink-0" />{b}
                 </li>
@@ -494,11 +459,6 @@ export const BookNow = () => {
                     <div className="flex items-center gap-2 text-sunrise-gold">
                       <Users className="w-4 h-4" />
                       <span className="text-sm font-bold">Group Details</span>
-                      {groupDiscountPerPerson > 0 && (
-                        <span className="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded-full border border-green-500/30 font-bold">
-                          ₹{groupDiscountPerPerson} off each applied!
-                        </span>
-                      )}
                     </div>
 
                     {/* Group Size */}

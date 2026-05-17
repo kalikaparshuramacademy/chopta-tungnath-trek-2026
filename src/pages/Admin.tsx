@@ -37,10 +37,10 @@ interface Registration {
 
 const getBasePrice = (type: string) => {
   switch (type) {
-    case 'quad': return 5499;
-    case 'triple': return 5999;
-    case 'double': return 6499;
-    default: return 5499;
+    case 'quad': return 5999;
+    case 'triple': return 6499;
+    case 'double': return 6999;
+    default: return 5999;
   }
 };
 
@@ -423,17 +423,28 @@ export const Admin = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
             {activeTab === 'registrations' && (
-              <select
-                value={selectedBatch}
-                onChange={e => setSelectedBatch(e.target.value)}
-                aria-label="Filter by Batch"
-                className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all"
-              >
-                <option value="all">All Batches</option>
-                {batches.map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
+              <>
+                <select
+                  value={selectedBatch}
+                  onChange={e => setSelectedBatch(e.target.value)}
+                  aria-label="Filter by Batch"
+                  className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sunrise-gold/50 transition-all"
+                >
+                  <option value="all">All Batches</option>
+                  {batches.map(b => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                {selectedBatch !== 'all' && (
+                  <button
+                    onClick={() => exportCSV(filteredRegistrations, `registrations_${selectedBatch.replace(/\s+/g, '_')}`)}
+                    className="flex items-center gap-2 bg-sunrise-gold/10 text-sunrise-gold border border-sunrise-gold/20 px-4 py-2.5 rounded-full hover:bg-sunrise-gold/20 transition-colors font-bold text-sm whitespace-nowrap"
+                  >
+                    <Download className="w-4 h-4" />
+                    Export Batch CSV
+                  </button>
+                )}
+              </>
             )}
 
             <div className="relative w-full lg:w-96 group">
