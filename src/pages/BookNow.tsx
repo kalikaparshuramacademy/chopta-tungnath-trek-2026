@@ -48,6 +48,9 @@ export const BookNow = () => {
   const [sharingType, setSharingType] = useState<'quad' | 'triple' | 'double'>('quad');
   const [successId, setSuccessId] = useState<number | null>(null);
   const [members, setMembers] = useState<{ name: string; phone: string }[]>([]);
+  const [isValidatingCode, setIsValidatingCode] = useState(false);
+  const [validReferral, setValidReferral] = useState<{code: string, discount: number} | null>(null);
+  const [referralError, setReferralError] = useState('');
 
   const [formData, setFormData] = useState({
     // Lead contact
@@ -79,7 +82,7 @@ export const BookNow = () => {
   const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
 
   // Customer chooses EITHER group discount OR referral code — not both
-  const referralDiscount = formData.discountChoice === 'referral' && formData.referralCode.trim().length > 0 ? 500 : 0;
+  const referralDiscount = formData.discountChoice === 'referral' && validReferral ? validReferral.discount : 0;
   const appliedDiscount = formData.discountChoice === 'group' ? groupDiscountPerPerson : referralDiscount;
 
   const currentBasePrice = sharingType === 'quad' ? 5999 : sharingType === 'triple' ? 6499 : 6999;
@@ -94,6 +97,32 @@ export const BookNow = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value,
     }));
+
+    if (name === 'referralCode') {
+      setValidReferral(null);
+      setReferralError('');
+    }
+  };
+
+  const handleApplyCode = async () => {
+    const code = formData.referralCode.trim().toUpperCase();
+    if (!code) return;
+    setIsValidatingCode(true);
+    setReferralError('');
+    try {
+      const { data, error } = await supabase.from('creator_codes').select('*').eq('code', code).single();
+      if (error || !data) {
+        setReferralError('Invalid referral code');
+        setValidReferral(null);
+      } else {
+        setValidReferral({ code: data.code, discount: 500 });
+      }
+    } catch(e) {
+      setReferralError('Error validating code');
+      setValidReferral(null);
+    } finally {
+      setIsValidatingCode(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -600,7 +629,13 @@ export const BookNow = () => {
                   <button
                     key={opt.val}
                     type="button"
-                    onClick={() => setFormData(p => ({ ...p, discountChoice: opt.val as any, referralCode: opt.val !== 'referral' ? '' : p.referralCode }))}
+                    onClick={() => {
+                      setFormData(p => ({ ...p, discountChoice: opt.val as any, referralCode: opt.val !== 'referral' ? '' : p.referralCode }));
+                      if (opt.val !== 'referral') {
+                        setValidReferral(null);
+                        setReferralError('');
+                      }
+                    }}
                     className={`py-2.5 rounded-xl border font-bold text-xs transition-all ${
                       formData.discountChoice === opt.val
                         ? 'bg-sunrise-gold text-black border-sunrise-gold'
@@ -662,24 +697,29 @@ export const BookNow = () => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden space-y-2"
                   >
-                    <div className="relative mt-1">
+                    <div className="relative mt-1 flex gap-2">
                       <input
                         id="referralCode"
                         name="referralCode"
                         type="text"
                         value={formData.referralCode}
                         onChange={handleChange}
-                        className={INPUT + ' uppercase tracking-widest pr-28'}
+                        className={INPUT + ' uppercase tracking-widest flex-1'}
                         placeholder="e.g. RAHUL500"
                         maxLength={20}
                       />
-                      {formData.referralCode.trim().length > 0 && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          <span className="text-green-400 text-xs font-bold">✓ ₹500 OFF!</span>
-                        </div>
-                      )}
+                      <button
+                        type="button"
+                        onClick={handleApplyCode}
+                        disabled={isValidatingCode || !formData.referralCode.trim() || !!validReferral}
+                        className="px-4 bg-white/10 rounded-xl font-bold text-sm hover:bg-white/20 disabled:opacity-50 transition-colors border border-white/10"
+                      >
+                        {isValidatingCode ? 'Checking...' : validReferral ? 'Applied' : 'Apply'}
+                      </button>
                     </div>
-                    <p className="text-xs text-white/40">Enter a valid creator referral code to get ₹500 off.</p>
+                    {validReferral && <p className="text-green-400 text-xs font-bold mt-1">✓ ₹500 OFF applied!</p>}
+                    {referralError && <p className="text-red-400 text-xs font-bold mt-1">{referralError}</p>}
+                    <p className="text-xs text-white/40 mt-1">Enter a valid creator referral code to get ₹500 off.</p>
                   </motion.div>
                 )}
               </AnimatePresence>
