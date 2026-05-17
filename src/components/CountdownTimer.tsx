@@ -3,10 +3,16 @@ import { motion } from 'motion/react';
 import { Clock } from 'lucide-react';
 
 const BATCHES = [
-  { label: '6th June', date: new Date('2026-06-06T06:00:00+05:30') },
+  { label: '6th June',  date: new Date('2026-06-06T06:00:00+05:30') },
   { label: '11th June', date: new Date('2026-06-11T06:00:00+05:30') },
   { label: '14th June', date: new Date('2026-06-14T06:00:00+05:30') },
+  { label: '20th June', date: new Date('2026-06-20T06:00:00+05:30') },
+  { label: '23rd June', date: new Date('2026-06-23T06:00:00+05:30') },
+  { label: '26th June', date: new Date('2026-06-26T06:00:00+05:30') },
   { label: '28th June', date: new Date('2026-06-28T06:00:00+05:30') },
+  { label: '30th June', date: new Date('2026-06-30T06:00:00+05:30') },
+  { label: '3rd July',  date: new Date('2026-07-03T06:00:00+05:30') },
+  { label: '6th July',  date: new Date('2026-07-06T06:00:00+05:30') },
 ];
 
 function getNextBatch() {

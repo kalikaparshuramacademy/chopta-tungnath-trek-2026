@@ -1,7 +1,7 @@
 import { Destination, DayItinerary, PricePlan, FAQItem } from './types';
 
 export const TRIP_NAME = "Chopta Tungnath Trip 2026";
-export const TRIP_DATES = "6th June to 10th June | 11th June to 15th June | 14th June to 18th June";
+export const TRIP_DATES = "6 Jun | 11 Jun | 14 Jun | 20 Jun | 23 Jun | 26 Jun | 28 Jun | 30 Jun | 3 Jul | 6 Jul";
 export const DURATION = "4 Nights / 5 Days";
 export const TAGLINE = "Walk Through Clouds. Climb Beyond Fear. Experience Tungnath.";
 export const CONTACT_PHONE = "9266910290";

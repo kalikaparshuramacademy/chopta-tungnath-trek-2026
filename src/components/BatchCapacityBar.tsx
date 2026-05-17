@@ -4,10 +4,16 @@ import { supabase } from '../lib/supabase';
 import { Users } from 'lucide-react';
 
 const BATCHES = [
-  { date: '6th June 2026', label: 'June 6–10', capacity: 60 },
-  { date: '11th June 2026', label: 'June 11–15', capacity: 60 },
-  { date: '14th June 2026', label: 'June 14–18', capacity: 60 },
-  { date: '28th June 2026', label: 'June 28–Jul 2', capacity: 60 },
+  { date: '6th June 2026',  label: 'Jun 6–10',  capacity: 60 },
+  { date: '11th June 2026', label: 'Jun 11–15', capacity: 60 },
+  { date: '14th June 2026', label: 'Jun 14–18', capacity: 60 },
+  { date: '20th June 2026', label: 'Jun 20–24', capacity: 60 },
+  { date: '23rd June 2026', label: 'Jun 23–27', capacity: 60 },
+  { date: '26th June 2026', label: 'Jun 26–30', capacity: 60 },
+  { date: '28th June 2026', label: 'Jun 28–Jul 2', capacity: 60 },
+  { date: '30th June 2026', label: 'Jun 30–Jul 4', capacity: 60 },
+  { date: '3rd July 2026',  label: 'Jul 3–7',   capacity: 60 },
+  { date: '6th July 2026',  label: 'Jul 6–10',  capacity: 60 },
 ];
 
 export const BatchCapacityBar = () => {

@@ -16,6 +16,27 @@ const BASE_PRICE = 5999;
 const TOKEN_AMOUNT = 999;
 const TRIP_NAME = 'Chopta Tungnath Trip 2026';
 
+const GROUP_DISCOUNTS: Record<number, number> = { 3: 200, 4: 300, 6: 400, 8: 500 };
+function getGroupDiscount(size: number): number {
+  if (size >= 8) return GROUP_DISCOUNTS[8];
+  if (size >= 6) return GROUP_DISCOUNTS[6];
+  if (size >= 4) return GROUP_DISCOUNTS[4];
+  if (size >= 3) return GROUP_DISCOUNTS[3];
+  return 0;
+}
+
+const ALL_BATCHES = [
+  { value: '6th June 2026',  label: '6th June – 10th June 2026' },
+  { value: '11th June 2026', label: '11th June – 15th June 2026' },
+  { value: '14th June 2026', label: '14th June – 18th June 2026' },
+  { value: '20th June 2026', label: '20th June – 24th June 2026' },
+  { value: '23rd June 2026', label: '23rd June – 27th June 2026' },
+  { value: '26th June 2026', label: '26th June – 30th June 2026' },
+  { value: '28th June 2026', label: '28th June – 2nd July 2026' },
+  { value: '30th June 2026', label: '30th June – 4th July 2026' },
+  { value: '3rd July 2026',  label: '3rd July – 7th July 2026' },
+  { value: '6th July 2026',  label: '6th July – 10th July 2026' },
+];
 
 // ── Input style ───────────────────────────────────────────────────────────────
 const INPUT = 'w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/50 transition-all text-white placeholder-white/20';
@@ -47,6 +68,7 @@ export const BookNow = () => {
 
     // Offer
     referralCode: '',
+    discountChoice: 'none' as 'none' | 'group' | 'referral',
 
     // Declaration
     declarationAccepted: false,
@@ -54,9 +76,11 @@ export const BookNow = () => {
 
   // ── Computed discount ────────────────────────────────────────────────────
   const effectiveGroupSize = registrationType === 'group' ? 1 + members.length : 1;
+  const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
 
-  const referralDiscount = formData.referralCode.trim().length > 0 ? 500 : 0;
-  const appliedDiscount = referralDiscount;
+  // Customer chooses EITHER group discount OR referral code — not both
+  const referralDiscount = formData.discountChoice === 'referral' && formData.referralCode.trim().length > 0 ? 500 : 0;
+  const appliedDiscount = formData.discountChoice === 'group' ? groupDiscountPerPerson : referralDiscount;
 
   const currentBasePrice = sharingType === 'quad' ? 5999 : sharingType === 'triple' ? 6499 : 6999;
   const effectivePrice = Math.max(0, currentBasePrice - appliedDiscount);
@@ -438,10 +462,9 @@ export const BookNow = () => {
               <label htmlFor="date" className={LABEL}>Select Batch *</label>
               <select id="date" name="date" required value={formData.date} onChange={handleChange}
                 className={INPUT}>
-                <option value="6th June 2026">6th June – 10th June 2026</option>
-                <option value="11th June 2026">11th June – 15th June 2026</option>
-                <option value="14th June 2026">14th June – 18th June 2026</option>
-                <option value="28th June 2026">28th June – 2nd July 2026</option>
+                {ALL_BATCHES.map(b => (
+                  <option key={b.value} value={b.value}>{b.label}</option>
+                ))}
               </select>
             </div>
 
@@ -563,30 +586,105 @@ export const BookNow = () => {
               )}
             </AnimatePresence>
 
-            {/* ── REFERRAL CODE ────────────────────────────────────────── */}
-            <div className="space-y-2 p-4 rounded-2xl bg-sunrise-gold/5 border border-sunrise-gold/20">
-              <p className={LABEL + ' text-sunrise-gold/80'}>Have a Referral Code? (Optional)</p>
-              <div className="relative">
-                <input
-                  id="referralCode"
-                  name="referralCode"
-                  type="text"
-                  value={formData.referralCode}
-                  onChange={handleChange}
-                  className={INPUT + ' uppercase tracking-widest'}
-                  placeholder="Enter creator code e.g. RAHUL500"
-                  maxLength={20}
-                />
-                {formData.referralCode.trim().length > 0 && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                    <span className="text-green-400 text-xs font-bold">✓ ₹500 OFF applied!</span>
-                  </div>
-                )}
+            {/* ── DISCOUNT SECTION ─────────────────────────────────────── */}
+            <div className="space-y-3 p-4 rounded-2xl bg-sunrise-gold/5 border border-sunrise-gold/20">
+              <p className={LABEL + ' text-sunrise-gold/80'}>Apply a Discount (Choose one)</p>
+
+              {/* Toggle buttons */}
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { val: 'none', label: '🚫 No Discount' },
+                  { val: 'group', label: '👥 Group Discount' },
+                  { val: 'referral', label: '🎟️ Referral Code' },
+                ].map(opt => (
+                  <button
+                    key={opt.val}
+                    type="button"
+                    onClick={() => setFormData(p => ({ ...p, discountChoice: opt.val as any, referralCode: opt.val !== 'referral' ? '' : p.referralCode }))}
+                    className={`py-2.5 rounded-xl border font-bold text-xs transition-all ${
+                      formData.discountChoice === opt.val
+                        ? 'bg-sunrise-gold text-black border-sunrise-gold'
+                        : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
-              <p className="text-xs text-white/40">
-                A valid creator referral code gives you ₹500 off the trip price.
-              </p>
+
+              {/* Group discount ladder */}
+              <AnimatePresence>
+                {formData.discountChoice === 'group' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden space-y-3"
+                  >
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      {[{ n: 3, off: 200 }, { n: 4, off: 300 }, { n: 6, off: 400 }, { n: '8+', off: 500 }].map(({ n, off }) => {
+                        const isActive = registrationType === 'group' &&
+                          (typeof n === 'number' ? effectiveGroupSize === n : effectiveGroupSize >= 8);
+                        return (
+                          <div key={n} className={`flex justify-between items-center px-3 py-2 rounded-xl border text-xs transition-colors ${
+                            isActive ? 'bg-sunrise-gold/10 border-sunrise-gold/40 text-sunrise-gold' : 'bg-white/5 border-white/10 text-white/50'
+                          }`}>
+                            <span>Group of {n}</span>
+                            <span className="font-bold">₹{off} off</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {registrationType !== 'group' && (
+                      <p className="text-xs text-amber-400/80 flex items-center gap-1.5">
+                        <Info className="w-3 h-3 shrink-0" />
+                        Switch to Group registration above to activate group discounts.
+                      </p>
+                    )}
+                    {registrationType === 'group' && groupDiscountPerPerson > 0 && (
+                      <p className="text-green-400 text-xs font-bold">
+                        ✓ ₹{groupDiscountPerPerson} off per person × {effectiveGroupSize} = ₹{groupDiscountPerPerson * effectiveGroupSize} total saved!
+                      </p>
+                    )}
+                    {registrationType === 'group' && groupDiscountPerPerson === 0 && (
+                      <p className="text-white/40 text-xs">Add at least 2 more members to unlock group discount.</p>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Referral code */}
+              <AnimatePresence>
+                {formData.discountChoice === 'referral' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden space-y-2"
+                  >
+                    <div className="relative mt-1">
+                      <input
+                        id="referralCode"
+                        name="referralCode"
+                        type="text"
+                        value={formData.referralCode}
+                        onChange={handleChange}
+                        className={INPUT + ' uppercase tracking-widest pr-28'}
+                        placeholder="e.g. RAHUL500"
+                        maxLength={20}
+                      />
+                      {formData.referralCode.trim().length > 0 && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <span className="text-green-400 text-xs font-bold">✓ ₹500 OFF!</span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-white/40">Enter a valid creator referral code to get ₹500 off.</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
 
             {/* ── DECLARATION ──────────────────────────────────────────── */}
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
