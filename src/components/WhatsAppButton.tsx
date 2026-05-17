@@ -10,19 +10,20 @@ export const WhatsAppButton = () => {
   const [tooltip, setTooltip] = useState(true);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-28 md:bottom-6 right-4 md:right-6 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
         {tooltip && (
           <motion.div
             initial={{ opacity: 0, x: 20, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20, scale: 0.9 }}
-            className="flex items-center gap-2 bg-white text-black text-sm font-bold px-4 py-2.5 rounded-2xl shadow-2xl max-w-[200px]"
+            className="hidden md:flex items-center gap-2 bg-white text-black text-sm font-bold px-4 py-2.5 rounded-2xl shadow-2xl max-w-[200px]"
           >
             <span>💬 Chat with us!</span>
             <button
               onClick={() => setTooltip(false)}
               className="text-black/40 hover:text-black transition-colors ml-1"
+              aria-label="Dismiss"
             >
               <X className="w-3 h-3" />
             </button>
@@ -41,7 +42,7 @@ export const WhatsAppButton = () => {
         transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 1 }}
         onClick={() => setTooltip(false)}
         aria-label="Chat on WhatsApp"
-        className="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(37,211,102,0.5)] hover:shadow-[0_8px_40px_rgba(37,211,102,0.7)] transition-shadow"
+        className="w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_8px_30px_rgba(37,211,102,0.5)] hover:shadow-[0_8px_40px_rgba(37,211,102,0.7)] transition-shadow"
       >
         {/* WhatsApp SVG icon */}
         <svg viewBox="0 0 24 24" fill="white" className="w-8 h-8">

@@ -35,7 +35,7 @@ export const CountdownTimer = () => {
 
   const units = [
     { label: 'Days', value: time.days },
-    { label: 'Hours', value: time.hours },
+    { label: 'Hrs', value: time.hours },
     { label: 'Mins', value: time.minutes },
     { label: 'Secs', value: time.seconds },
   ];
@@ -46,41 +46,42 @@ export const CountdownTimer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="py-10 px-6 bg-black/40 backdrop-blur-sm border-t border-b border-white/5"
+      className="py-10 px-4 sm:px-6 bg-black/40 backdrop-blur-sm border-t border-b border-white/5"
     >
       <div className="max-w-4xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Clock className="w-4 h-4 text-sunrise-gold animate-pulse" />
-          <p className="text-xs font-bold tracking-[0.3em] text-sunrise-gold uppercase">
+        <div className="flex items-center justify-center gap-2 mb-5">
+          <Clock className="w-4 h-4 text-sunrise-gold animate-pulse shrink-0" />
+          <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] text-sunrise-gold uppercase">
             Next Batch Departs · {batch.label} 2026
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-3 md:gap-6">
+        {/* Responsive flip clock */}
+        <div className="flex items-end justify-center gap-2 sm:gap-4 md:gap-6">
           {units.map(({ label, value }, i) => (
-            <div key={label} className="flex items-center gap-3 md:gap-6">
+            <div key={label} className="flex items-end gap-2 sm:gap-4 md:gap-6">
               <div className="text-center">
                 <motion.div
                   key={value}
                   initial={{ rotateX: -90, opacity: 0 }}
                   animate={{ rotateX: 0, opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="glass-dark w-16 md:w-24 h-16 md:h-24 rounded-2xl flex items-center justify-center border border-white/10"
+                  className="glass-dark w-[68px] h-[68px] sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10"
                 >
-                  <span className="text-3xl md:text-5xl font-black tabular-nums text-white">
+                  <span className="text-[28px] sm:text-3xl md:text-5xl font-black tabular-nums text-white leading-none">
                     {String(value).padStart(2, '0')}
                   </span>
                 </motion.div>
-                <p className="text-[10px] font-bold tracking-widest text-white/40 uppercase mt-2">{label}</p>
+                <p className="text-[9px] sm:text-[10px] font-bold tracking-widest text-white/40 uppercase mt-1.5">{label}</p>
               </div>
               {i < 3 && (
-                <span className="text-2xl md:text-4xl font-black text-sunrise-gold/40 -mt-6 select-none">:</span>
+                <span className="text-xl sm:text-2xl md:text-4xl font-black text-sunrise-gold/40 mb-6 sm:mb-7 md:mb-8 select-none leading-none">:</span>
               )}
             </div>
           ))}
         </div>
 
-        <p className="text-white/30 text-xs mt-4">Seats filling up fast · Book now to secure your spot</p>
+        <p className="text-white/30 text-[11px] sm:text-xs mt-4">Seats filling up fast · Book now to secure your spot</p>
       </div>
     </motion.div>
   );

@@ -45,7 +45,7 @@ export const SocialProofTicker = () => {
   const city = CITIES[b.id % CITIES.length];
 
   return (
-    <div className="fixed bottom-24 left-4 z-40 pointer-events-none">
+    <div className="hidden md:block fixed bottom-24 left-4 z-40 pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={b.id}

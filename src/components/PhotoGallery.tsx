@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 
@@ -19,41 +19,74 @@ interface LightboxProps { index: number; onClose: () => void; onPrev: () => void
 
 const Lightbox = ({ index, onClose, onPrev, onNext }: LightboxProps) => {
   const img = GALLERY_IMAGES[index];
+
+  // Touch swipe support
+  const touchStartX = useRef(0);
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? onNext() : onPrev();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      className="fixed inset-0 z-[100] bg-black/97 flex flex-col items-center justify-center"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      <button onClick={onClose} className="absolute top-4 right-4 p-3 glass rounded-full text-white/70 hover:text-white z-10">
+      {/* Close */}
+      <button
+        aria-label="Close"
+        onClick={onClose}
+        className="absolute top-4 right-4 w-10 h-10 glass rounded-full flex items-center justify-center text-white/70 hover:text-white z-10"
+      >
         <X className="w-5 h-5" />
       </button>
-      <button onClick={e => { e.stopPropagation(); onPrev(); }} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 glass rounded-full text-white/70 hover:text-white z-10">
-        <ChevronLeft className="w-6 h-6" />
+
+      {/* Prev */}
+      <button
+        aria-label="Previous"
+        onClick={e => { e.stopPropagation(); onPrev(); }}
+        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 glass rounded-full flex items-center justify-center text-white/70 hover:text-white z-10"
+      >
+        <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
       </button>
-      <button onClick={e => { e.stopPropagation(); onNext(); }} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 glass rounded-full text-white/70 hover:text-white z-10">
-        <ChevronRight className="w-6 h-6" />
+
+      {/* Next */}
+      <button
+        aria-label="Next"
+        onClick={e => { e.stopPropagation(); onNext(); }}
+        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 glass rounded-full flex items-center justify-center text-white/70 hover:text-white z-10"
+      >
+        <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
       </button>
 
       <motion.div
         key={index}
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.2 }}
-        className="max-w-5xl max-h-[85vh] w-full px-16"
+        className="w-full max-w-5xl max-h-[85dvh] px-14 md:px-20 flex flex-col items-center"
         onClick={e => e.stopPropagation()}
       >
-        <img src={img.src} alt={img.caption} className="w-full h-full object-contain max-h-[75vh] rounded-2xl" />
-        <div className="text-center mt-4">
-          <p className="text-white font-bold">{img.caption}</p>
-          <p className="text-white/40 text-xs mt-1">{index + 1} / {GALLERY_IMAGES.length}</p>
+        <img
+          src={img.src}
+          alt={img.caption}
+          className="w-full max-h-[70dvh] object-contain rounded-xl md:rounded-2xl"
+        />
+        <div className="text-center mt-3 px-4">
+          <p className="text-white font-bold text-sm md:text-base">{img.caption}</p>
+          <p className="text-white/40 text-xs mt-1">{index + 1} / {GALLERY_IMAGES.length} · swipe to navigate</p>
         </div>
       </motion.div>
     </motion.div>
   );
 };
+
 
 export const PhotoGallery = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
