@@ -7,7 +7,13 @@ const BATCHES = [
   '6th June 2026 (June 6–10)',
   '11th June 2026 (June 11–15)',
   '14th June 2026 (June 14–18)',
+  '20th June 2026 (June 20–24)',
+  '23rd June 2026 (June 23–27)',
+  '26th June 2026 (June 26–30)',
   '28th June 2026 (June 28–Jul 2)',
+  '30th June 2026 (June 30–Jul 4)',
+  '3rd July 2026 (July 3–7)',
+  '6th July 2026 (July 6–10)',
 ];
 
 interface Item { label: string; checked?: boolean; tip?: string; }

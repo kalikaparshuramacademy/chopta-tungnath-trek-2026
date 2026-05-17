@@ -8,7 +8,13 @@ const BATCHES = [
   '6th June 2026',
   '11th June 2026',
   '14th June 2026',
+  '20th June 2026',
+  '23rd June 2026',
+  '26th June 2026',
   '28th June 2026',
+  '30th June 2026',
+  '3rd July 2026',
+  '6th July 2026',
 ];
 
 const INPUT = 'w-full bg-himalaya-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sunrise-gold/50 focus:ring-1 focus:ring-sunrise-gold/30 transition-all text-white placeholder-white/20';
