@@ -270,8 +270,8 @@ export const InvoiceView = () => {
               </div>
               <div>
                 <p className="text-[10px] font-black text-sunrise-gold uppercase tracking-[0.3em] mb-1">Boarding Point</p>
-                <p className="text-lg font-bold text-white">Majnu Ka Tila, Delhi</p>
-                <p className="text-xs text-white/50 italic">Standard pickup for all North Campus batches</p>
+                <p className="text-lg font-bold text-white">Rohini Sector 18 Metro Station, Delhi</p>
+                <p className="text-xs text-white/50 italic">Standard pickup for all batches</p>
               </div>
             </div>
             <div className="flex items-center gap-5 relative z-10">
@@ -354,7 +354,7 @@ export const InvoiceView = () => {
               <p className="font-black text-neutral-800 uppercase tracking-widest mb-3">Important Guidelines</p>
               <ul className="space-y-2 list-disc pl-4">
                 <li>Original Government ID proof is mandatory for permit verification.</li>
-                <li>Reach Majnu Ka Tila 30 mins before reporting time.</li>
+                <li>Reach Rohini Sector 18 Metro Station 30 mins before reporting time.</li>
                 <li>Pack light but carry essential winter layering (Temperature: -2° to 10°).</li>
                 <li>Balance amount must be paid via the portal or Bank Transfer.</li>
               </ul>
