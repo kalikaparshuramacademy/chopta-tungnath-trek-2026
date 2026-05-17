@@ -9,7 +9,7 @@ const WAYPOINTS = [
   { id: 'deoriatal', label: 'Deoria Tal', sub: '2,438m • Mirror Lake', x: 350, y: 200, color: '#34d399', day: 'Day 2' },
   { id: 'chopta', label: 'Chopta', sub: '2,680m • Mini Switzerland', x: 410, y: 150, color: '#f59e0b', day: 'Day 3' },
   { id: 'tungnath', label: 'Tungnath', sub: '3,680m • Highest Shiva Temple', x: 460, y: 100, color: '#f97316', day: 'Day 3' },
-  { id: 'chandrashila', label: 'Chandrashila', sub: '4,000m • Summit 360°', x: 500, y: 60, color: '#ef4444', day: 'Day 3' },
+  { id: 'chandrashila', label: 'Chandrashila', sub: '4,000m • Summit 360°', x: 500, y: 85, color: '#ef4444', day: 'Day 3' },
 ];
 
 // Build SVG path from waypoints
@@ -48,7 +48,7 @@ export const TrekRouteMap = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* SVG Map */}
             <div className="relative">
-              <svg viewBox="0 60 650 400" className="w-full h-auto" aria-label="Trek route map">
+              <svg viewBox="0 20 650 420" className="w-full h-auto" aria-label="Trek route map">
                 {/* Background hills */}
                 <defs>
                   <linearGradient id="routeGrad" x1="0%" y1="100%" x2="100%" y2="0%">
