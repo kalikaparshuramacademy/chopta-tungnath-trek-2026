@@ -12,7 +12,7 @@ declare global {
 }
 
 // ── Pricing constants ────────────────────────────────────────────────────────
-const BASE_PRICE = 5499;
+const BASE_PRICE = 5999;
 const TOKEN_AMOUNT = 999;
 const TRIP_NAME = 'Chopta Tungnath Trip 2026';
 
@@ -60,8 +60,7 @@ export const BookNow = () => {
     femaleCount: 0,
 
     // Offer
-    isCampusAmbassador: false,
-    offerPreference: '',     // 'group_discount' | 'free_trip' | ''
+    referralCode: '',
 
     // Declaration
     declarationAccepted: false,
@@ -71,12 +70,10 @@ export const BookNow = () => {
   const effectiveGroupSize = registrationType === 'group' ? 1 + members.length : 1;
   const groupDiscountPerPerson = registrationType === 'group' ? getGroupDiscount(effectiveGroupSize) : 0;
 
-  // If ambassador prefers group discount, they get that; if free_trip, discount = 0 on price display
-  const appliedDiscount = formData.isCampusAmbassador && formData.offerPreference === 'free_trip'
-    ? 0
-    : groupDiscountPerPerson;
+  const referralDiscount = formData.referralCode.trim().length > 0 ? 500 : 0;
+  const appliedDiscount = groupDiscountPerPerson + referralDiscount;
 
-  const currentBasePrice = sharingType === 'quad' ? 5499 : sharingType === 'triple' ? 5999 : 6499;
+  const currentBasePrice = sharingType === 'quad' ? 5999 : sharingType === 'triple' ? 6499 : 6999;
   const effectivePrice = Math.max(0, currentBasePrice - appliedDiscount);
   const totalGroupSaving = appliedDiscount * effectiveGroupSize;
 
@@ -108,11 +105,7 @@ export const BookNow = () => {
       }
     }
 
-    // Ambassador must choose one offer
-    if (formData.isCampusAmbassador && !formData.offerPreference) {
-      alert('Please select which offer you want to avail as a Campus Ambassador.');
-      return;
-    }
+
 
     setIsSubmitting(true);
 
@@ -144,8 +137,7 @@ export const BookNow = () => {
         female_count: formData.femaleCount,
         discount_per_person: appliedDiscount,
         total_discount: totalGroupSaving,
-        is_campus_ambassador: formData.isCampusAmbassador,
-        offer_preference: formData.offerPreference || 'none',
+        referral_code: formData.referralCode,
         declaration_accepted: formData.declarationAccepted,
         payment_status: 'pending', // Initially pending
       };
@@ -359,7 +351,7 @@ export const BookNow = () => {
             </div>
 
             <ul className="space-y-2 border-t border-white/10 pt-4">
-              {['Priority Seating', 'Exclusive DU Batch 2026 T-Shirt', 'Free Photography Coverage', 'Instant Confirmation'].map((b, i) => (
+              {['Priority Seating', 'Chopta Tungnath Trip T-Shirt', 'Free Photography Coverage', 'Instant Confirmation'].map((b, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm text-white/80">
                   <CheckCircle className="w-4 h-4 text-sunrise-gold shrink-0" />{b}
                 </li>
@@ -416,9 +408,9 @@ export const BookNow = () => {
                 value={sharingType}
                 onChange={(e) => setSharingType(e.target.value as 'quad' | 'triple' | 'double')}
               >
-                <option value="quad">Quad Sharing (₹5,499)</option>
-                <option value="triple">Triple Sharing (₹5,999)</option>
-                <option value="double">Double Sharing (₹6,499)</option>
+                <option value="quad">Quad Sharing (₹5,999)</option>
+                <option value="triple">Triple Sharing (₹6,499)</option>
+                <option value="double">Double Sharing (₹6,999)</option>
               </select>
             </div>
 
@@ -482,7 +474,7 @@ export const BookNow = () => {
               <select id="date" name="date" required value={formData.date} onChange={handleChange}
                 className={INPUT}>
                 <option value="6th June 2026">6th June – 10th June 2026</option>
-                <option value="11th June 2026">11th June – 15th June 2026 (DU Special)</option>
+                <option value="11th June 2026">11th June – 15th June 2026</option>
                 <option value="14th June 2026">14th June – 18th June 2026</option>
                 <option value="28th June 2026">28th June – 2nd July 2026</option>
               </select>
@@ -611,55 +603,29 @@ export const BookNow = () => {
               )}
             </AnimatePresence>
 
-            {/* ── CAMPUS AMBASSADOR SECTION ────────────────────────────── */}
-            <div className="space-y-3 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input type="checkbox" name="isCampusAmbassador" checked={formData.isCampusAmbassador}
-                  onChange={handleChange} className="mt-0.5 accent-sunrise-gold w-4 h-4" />
-                <span className="text-sm text-white/80">
-                  I am a <span className="text-sunrise-gold font-bold">Campus Ambassador</span> with 8+ confirmed registrations
-                </span>
-              </label>
-
-              <AnimatePresence>
-                {formData.isCampusAmbassador && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="pt-3 space-y-2">
-                      <p className={LABEL}>Choose Your Ambassador Benefit *</p>
-                      <p className="text-xs text-white/40 flex items-center gap-1 mb-2">
-                        <Info className="w-3 h-3" />
-                        One benefit only — you cannot combine group discount + free trip
-                      </p>
-                      <div className="space-y-2">
-                        <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 cursor-pointer hover:border-sunrise-gold/30 transition-colors">
-                          <input type="radio" name="offerPreference" value="group_discount"
-                            checked={formData.offerPreference === 'group_discount'} onChange={handleChange}
-                            className="accent-sunrise-gold" />
-                          <div>
-                            <p className="text-sm font-bold">Group Discount</p>
-                            <p className="text-xs text-white/40">₹{groupDiscountPerPerson > 0 ? groupDiscountPerPerson : '200–500'} off per person based on group size</p>
-                          </div>
-                        </label>
-                        <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 cursor-pointer hover:border-green-500/30 transition-colors">
-                          <input type="radio" name="offerPreference" value="free_trip"
-                            checked={formData.offerPreference === 'free_trip'} onChange={handleChange}
-                            className="accent-green-400" />
-                          <div>
-                            <p className="text-sm font-bold text-green-400">Free Trip (Ambassador Reward)</p>
-                            <p className="text-xs text-white/40">Your trip is fully sponsored (8+ referrals confirmed)</p>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-                  </motion.div>
+            {/* ── REFERRAL CODE ────────────────────────────────────────── */}
+            <div className="space-y-2 p-4 rounded-2xl bg-sunrise-gold/5 border border-sunrise-gold/20">
+              <p className={LABEL + ' text-sunrise-gold/80'}>Have a Referral Code? (Optional)</p>
+              <div className="relative">
+                <input
+                  id="referralCode"
+                  name="referralCode"
+                  type="text"
+                  value={formData.referralCode}
+                  onChange={handleChange}
+                  className={INPUT + ' uppercase tracking-widest'}
+                  placeholder="Enter creator code e.g. RAHUL500"
+                  maxLength={20}
+                />
+                {formData.referralCode.trim().length > 0 && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                    <span className="text-green-400 text-xs font-bold">✓ ₹500 OFF applied!</span>
+                  </div>
                 )}
-              </AnimatePresence>
+              </div>
+              <p className="text-xs text-white/40">
+                A valid creator referral code gives you ₹500 off the trip price.
+              </p>
             </div>
 
             {/* ── DECLARATION ──────────────────────────────────────────── */}
@@ -729,8 +695,7 @@ export const BookNow = () => {
                       female_count: Number(formData.femaleCount) || 0,
                       discount_per_person: Number(appliedDiscount) || 0,
                       total_discount: totalGroupSaving,
-                      is_campus_ambassador: formData.isCampusAmbassador,
-                      offer_preference: formData.offerPreference || 'none',
+                      referral_code: formData.referralCode,
                       declaration_accepted: formData.declarationAccepted,
                       payment_status: 'paid', // Simulate success
                       payment_id: 'TEST_BYPASS_' + Date.now()

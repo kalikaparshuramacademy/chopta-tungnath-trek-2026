@@ -163,18 +163,18 @@ export const ITINERARY: DayItinerary[] = [
 export const PRICING_PLANS: PricePlan[] = [
   {
     type: "Quad Sharing",
-    price: "₹5,499",
+    price: "₹5,999",
     description: "Best option for groups and budget travelers."
   },
   {
     type: "Triple Sharing",
-    price: "₹5,999",
+    price: "₹6,499",
     description: "Ideal for small friend groups.",
     recommended: true
   },
   {
     type: "Double Sharing",
-    price: "₹6,499",
+    price: "₹6,999",
     description: "Perfect for couples or those wanting extra comfort."
   }
 ];

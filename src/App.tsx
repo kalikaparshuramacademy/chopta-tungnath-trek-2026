@@ -33,6 +33,7 @@ const Terms = lazy(() => import('./pages/Terms').then(module => ({ default: modu
 const Privacy = lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
 const InvoiceView = lazy(() => import('./pages/InvoiceView').then(module => ({ default: module.InvoiceView })));
 const FindBooking = lazy(() => import('./pages/FindBooking').then(module => ({ default: module.FindBooking })));
+const CreatorLogin = lazy(() => import('./pages/CreatorLogin').then(module => ({ default: module.CreatorLogin })));
 
 const Loading = () => (
   <div className="h-screen w-full flex items-center justify-center bg-himalaya-black">
@@ -91,9 +92,9 @@ const Home = () => {
       <main className="relative z-10">
         <Hero />
         
-        {/* Why DU Batch Section */}
+        {/* Epic Destinations Section */}
         <section className="py-32 px-6 bg-himalaya-black text-center relative overflow-hidden">
-          <div className="max-w-4xl mx-auto space-y-16">
+          <div className="max-w-6xl mx-auto space-y-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -101,7 +102,7 @@ const Home = () => {
               transition={{ duration: 0.8, ease: SMOOTH_EASE }}
               className="inline-block glass px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] text-sunrise-gold"
             >
-              EXCLUSIVELY FOR DU BATCH OF 2026
+              A JOURNEY OF A LIFETIME
             </motion.div>
             
             <motion.h2 
@@ -111,29 +112,51 @@ const Home = () => {
               transition={{ duration: 1, ease: SMOOTH_EASE, delay: 0.1 }}
               className="text-5xl md:text-7xl font-bold tracking-tighter text-glow leading-tight"
             >
-              Why this trip for your <br/>
-              <span className="text-sunrise-gold italic font-serif">Graduating Summer?</span>
+              Experience the Magic of <br/>
+              <span className="text-sunrise-gold italic font-serif">The Himalayas</span>
             </motion.h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
               {[
-                { title: "Last Core Memory", desc: "One final adventure with your batch before life happens.", icon: "🎓" },
-                { title: "Spiritual Reset", desc: "Calm your mind at the highest Shiva temple after exams.", icon: "🕉️" },
-                { title: "Elite Community", desc: "Travel with students from Hindu, Hansraj, SRCC & more.", icon: "🤝" }
-              ].map((card, i) => (
+                { 
+                  title: "Chopta Tungnath", 
+                  desc: "Known as the 'Mini Switzerland of India', Chopta offers vibrant meadows. Tungnath is the highest Shiva temple in the world at an altitude of 3,680 meters.", 
+                  image: "/images/chopta_tungnath.png" 
+                },
+                { 
+                  title: "Deoria Tal", 
+                  desc: "A pristine emerald lake at 2,438 meters, famous for offering a 300-degree panoramic reflection of the mighty Chaukhamba peaks in its crystal clear waters.", 
+                  image: "/images/deoria_tal.png" 
+                },
+                { 
+                  title: "Rishikesh", 
+                  desc: "The Yoga Capital of the World. Experience the majestic flow of the Ganges and cross the iconic Laxman Jhula bridge amidst a spiritual and serene atmosphere.", 
+                  image: "/images/rishikesh.png" 
+                },
+                { 
+                  title: "Haridwar", 
+                  desc: "Witness the mesmerizing Ganga Aarti at Har Ki Pauri where thousands of glowing diyas float in the river, creating an unforgettable spiritual experience.", 
+                  image: "/images/haridwar.png" 
+                }
+              ].map((destination, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: 0.2 + i * 0.1 }}
-                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                  className="glass-dark p-10 rounded-[2.5rem] border-white/5 relative group overflow-hidden"
+                  whileHover={{ y: -5, transition: { duration: 0.3 } }}
+                  className="glass-dark rounded-[2.5rem] border-white/5 relative group overflow-hidden flex flex-col md:flex-row h-full"
                 >
-                  <div className="text-4xl mb-6 opacity-80 group-hover:scale-110 transition-transform duration-500">{card.icon}</div>
-                  <h3 className="text-xl font-bold mb-4 tracking-tight">{card.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed">{card.desc}</p>
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-sunrise-gold/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-sunrise-gold/10 transition-colors" />
+                  <div className="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden">
+                    <img src={destination.image} alt={destination.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden" />
+                  </div>
+                  <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
+                    <h3 className="text-2xl font-bold mb-4 tracking-tight text-white">{destination.title}</h3>
+                    <p className="text-sm text-white/60 leading-relaxed">{destination.desc}</p>
+                  </div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-sunrise-gold/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-sunrise-gold/10 transition-colors pointer-events-none" />
                 </motion.div>
               ))}
             </div>
@@ -231,7 +254,7 @@ const Home = () => {
               </h2>
               
               <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto font-medium">
-                Seats are filling fast for the DU June Batch. Don't let your last college summer pass without reaching the summit.
+                Seats are filling fast for the upcoming adventure. Don't let your summer pass without reaching the summit and creating memories of a lifetime.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
@@ -293,6 +316,7 @@ export default function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/invoice/:id" element={<InvoiceView />} />
         <Route path="/find-booking" element={<FindBooking />} />
+        <Route path="/creator-login" element={<CreatorLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
