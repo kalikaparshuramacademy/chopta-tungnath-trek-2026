@@ -19,7 +19,6 @@ import { CountdownTimer } from './components/CountdownTimer';
 import { LiveSeatCounter } from './components/LiveSeatCounter';
 import { PhotoGallery } from './components/PhotoGallery';
 import { TrekRouteMap } from './components/TrekRouteMap';
-import { BatchCapacityBar } from './components/BatchCapacityBar';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { SocialProofTicker } from './components/SocialProofTicker';
 import { motion, useScroll, useSpring } from 'motion/react';
@@ -229,7 +228,6 @@ const Home = () => {
         <TrekRouteMap />
         <DestinationShowcase />
         <PhotoGallery />
-        <BatchCapacityBar />
         <Pricing />
         <AmbassadorProgram />
         <CreatorProgram />

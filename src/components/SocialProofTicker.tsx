@@ -1,87 +1,91 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { supabase } from '../lib/supabase';
 
-const CITIES = ['Delhi', 'Noida', 'Gurugram', 'Mumbai', 'Bengaluru', 'Pune', 'Hyderabad', 'Jaipur', 'Lucknow', 'Chandigarh'];
+const FIRST_NAMES = ['Rahul', 'Priya', 'Amit', 'Sneha', 'Vikram', 'Neha', 'Rohan', 'Anjali', 'Karan', 'Pooja', 'Aditya', 'Shruti', 'Siddharth', 'Riya', 'Arjun', 'Kritika', 'Manish', 'Kavita', 'Sanjay', 'Megha'];
+const CITIES = ['Delhi', 'Noida', 'Gurugram', 'Mumbai', 'Bengaluru', 'Pune', 'Hyderabad', 'Jaipur', 'Lucknow', 'Chandigarh', 'Indore', 'Ahmedabad', 'Surat', 'Bhopal'];
+const BATCHES = ['11th June 2026', '14th June 2026', '20th June 2026', '23rd June 2026', '26th June 2026', '6th June 2026', '28th June 2026'];
 
-function timeAgo(dateStr: string) {
-  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
+interface LiveNotification {
+  id: number;
+  name: string;
+  city: string;
+  batch: string;
+  timeAgo: string;
 }
 
-interface Booking { id: number; name: string; batch_date: string; created_at: string; }
-
-const FAKE_BOOKINGS: Booking[] = [
-  { id: 9901, name: 'Rahul Sharma', batch_date: '11th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
-  { id: 9902, name: 'Priya Patel', batch_date: '14th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
-  { id: 9903, name: 'Amit Kumar', batch_date: '20th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
-  { id: 9904, name: 'Sneha Gupta', batch_date: '6th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() },
-  { id: 9905, name: 'Vikram Singh', batch_date: '23rd June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString() },
-  { id: 9906, name: 'Neha Verma', batch_date: '11th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() },
-  { id: 9907, name: 'Rohan Desai', batch_date: '14th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString() },
-  { id: 9908, name: 'Anjali Mishra', batch_date: '6th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() },
-];
+function generateRandomNotification(): LiveNotification {
+  const isJustNow = Math.random() > 0.5;
+  const minutes = Math.floor(Math.random() * 59) + 1;
+  
+  return {
+    id: Date.now(),
+    name: FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)],
+    city: CITIES[Math.floor(Math.random() * CITIES.length)],
+    batch: BATCHES[Math.floor(Math.random() * BATCHES.length)],
+    timeAgo: isJustNow ? 'Just now' : `${minutes}m ago`
+  };
+}
 
 export const SocialProofTicker = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const [notification, setNotification] = useState<LiveNotification | null>(null);
 
   useEffect(() => {
-    supabase
-      .from('registrations')
-      .select('id, name, batch_date, created_at')
-      .eq('payment_status', 'paid')
-      .order('created_at', { ascending: false })
-      .limit(20)
-      .then(({ data }) => {
-        const combined = [...(data || []), ...FAKE_BOOKINGS];
-        setBookings(combined);
-      });
+    let timeoutId: ReturnType<typeof setTimeout>;
+    
+    const triggerNext = () => {
+      // Hide current notification
+      setNotification(null);
+      
+      // Wait for 2-6 seconds, then show a new one
+      const waitTime = Math.random() * 4000 + 2000;
+      
+      timeoutId = setTimeout(() => {
+        setNotification(generateRandomNotification());
+        
+        // Keep it visible for 5-8 seconds
+        const visibleTime = Math.random() * 3000 + 5000;
+        timeoutId = setTimeout(triggerNext, visibleTime);
+      }, waitTime);
+    };
+
+    // Start the first one after 2 seconds
+    timeoutId = setTimeout(() => {
+      setNotification(generateRandomNotification());
+      timeoutId = setTimeout(triggerNext, 5000);
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
-  useEffect(() => {
-    if (bookings.length < 2) return;
-    timerRef.current = setTimeout(() => {
-      setCurrent(c => (c + 1) % bookings.length);
-    }, 4000);
-    return () => clearTimeout(timerRef.current);
-  }, [current, bookings.length]);
-
-  if (!bookings.length) return null;
-
-  const b = bookings[current];
-  const firstName = b.name.split(' ')[0];
-  const lastInitial = b.name.split(' ')[1]?.[0] ? b.name.split(' ')[1][0] + '.' : '';
-  const city = CITIES[b.id % CITIES.length];
-
   return (
-    <div className="hidden md:block fixed bottom-24 left-4 z-40 pointer-events-none">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={b.id}
-          initial={{ opacity: 0, y: 20, x: -20 }}
-          animate={{ opacity: 1, y: 0, x: 0 }}
-          exit={{ opacity: 0, y: -20, x: -20 }}
-          transition={{ duration: 0.4 }}
-          className="glass-dark border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3 max-w-[260px] shadow-2xl"
-        >
-          <div className="w-8 h-8 rounded-full bg-sunrise-gold flex items-center justify-center text-black font-black text-sm shrink-0">
-            {firstName[0]}
-          </div>
-          <div className="min-w-0">
-            <p className="text-white text-xs font-bold truncate">
-              {firstName} {lastInitial} from {city}
-            </p>
-            <p className="text-white/50 text-[10px]">
-              Just booked for {b.batch_date} · {timeAgo(b.created_at)}
-            </p>
-          </div>
-          <span className="text-green-400 text-lg shrink-0">✓</span>
-        </motion.div>
+    <div className="fixed bottom-24 left-4 z-40 pointer-events-none">
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            key={notification.id}
+            initial={{ opacity: 0, y: 20, x: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="glass-dark border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3 max-w-[260px] shadow-2xl backdrop-blur-md bg-black/60"
+          >
+            <div className="w-8 h-8 rounded-full bg-sunrise-gold flex items-center justify-center text-black font-black text-sm shrink-0">
+              {notification.name[0]}
+            </div>
+            <div className="min-w-0">
+              <p className="text-white text-xs font-bold truncate">
+                {notification.name} from {notification.city}
+              </p>
+              <p className="text-white/50 text-[10px] mt-0.5">
+                Just booked for {notification.batch} · <span className="text-sunrise-gold/80 font-medium">{notification.timeAgo}</span>
+              </p>
+            </div>
+            <div className="relative shrink-0 flex items-center justify-center w-5 h-5">
+              <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-20"></div>
+              <span className="text-green-400 text-sm relative z-10">✓</span>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
