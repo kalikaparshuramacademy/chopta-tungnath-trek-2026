@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Search, Calendar, CreditCard, ChevronRight, AlertCircle } from 'lucide-react';
@@ -171,6 +172,7 @@ export const FindBooking = () => {
           </div>
         )}
       </div>
+    <Footer />
     </div>
   );
 };

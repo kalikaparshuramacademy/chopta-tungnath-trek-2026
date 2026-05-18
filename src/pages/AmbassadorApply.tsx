@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle, GraduationCap } from 'lucide-react';
@@ -216,6 +217,7 @@ export const AmbassadorApply = () => {
           </form>
         </motion.div>
       </div>
+    <Footer />
     </div>
   );
 };

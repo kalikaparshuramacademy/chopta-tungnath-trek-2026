@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, CheckCircle, Shield, Users, User, AlertTriangle, Info, Plus, Trash2 } from 'lucide-react';
@@ -821,6 +822,7 @@ export const BookNow = () => {
           </form>
         </motion.div>
       </div>
+    <Footer />
     </div>
   );
 };

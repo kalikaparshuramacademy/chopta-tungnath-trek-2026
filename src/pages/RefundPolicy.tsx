@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
@@ -365,6 +366,7 @@ export const RefundPolicy = () => {
         </Section>
 
       </div>
+    <Footer />
     </div>
   );
 };

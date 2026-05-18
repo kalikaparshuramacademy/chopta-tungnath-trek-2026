@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Printer, Download, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide-react';
@@ -272,6 +273,7 @@ export const PackingChecklist = () => {
           Peak & River Travels · Chopta Tungnath Trek 2026 · Packing Guide
         </p>
       </div>
+    <Footer />
     </div>
   );
 };

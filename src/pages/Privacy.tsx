@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import { motion } from 'motion/react';
 import { TRIP_NAME } from '../constants';
 import { Shield, Eye, Lock, Database, Mail } from 'lucide-react';
@@ -96,6 +97,7 @@ export const Privacy = () => {
           </div>
         </motion.div>
       </div>
+    <Footer />
     </div>
   );
 };

@@ -74,10 +74,10 @@ export const InvoiceView = () => {
 
   const getBasePrice = (type: string) => {
     switch (type) {
-      case 'quad': return 5499;
-      case 'triple': return 5999;
-      case 'double': return 6499;
-      default: return 5499;
+      case 'quad': return 5999;
+      case 'triple': return 6499;
+      case 'double': return 6999;
+      default: return 5999;
     }
   };
   const BASE_PRICE = getBasePrice(data.sharing_type);

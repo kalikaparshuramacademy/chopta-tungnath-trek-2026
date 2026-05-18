@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import { motion } from 'motion/react';
 import { TRIP_NAME } from '../constants';
 import { Shield, FileText, Scale, Info } from 'lucide-react';
@@ -81,6 +82,7 @@ export const Terms = () => {
           </div>
         </motion.div>
       </div>
+    <Footer />
     </div>
   );
 };

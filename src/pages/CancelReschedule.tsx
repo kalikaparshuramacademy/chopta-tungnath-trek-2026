@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Search, AlertTriangle, CheckCircle, Loader2, ArrowRight } from 'lucide-react';
@@ -309,6 +310,7 @@ export const CancelReschedule = () => {
           )}
         </AnimatePresence>
       </div>
+    <Footer />
     </div>
   );
 };

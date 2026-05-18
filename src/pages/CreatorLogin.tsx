@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -453,6 +454,7 @@ export const CreatorLogin = () => {
           </div>
         </div>
       </motion.div>
+    <Footer />
     </div>
   );
 };

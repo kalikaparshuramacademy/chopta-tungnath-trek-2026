@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle, Instagram } from 'lucide-react';
@@ -209,6 +210,7 @@ export const InfluencerApply = () => {
           </form>
         </motion.div>
       </div>
+    <Footer />
     </div>
   );
 };
