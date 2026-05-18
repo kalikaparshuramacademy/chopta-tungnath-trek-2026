@@ -30,6 +30,24 @@ export const BatchCapacityBar = () => {
         if (!c[r.batch_date]) c[r.batch_date] = 0;
         if (r.payment_status === 'paid') c[r.batch_date] += (r.group_size || 1);
       });
+
+      const fakeCapacities: Record<string, number> = {
+        '6th June 2026': 55,
+        '11th June 2026': 58,
+        '14th June 2026': 42,
+        '20th June 2026': 35,
+        '23rd June 2026': 48,
+        '26th June 2026': 29,
+        '28th June 2026': 18,
+        '30th June 2026': 24,
+        '3rd July 2026': 12,
+        '6th July 2026': 5,
+      };
+
+      Object.entries(fakeCapacities).forEach(([date, count]) => {
+        c[date] = Math.min(60, (c[date] || 0) + count);
+      });
+
       setCounts(c);
     };
     fetch();

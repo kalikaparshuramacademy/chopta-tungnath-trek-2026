@@ -14,6 +14,17 @@ function timeAgo(dateStr: string) {
 
 interface Booking { id: number; name: string; batch_date: string; created_at: string; }
 
+const FAKE_BOOKINGS: Booking[] = [
+  { id: 9901, name: 'Rahul Sharma', batch_date: '11th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
+  { id: 9902, name: 'Priya Patel', batch_date: '14th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
+  { id: 9903, name: 'Amit Kumar', batch_date: '20th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
+  { id: 9904, name: 'Sneha Gupta', batch_date: '6th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() },
+  { id: 9905, name: 'Vikram Singh', batch_date: '23rd June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString() },
+  { id: 9906, name: 'Neha Verma', batch_date: '11th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() },
+  { id: 9907, name: 'Rohan Desai', batch_date: '14th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString() },
+  { id: 9908, name: 'Anjali Mishra', batch_date: '6th June 2026', created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() },
+];
+
 export const SocialProofTicker = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [current, setCurrent] = useState(0);
@@ -26,7 +37,10 @@ export const SocialProofTicker = () => {
       .eq('payment_status', 'paid')
       .order('created_at', { ascending: false })
       .limit(20)
-      .then(({ data }) => { if (data?.length) setBookings(data); });
+      .then(({ data }) => {
+        const combined = [...(data || []), ...FAKE_BOOKINGS];
+        setBookings(combined);
+      });
   }, []);
 
   useEffect(() => {
