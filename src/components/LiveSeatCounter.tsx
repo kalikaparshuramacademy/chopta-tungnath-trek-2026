@@ -1,36 +1,13 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { supabase } from '../lib/supabase';
+import { motion } from 'motion/react';
 import { Flame } from 'lucide-react';
 
 const TOTAL_SEATS = 60;
 
 export const LiveSeatCounter = () => {
-  const [booked, setBooked] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const { count } = await supabase
-        .from('registrations')
-        .select('*', { count: 'exact', head: true })
-        .eq('payment_status', 'paid');
-      setBooked(count ?? 0);
-    };
-    fetch();
-
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel('seat-counter')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'registrations' }, fetch)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'registrations' }, fetch)
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, []);
-
-  const remaining = booked !== null ? Math.max(0, TOTAL_SEATS - booked) : null;
-  const pct = booked !== null ? Math.min(100, (booked / TOTAL_SEATS) * 100) : 0;
-  const urgency = remaining !== null && remaining <= 10;
+  const remaining = 24;
+  const booked = TOTAL_SEATS - remaining;
+  const pct = (booked / TOTAL_SEATS) * 100;
+  const urgency = true;
 
   return (
     <motion.div
@@ -43,20 +20,9 @@ export const LiveSeatCounter = () => {
       }`}
     >
       <Flame className={`w-4 h-4 ${urgency ? 'animate-pulse' : ''}`} />
-      <AnimatePresence mode="wait">
-        {remaining === null ? (
-          <span key="loading" className="opacity-50">Loading seats...</span>
-        ) : (
-          <motion.span
-            key={remaining}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-          >
-            Only <strong>{remaining}</strong> seats left out of {TOTAL_SEATS}!
-          </motion.span>
-        )}
-      </AnimatePresence>
+      <span>
+        Only <strong>{remaining}</strong> seats left out of {TOTAL_SEATS}!
+      </span>
       <span className="ml-1 text-[10px] font-normal opacity-60">
         ({Math.round(pct)}% filled)
       </span>

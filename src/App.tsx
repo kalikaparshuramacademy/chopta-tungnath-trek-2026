@@ -20,6 +20,7 @@ import { LiveSeatCounter } from './components/LiveSeatCounter';
 import { PhotoGallery } from './components/PhotoGallery';
 import { TrekRouteMap } from './components/TrekRouteMap';
 import { WhatsAppButton } from './components/WhatsAppButton';
+import { TripDates } from './components/TripDates';
 import { SocialProofTicker } from './components/SocialProofTicker';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Routes, Route, Link } from 'react-router-dom';
@@ -99,6 +100,7 @@ const Home = () => {
       
       <main className="relative z-10">
         <Hero />
+        <TripDates />
         
         {/* Epic Destinations Section */}
         <section className="py-32 px-6 bg-himalaya-black text-center relative overflow-hidden">
