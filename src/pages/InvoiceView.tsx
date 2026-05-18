@@ -22,6 +22,7 @@ interface Registration {
   payment_id: string;
   payment_status: string;
   created_at: string;
+  referral_code?: string;
 }
 
 export const InvoiceView = () => {
@@ -309,7 +310,9 @@ export const InvoiceView = () => {
                 </tr>
                 {data.discount_per_person > 0 && (
                   <tr className="text-sm text-green-600">
-                    <td className="py-6 px-2 font-bold italic">Group Discount Applied</td>
+                    <td className="py-6 px-2 font-bold italic">
+                      {data.referral_code ? `Referral Discount Applied (${data.referral_code})` : 'Group Discount Applied'}
+                    </td>
                     <td className="py-6 px-2 text-right">-₹{data.discount_per_person.toLocaleString('en-IN')}</td>
                     <td className="py-6 px-2 text-center">x{data.group_size}</td>
                     <td className="py-6 px-2 text-right font-bold">-₹{(data.discount_per_person * data.group_size).toLocaleString('en-IN')}</td>
