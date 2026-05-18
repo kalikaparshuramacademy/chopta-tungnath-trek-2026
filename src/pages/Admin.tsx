@@ -843,6 +843,16 @@ export const Admin = () => {
                     <h3 className="text-xs uppercase tracking-widest text-sunrise-gold mb-4 font-bold">Additional Info</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                       <div>
+                        <p className="text-xs text-white/60">Referral Code</p>
+                        <p className="text-white font-medium">
+                          {viewingRegistration.referral_code ? (
+                            <span className="bg-sunrise-gold/20 text-sunrise-gold px-2 py-0.5 rounded text-sm font-bold">
+                              {viewingRegistration.referral_code}
+                            </span>
+                          ) : 'None'}
+                        </p>
+                      </div>
+                      <div>
                         <p className="text-xs text-white/60">Male Count</p>
                         <p className="text-white font-medium">{viewingRegistration.male_count}</p>
                       </div>
