@@ -75,7 +75,7 @@ export const CreatorLogin = () => {
       const { data: regs, error: regsError } = await supabase
         .from('registrations')
         .select('id, name, batch_date, sharing_type, payment_status, created_at')
-        .eq('referral_code', data.code)
+        .ilike('referral_code', data.code)
         .order('created_at', { ascending: false });
 
       const paidRegs = (regs || []).filter(r => r.payment_status === 'paid');

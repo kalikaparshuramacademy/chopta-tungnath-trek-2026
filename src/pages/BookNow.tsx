@@ -176,7 +176,7 @@ export const BookNow = () => {
         female_count: formData.femaleCount,
         discount_per_person: appliedDiscount,
         total_discount: totalGroupSaving,
-        referral_code: formData.referralCode,
+        referral_code: formData.referralCode ? formData.referralCode.toUpperCase() : '',
         declaration_accepted: formData.declarationAccepted,
         payment_status: 'pending', // Initially pending
       };
@@ -794,7 +794,7 @@ export const BookNow = () => {
                       female_count: Number(formData.femaleCount) || 0,
                       discount_per_person: Number(appliedDiscount) || 0,
                       total_discount: totalGroupSaving,
-                      referral_code: formData.referralCode,
+                      referral_code: formData.referralCode ? formData.referralCode.toUpperCase() : '',
                       declaration_accepted: formData.declarationAccepted,
                       payment_status: 'paid', // Simulate success
                       payment_id: 'TEST_BYPASS_' + Date.now()
