@@ -706,7 +706,7 @@ export const BookNow = () => {
                         value={formData.referralCode}
                         onChange={handleChange}
                         className={INPUT + ' uppercase tracking-widest flex-1'}
-                        placeholder="e.g. RAHUL500"
+                        placeholder="Enter code"
                         maxLength={20}
                       />
                       <button

@@ -1,9 +1,10 @@
-import { motion, useScroll, useTransform } from 'motion/react';
-import { TRIP_NAME, PAYMENT_LINK } from '../constants';
-import { Phone } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Phone, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
 export const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const backgroundColor = useTransform(
     scrollY,
@@ -25,6 +26,7 @@ export const Navbar = () => {
   ];
 
   return (
+    <>
     <motion.nav
       style={{ backgroundColor, backdropFilter: backdropBlur }}
       className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 border-b border-white/5"
@@ -76,11 +78,81 @@ export const Navbar = () => {
             <Phone className="w-4 h-4 text-sunrise-gold" />
             9266910290
           </a>
-          <Link to="/book" className="bg-sunrise-gold text-black px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-sunrise-gold/20 flex items-center justify-center">
+          <Link to="/book" className="hidden md:flex bg-sunrise-gold text-black px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-sunrise-gold/20 items-center justify-center">
             BOOK NOW
           </Link>
+          
+          <button
+            className="md:hidden text-white hover:text-sunrise-gold transition-colors p-2"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open Mobile Menu"
+            title="Open Menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
         </motion.div>
       </div>
     </motion.nav>
+    
+    <AnimatePresence>
+      {isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex flex-col"
+        >
+          <div className="flex justify-end p-6">
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white/70 hover:text-white p-2"
+              aria-label="Close Mobile Menu"
+              title="Close Menu"
+            >
+              <X className="w-8 h-8" />
+            </button>
+          </div>
+          
+          <div className="flex-1 flex flex-col items-center justify-center gap-8 p-6">
+            {navItems.map((item, idx) => (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-3xl font-bold text-white/80 hover:text-sunrise-gold transition-colors"
+              >
+                {item.name}
+              </motion.a>
+            ))}
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 flex flex-col items-center gap-6 w-full max-w-xs"
+            >
+              <a 
+                href={`tel:9266910290`}
+                className="flex items-center justify-center gap-2 text-xl font-bold text-white hover:text-sunrise-gold transition-colors w-full border border-white/10 rounded-full py-4"
+              >
+                <Phone className="w-5 h-5 text-sunrise-gold" />
+                9266910290
+              </a>
+              <Link
+                to="/book"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="bg-sunrise-gold text-black px-6 py-4 rounded-full font-bold text-xl w-full text-center hover:scale-105 transition-transform shadow-lg shadow-sunrise-gold/20"
+              >
+                BOOK NOW
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 };

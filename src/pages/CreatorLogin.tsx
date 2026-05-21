@@ -326,18 +326,19 @@ export const CreatorLogin = () => {
 
   // ── LOGIN FORM ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black flex items-center justify-center px-4 py-16 relative overflow-hidden">
+    <div className="min-h-screen bg-himalaya-black text-white selection:bg-sunrise-gold selection:text-black flex flex-col relative overflow-hidden">
       <div className="fixed inset-0 z-0 opacity-15 pointer-events-none bg-[url('/images/hero_bg_1778044589465.webp')] bg-cover bg-center mix-blend-overlay" />
       <div className="fixed inset-0 z-0 bg-gradient-to-br from-himalaya-black via-himalaya-black to-black/90" />
 
       {/* Glowing orb */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sunrise-gold/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 z-10 w-full relative">
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative z-10 w-full max-w-md"
+        className="w-full max-w-md"
       >
         <Link
           to="/"
@@ -373,7 +374,7 @@ export const CreatorLogin = () => {
                   value={credentials.code}
                   onChange={e => setCredentials(p => ({ ...p, code: e.target.value }))}
                   className={INPUT + ' uppercase tracking-[0.2em] font-bold'}
-                  placeholder="E.g. RAHUL500"
+                  placeholder="Enter code"
                   maxLength={20}
                 />
               </div>
@@ -454,7 +455,10 @@ export const CreatorLogin = () => {
           </div>
         </div>
       </motion.div>
-    <Footer />
+      </div>
+      <div className="w-full relative z-10">
+        <Footer />
+      </div>
     </div>
   );
 };
