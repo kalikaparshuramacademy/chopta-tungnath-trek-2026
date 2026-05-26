@@ -124,10 +124,10 @@ export const InvoiceView = () => {
                 <img src="/images/logo_circular.png" alt="Logo" className="w-16 h-16 rounded-full border border-neutral-100" />
                 <div className="leading-tight">
                   <h1 className="text-2xl font-black tracking-tighter text-neutral-900">PEAK & RIVER <span className="text-sunrise-gold">TRAVELS</span></h1>
-                  <p className="text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase">Premium Himalayan Expeditions</p>
+                  <p className="text-[10px] font-bold tracking-[0.3em] text-neutral-600 uppercase">Premium Himalayan Expeditions</p>
                 </div>
               </div>
-              <div className="space-y-1 text-sm text-neutral-500">
+              <div className="space-y-1 text-sm text-neutral-700">
                 <p className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-sunrise-gold" /> H.no 18, Block D-1, Phase 1, Budh Vihar, Delhi - 110086</p>
                 <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-sunrise-gold" /> +91 9266910290</p>
                 <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-sunrise-gold" /> peakandrivertravels@gmail.com</p>
@@ -137,10 +137,10 @@ export const InvoiceView = () => {
             <div className="text-left md:text-right">
               <h2 className="text-5xl font-black text-neutral-100 absolute top-20 right-16 pointer-events-none uppercase tracking-tighter">INVOICE</h2>
               <div className="relative z-10">
-                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-1">Invoice Number</p>
+                <p className="text-xs font-bold text-neutral-600 uppercase tracking-widest mb-1">Invoice Number</p>
                 <p className="text-2xl font-black tracking-tight mb-6 text-neutral-800">#PRT-2026-{data.id.toString().padStart(4, '0')}</p>
                 
-                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-1">Booking Date</p>
+                <p className="text-xs font-bold text-neutral-600 uppercase tracking-widest mb-1">Booking Date</p>
                 <p className="text-sm font-bold text-neutral-800">{new Date(data.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export const InvoiceView = () => {
 
               <div className="flex flex-col items-center md:items-end gap-2 relative z-10">
                 <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-xl border border-green-100">
-                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Powered by</span>
+                  <span className="text-[10px] font-black text-neutral-600 uppercase tracking-widest">Powered by</span>
                   <img 
                     src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" 
                     alt="Razorpay" 
@@ -201,7 +201,7 @@ export const InvoiceView = () => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-1">Status</p>
+                <p className="text-xs font-bold text-neutral-700 uppercase tracking-widest mb-1">Status</p>
                 <p className="text-lg font-black text-yellow-700 uppercase">{data.payment_status || 'PENDING'}</p>
               </div>
             </div>
@@ -210,25 +210,25 @@ export const InvoiceView = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-16">
             {/* Traveler Info */}
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-neutral-400 mb-6 flex items-center gap-2">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-neutral-600 mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-sunrise-gold" /> Traveler Details
               </h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Name</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Name</p>
                   <p className="font-bold text-lg text-neutral-800">{data.name}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Contact</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Contact</p>
                   <p className="font-medium text-neutral-600">{data.phone}</p>
                   <p className="font-medium text-neutral-600">{data.email}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Gender</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Gender</p>
                   <p className="font-bold text-neutral-700">{data.gender || '—'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Registration Type</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Registration Type</p>
                   <p className="font-bold text-neutral-700">{data.registration_type === 'group' ? `Group Booking (${data.group_size} Person)` : 'Individual Solo Booking'}</p>
                 </div>
               </div>
@@ -236,25 +236,25 @@ export const InvoiceView = () => {
 
             {/* Trip Info */}
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-neutral-400 mb-6 flex items-center gap-2">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-neutral-600 mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-sunrise-gold" /> Trip Information
               </h3>
               <div className="space-y-4 bg-neutral-50 p-6 rounded-3xl border border-neutral-100">
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Expedition</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Expedition</p>
                   <p className="font-bold text-neutral-800">Chopta Tungnath Trip 2026</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Batch Dates</p>
+                  <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Batch Dates</p>
                   <p className="font-bold text-sunrise-gold">{data.batch_date}</p>
                 </div>
                 <div className="pt-2 flex gap-6">
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Seat No.</p>
+                    <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Seat No.</p>
                     <p className="font-black text-lg text-neutral-800">S-{data.id.toString().padStart(3, '0')}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Batch Code</p>
+                    <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Batch Code</p>
                     <p className="font-black text-lg text-neutral-800">DU26-B1</p>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export const InvoiceView = () => {
           </div>
 
           {/* Boarding Info Card */}
-          <div className="bg-black text-white p-8 rounded-[2rem] mb-16 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden group">
+          <div className="bg-black text-white p-8 rounded-[2rem] mb-16 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden group print:bg-black print:text-white" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
             <div className="absolute top-0 right-0 w-64 h-64 bg-sunrise-gold/10 blur-[80px] rounded-full" />
             <div className="flex items-center gap-5 relative z-10">
               <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
@@ -291,7 +291,7 @@ export const InvoiceView = () => {
           <div className="mb-16">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-[10px] font-black uppercase tracking-widest text-neutral-400 border-b border-neutral-100">
+                <tr className="text-left text-[10px] font-black uppercase tracking-widest text-neutral-600 border-b border-neutral-100">
                   <th className="pb-4 px-2">Description</th>
                   <th className="pb-4 px-2 text-right">Rate</th>
                   <th className="pb-4 px-2 text-center">Qty</th>
@@ -302,7 +302,7 @@ export const InvoiceView = () => {
                 <tr className="text-sm">
                   <td className="py-6 px-2">
                     <p className="font-bold text-neutral-800">Trip Package ({data.sharing_type ? `${data.sharing_type.charAt(0).toUpperCase() + data.sharing_type.slice(1)} Sharing` : 'Standard Sharing'})</p>
-                    <p className="text-xs text-neutral-500">Includes stays, meals, guide & T-shirt</p>
+                    <p className="text-xs text-neutral-700">Includes stays, meals, guide & T-shirt</p>
                   </td>
                   <td className="py-6 px-2 text-right font-medium text-neutral-700">₹{BASE_PRICE.toLocaleString('en-IN')}</td>
                   <td className="py-6 px-2 text-center font-medium text-neutral-700">x{data.group_size}</td>
@@ -325,26 +325,26 @@ export const InvoiceView = () => {
           {/* Totals Section */}
           <div className="flex flex-col md:flex-row justify-between gap-12">
             <div className="max-w-xs">
-              <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-4">Payment Terms</h4>
-              <p className="text-[11px] text-neutral-500 leading-relaxed italic">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mb-4">Payment Terms</h4>
+              <p className="text-[11px] text-neutral-700 leading-relaxed italic">
                 The token amount secures your seat. The remaining balance must be cleared 7 days before the departure date. Payments are subject to our standard refund policy.
               </p>
             </div>
             
             <div className="w-full md:w-80 space-y-3">
               <div className="flex justify-between items-center text-sm">
-                <span className="text-neutral-500">Subtotal</span>
+                <span className="text-neutral-700">Subtotal</span>
                 <span className="font-bold text-neutral-800">₹{totalAmount.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between items-center pt-4 border-t border-neutral-100">
-                <span className="text-sm font-bold text-neutral-400 uppercase tracking-widest">Grand Total</span>
+                <span className="text-sm font-bold text-neutral-600 uppercase tracking-widest">Grand Total</span>
                 <span className="text-3xl font-black text-neutral-900">₹{(BASE_PRICE * data.group_size - (data.discount_per_person * data.group_size)).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Token Paid (Secure)</span>
+                <span className="text-xs font-bold text-neutral-700 uppercase tracking-widest">Token Paid (Secure)</span>
                 <span className="text-lg font-black text-neutral-900">₹{paidAmount.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between items-center p-6 bg-sunrise-gold text-black rounded-3xl shadow-xl shadow-sunrise-gold/20 ring-4 ring-sunrise-gold/10">
+              <div className="flex justify-between items-center p-6 bg-sunrise-gold text-black rounded-3xl shadow-xl shadow-sunrise-gold/20 ring-4 ring-sunrise-gold/10 print:bg-sunrise-gold" style={{ printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}>
                 <span className="text-sm font-black uppercase tracking-widest">Balance Due</span>
                 <span className="text-2xl font-black">₹{pendingAmount.toLocaleString('en-IN')}</span>
               </div>
@@ -352,7 +352,7 @@ export const InvoiceView = () => {
           </div>
 
           {/* Footer Notes */}
-          <div className="mt-24 pt-12 border-t border-neutral-100 grid grid-cols-1 md:grid-cols-2 gap-12 text-[10px] text-neutral-400 font-medium">
+          <div className="mt-24 pt-12 border-t border-neutral-100 grid grid-cols-1 md:grid-cols-2 gap-12 text-[10px] text-neutral-600 font-medium">
             <div>
               <p className="font-black text-neutral-800 uppercase tracking-widest mb-3">Important Guidelines</p>
               <ul className="space-y-2 list-disc pl-4">
@@ -376,7 +376,7 @@ export const InvoiceView = () => {
 
       {/* ── FOOTER ACTIONS (HIDDEN IN PRINT) ─────────────────────────────── */}
       <div className="max-w-[850px] mx-auto mt-12 text-center print:hidden">
-        <p className="text-neutral-500 text-sm mb-6 flex items-center justify-center gap-2">
+        <p className="text-neutral-700 text-sm mb-6 flex items-center justify-center gap-2">
           <ShieldCheck className="w-4 h-4 text-sunrise-gold" />
           Verified Booking by Peak & River Travels
         </p>
