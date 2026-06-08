@@ -196,36 +196,67 @@ export const BookNow = () => {
       const registrationId = regData.id;
       console.log('[BookNow] ✅ Registration created:', registrationId);
 
-      // ── Step 2: Trigger Razorpay ────────────────────────────────────────
+      // ── Step 2: Create Razorpay Order via Backend ────────────────────────
       const totalAmount = TOKEN_AMOUNT * effectiveGroupSize;
+      const amountInPaise = totalAmount * 100;
+
+      console.log('[BookNow] 🚀 Creating backend Razorpay order...');
+      const orderResponse = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: amountInPaise,
+          currency: 'INR',
+          receipt: `rcpt_reg_${registrationId}`,
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to create payment order. Please try again.');
+      }
+
+      const orderData = await orderResponse.json();
+      console.log('[BookNow] ✅ Razorpay Order created:', orderData.order_id);
 
       const options = {
         key: rzpKey,
-        amount: totalAmount * 100, // amount in paisa
-        currency: 'INR',
+        amount: orderData.amount,
+        currency: orderData.currency,
+        order_id: orderData.order_id,
         name: 'Peak & River Travels',
         description: `${TRIP_NAME} - ${registrationType === 'individual' ? 'Individual' : 'Group'} Booking`,
-        image: 'https://choptatungnathtrek.vercel.app/images/peak_river_travels_logo_circular_1778134539480.png',
+        image: '/images/logo_circular.png',
         handler: async function (response: any) {
-          console.log('[BookNow] 💳 Razorpay Payment Success:', response.razorpay_payment_id);
+          console.log('[BookNow] 💳 Razorpay Payment Success, verifying signature...');
           try {
-            // Update the pending record to 'paid'
-            const { error: updateError } = await supabase
-              .from('registrations')
-              .update({
-                payment_id: response.razorpay_payment_id,
-                payment_status: 'paid',
-              })
-              .eq('id', registrationId);
+            // Call `/api/verify-payment` to verify signature and update DB
+            const verifyResponse = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                registration_id: registrationId,
+              }),
+            });
 
-            if (updateError) throw updateError;
+            if (!verifyResponse.ok) {
+              const errorData = await verifyResponse.json().catch(() => ({}));
+              throw new Error(errorData.error || 'Payment signature verification failed.');
+            }
 
-            console.log('[BookNow] 🎉 Payment status updated in database');
+            console.log('[BookNow] 🎉 Payment verified & registered successfully');
             setSuccessId(registrationId);
             setIsSubmitting(false);
           } catch (err: any) {
-            console.error('[BookNow] ❌ Post-payment update failed:', err);
-            alert('Payment was successful, but we failed to update your record. PLEASE SCREENSHOT YOUR PAYMENT ID and contact us!');
+            console.error('[BookNow] ❌ Payment verification failed:', err);
+            alert(`Payment was successful, but signature verification failed: ${err.message}. Please contact support with your Payment ID: ${response.razorpay_payment_id}`);
             setIsSubmitting(false);
           }
         },
