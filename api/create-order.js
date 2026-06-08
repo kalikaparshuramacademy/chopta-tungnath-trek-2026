@@ -1,6 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import Razorpay from 'razorpay';
-import dotenv from 'dotenv';
+'use strict';
+
+const Razorpay = require('razorpay');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -9,8 +10,7 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || '',
 });
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Enable CORS headers
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -27,16 +27,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { amount, currency, receipt } = req.body;
 
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      console.error("[Create Order] ❌ Razorpay API credentials are missing");
-      return res.status(401).json({ error: "Razorpay credentials not configured on server" });
+      console.error('[Create Order] ❌ Razorpay credentials are missing from environment');
+      return res.status(401).json({ error: 'Razorpay credentials not configured on server' });
     }
 
     if (amount === undefined || typeof amount !== 'number') {
-      return res.status(400).json({ error: "Amount is required and must be a number" });
+      return res.status(400).json({ error: 'Amount is required and must be a number' });
     }
 
     if (amount < 100) {
-      return res.status(400).json({ error: "Minimum amount is 100 paise (1 INR)" });
+      return res.status(400).json({ error: 'Minimum amount is 100 paise (₹1)' });
     }
 
     const options = {
@@ -45,20 +45,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       receipt: receipt || `rcpt_${Date.now()}`,
     };
 
-    console.log("[Create Order] 💸 Initiating order on Razorpay:", options);
+    console.log('[Create Order] 💸 Creating order:', options);
     const order = await razorpay.orders.create(options);
-    console.log("[Create Order] ✅ Order created successfully:", order.id);
+    console.log('[Create Order] ✅ Order created:', order.id);
 
     return res.status(200).json({
       order_id: order.id,
       amount: order.amount,
       currency: order.currency,
     });
-  } catch (err: any) {
-    console.error("[Create Order] ❌ Error creating Razorpay order:", err);
+  } catch (err) {
+    console.error('[Create Order] ❌ Error:', err.message || err);
     return res.status(500).json({
-      error: "Failed to create Razorpay order",
-      details: err.message || err,
+      error: 'Failed to create Razorpay order',
+      details: err.message || String(err),
     });
   }
-}
+};
